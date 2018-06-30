@@ -1,5 +1,6 @@
 <resources>
-    <string name="app_name">WalkingGroup</string>
-    <string name="google_maps_api_key"> AIzaSyBSqncGPQQx71qyCDOJuHxk7H_1Cvkuivw</string>
-    <string name="title_activity_maps">Map</string>
+    <string name="app_name">WalkingGroupServerDemo</string>
+
+    <!--Hardcode your API key like this. Don't use this test one!-->
+    <string name="apikey">3A8E4897-E11F-46F8-A444-E7A97A5FB3D26</string>
 </resources>
