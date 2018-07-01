@@ -23,6 +23,9 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.clustering.ClusterManager;
 
+import java.util.List;
+
+import ca.cmpt276.walkinggroup.dataobjects.Group;
 import ca.cmpt276.walkinggroup.dataobjects.MyItem;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
@@ -32,6 +35,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
     private static final String COARSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
     private boolean mLocationPermissionsGranted = false;
+    private boolean getDeviceLocationSuccess = false;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1234;
     private static final float DEFAULT_ZOOM = 15f;
     private FusedLocationProviderClient mFusedLocationProviderClient;
@@ -44,7 +48,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
-
         getLocationPermission();
 
     }
@@ -64,8 +67,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap = googleMap;
 
         if (mLocationPermissionsGranted) {
-            getDeviceLocationNew();
-            //setUpClusterer();
+            getDeviceLocationSuccess = getDeviceLocation();
+            if (getDeviceLocationSuccess) {
+                setUpClusterer(70, 100);
+            }
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 return;
             }
@@ -78,7 +83,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 //        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
     }
 
-    private void initMap(){
+    private void initializeMap(){
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -91,7 +96,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if(ContextCompat.checkSelfPermission(this.getApplicationContext(), FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
             if(ContextCompat.checkSelfPermission(this.getApplicationContext(), COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED){
                 mLocationPermissionsGranted = true;
-                initMap();
+                initializeMap();
             } else{
                 ActivityCompat.requestPermissions(this,permissions,LOCATION_PERMISSION_REQUEST_CODE);
             }
@@ -115,13 +120,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     }
 
                     mLocationPermissionsGranted = true;
-                    initMap();
+                    initializeMap();
                 }
             }
         }
     }
 
-    private void getDeviceLocationNew(){
+    private boolean getDeviceLocation(){
         try{
             if (mLocationPermissionsGranted){
                 // Code obtained from StacksOverflow https://stackoverflow.com/questions/2227292/how-to-get-latitude-and-longitude-of-the-mobile-device-in-android
@@ -130,35 +135,24 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 double longitude = location.getLongitude();
                 double latitude = location.getLatitude();
 
-                setUpClusterer(latitude, longitude);
-
                 LatLng currentLatLng = new LatLng(latitude, longitude);
-                //mMap.addMarker(new MarkerOptions().position(currentLatLng).title("Current Location"));
-                mMap.moveCamera(CameraUpdateFactory.newLatLng(currentLatLng));
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, DEFAULT_ZOOM));
 
-                // add multiple markers
-//                for (int i = 0; i < 5; i++){
-//                    mMap.addMarker(new MarkerOptions().position(currentLatLng).title("Group" + i));
-//                }
                 Toast.makeText(this, "longitude: " + longitude + ", latitude: " + latitude, Toast.LENGTH_LONG).show();
+                return true;
             }
 
         }catch (SecurityException e){
             Log.e(TAG, "getDeviceLocation: SecurityException: " + e.getMessage() );
-        }
-    }
 
-    private void moveCamera(LatLng latLng, float zoom){
-        Log.d(TAG, "moveCamera: moving the camera to: lat: " + latLng.latitude + ", lng: " + latLng.longitude);
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
+        }
+
+        return false;
     }
 
     // Map clusters
     // Documentation: https://developers.google.com/maps/documentation/android-sdk/utility/marker-clustering
     private void setUpClusterer(double lat, double lng) {
-        // Position the map.
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat, lng), DEFAULT_ZOOM));
-
         // Initialize the manager with the context and the map.
         // (Activity extends context, so we can pass 'this' in the constructor.)
         mClusterManager = new ClusterManager<MyItem>(this, mMap);
@@ -167,16 +161,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // manager.
         mMap.setOnCameraIdleListener(mClusterManager);
         mMap.setOnInfoWindowClickListener(mClusterManager);
-
-        //mMap.setOnMarkerClickListener(mClusterManager);
-        // OnClickListener for each marker in the cluster
-//        mClusterManager.setOnClusterItemClickListener(new ClusterManager.OnClusterItemClickListener<MyItem>() {
-//            @Override
-//            public boolean onClusterItemClick(MyItem myItem) {
-//                Toast.makeText(MapsActivity.this, "I clicked on marker:" + myItem.getTitle(), Toast.LENGTH_LONG).show();
-//                return false;
-//            }
-//        });
 
         mClusterManager.setOnClusterItemInfoWindowClickListener(new ClusterManager.OnClusterItemInfoWindowClickListener<MyItem>() {
             @Override
