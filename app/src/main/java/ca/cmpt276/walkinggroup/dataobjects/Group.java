@@ -21,7 +21,6 @@ public class Group extends IdItemBase{
     private User leader;
     private List<User> groupMembers;
 
-
     public Group() { }
 
     // Singleton support
@@ -70,6 +69,31 @@ public class Group extends IdItemBase{
 
     public void setGroupMembers(List<User> groupMembers) {
         this.groupMembers = groupMembers;
+    }
+
+    public List<Double> getRouteLatArray() {
+        return routeLatArray;
+    }
+
+    public List<Double> getRouteLngArray() {
+        return routeLngArray;
+    }
+
+    public void setRouteLatArray(List<Double> routeLatArray) {
+        this.routeLatArray = routeLatArray;
+    }
+
+    public void setRouteLngArray(List<Double> routeLngArray) {
+        this.routeLngArray = routeLngArray;
+    }
+
+    public void setToGroup2Params(Group group2){
+        this.id = group2.getGroupId();
+        this.groupDescription = group2.getGroupDescription();
+        this.routeLatArray = group2.getRouteLatArray();
+        this.routeLngArray = group2.getRouteLngArray();
+        this.leader = group2.getLeader();
+        this.groupMembers = group2.getGroupMembers();
     }
 
 

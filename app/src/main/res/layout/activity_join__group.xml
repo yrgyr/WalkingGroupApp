@@ -1,9 +1,85 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="ca.cmpt276.walkinggroup.app.Join_Group">
 
-</android.support.constraint.ConstraintLayout>
+    <TextView
+        android:id="@+id/txt_join_grp_grpid"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="36dp"
+        android:text="@string/join_group_grp_id"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/txt_join_grp_grpdesc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignStart="@+id/txt_join_grp_grpid"
+        android:layout_marginTop="83dp"
+        android:textSize="18sp"
+        android:text="@string/join_group_grp_desc" />
+
+    <TextView
+        android:id="@+id/txt_join_grp_grpdesc_val"
+        android:layout_width="148dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignTop="@+id/txt_join_grp_grpdesc"
+        android:layout_marginEnd="18dp"
+        android:text="TextView"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/txt_join_grp_grpid_val"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/txt_join_grp_grpid"
+        android:layout_toEndOf="@+id/btn_join_group"
+        android:text="TextView"
+        android:textSize="18sp" />
+
+    <Button
+        android:id="@+id/btn_join_group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignStart="@+id/txt_join_grp_grpid"
+        android:layout_marginBottom="30dp"
+        android:text="@string/join_group_btn_join" />
+
+    <Button
+        android:id="@+id/btn_join_group_cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignTop="@+id/btn_join_group"
+        android:layout_marginEnd="33dp"
+        android:text="@string/join_group_btn_cancel" />
+
+    <TextView
+        android:id="@+id/txt_join_group_grp_leader"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignStart="@+id/txt_join_grp_grpid"
+        android:layout_marginTop="128dp"
+        android:text="@string/join_group_grp_leader"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/txt_join_group_grp_leader_val"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/txt_join_grp_grpdesc_val"
+        android:layout_alignTop="@+id/txt_join_group_grp_leader"
+        android:text="TextView"
+        android:textSize="18sp" />
+</RelativeLayout>

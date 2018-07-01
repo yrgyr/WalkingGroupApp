@@ -7,6 +7,7 @@ public class MyItem implements ClusterItem {
     private final LatLng mPosition;
     private final String mTitle;
     private final String mSnippet;
+    private int grpId;
 
     public MyItem(double lat, double lng) {
         mPosition = new LatLng(lat, lng);
@@ -16,10 +17,11 @@ public class MyItem implements ClusterItem {
 
     }
 
-    public MyItem(double lat, double lng, String title, String snippet) {
+    public MyItem(double lat, double lng, String title, String snippet, int grpId) {
         mPosition = new LatLng(lat, lng);
         mTitle = title;
         mSnippet = snippet;
+        this.grpId = grpId;
     }
 
     @Override
@@ -36,4 +38,6 @@ public class MyItem implements ClusterItem {
     public String getSnippet() {
         return mSnippet;
     }
+
+    public int getGrpId(){ return grpId;}
 }

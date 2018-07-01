@@ -23,10 +23,12 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.clustering.ClusterManager;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import ca.cmpt276.walkinggroup.dataobjects.Group;
 import ca.cmpt276.walkinggroup.dataobjects.MyItem;
+import ca.cmpt276.walkinggroup.dataobjects.User;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
@@ -69,7 +71,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if (mLocationPermissionsGranted) {
             getDeviceLocationSuccess = getDeviceLocation();
             if (getDeviceLocationSuccess) {
-                setUpClusterer(70, 100);
+
+
+                //setUpClusterer(70, 100);
+                // Test map with locally created groups
+                List<Group> groups = createLocalTestGroups(70, 100);
+                setUpLocalGroupCluster(groups);
+
             }
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 return;
@@ -152,41 +160,126 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     // Map clusters
     // Documentation: https://developers.google.com/maps/documentation/android-sdk/utility/marker-clustering
-    private void setUpClusterer(double lat, double lng) {
-        // Initialize the manager with the context and the map.
-        // (Activity extends context, so we can pass 'this' in the constructor.)
-        mClusterManager = new ClusterManager<MyItem>(this, mMap);
+//    private void setUpClusterer(double lat, double lng) {
+//        // Initialize the manager with the context and the map.
+//        // (Activity extends context, so we can pass 'this' in the constructor.)
+//        mClusterManager = new ClusterManager<MyItem>(this, mMap);
+//
+//        // Point the map's listeners at the listeners implemented by the cluster
+//        // manager.
+//        mMap.setOnCameraIdleListener(mClusterManager);
+//        mMap.setOnInfoWindowClickListener(mClusterManager);
+//
+//        mClusterManager.setOnClusterItemInfoWindowClickListener(new ClusterManager.OnClusterItemInfoWindowClickListener<MyItem>() {
+//            @Override
+//            public void onClusterItemInfoWindowClick(MyItem myItem) {
+//                Intent intent = new Intent(MapsActivity.this, Join_Group.class);
+//                startActivity(intent);
+//            }
+//        });
+//
+//        // Add cluster items (markers) to the cluster manager.
+//        addItems(lat, lng);
+//    }
 
-        // Point the map's listeners at the listeners implemented by the cluster
-        // manager.
+    private void setUpLocalGroupCluster(List<Group> groups){
+        mClusterManager = new ClusterManager<MyItem>(this, mMap);
         mMap.setOnCameraIdleListener(mClusterManager);
         mMap.setOnInfoWindowClickListener(mClusterManager);
 
         mClusterManager.setOnClusterItemInfoWindowClickListener(new ClusterManager.OnClusterItemInfoWindowClickListener<MyItem>() {
             @Override
             public void onClusterItemInfoWindowClick(MyItem myItem) {
+                int grpId = myItem.getGrpId();
+                Group group = getLocalGroupById(groups, grpId);
+                Group groupToLaunch = Group.getGroupSingletonInstance();
+                groupToLaunch.setToGroup2Params(group);
                 Intent intent = new Intent(MapsActivity.this, Join_Group.class);
                 startActivity(intent);
             }
         });
 
-        // Add cluster items (markers) to the cluster manager.
-        addItems(lat, lng);
+        addGroupsToCluster(groups);
     }
 
-    private void addItems(double lat, double lng) {
+//    private void addItems(double lat, double lng) {
+//
+//        // Set some lat/lng coordinates to start with.
+////        double lat = 51.5145160;
+////        double lng = -0.1270060;
+//
+//        // Add ten cluster items in close proximity, for purposes of this example.
+//        for (int i = 0; i < 10; i++) {
+//            double offset = i / 200d;
+//            lat = lat + offset;
+//            lng = lng + offset;
+//            MyItem offsetItem = new MyItem(lat, lng, "Group " + i, "Click to join group", 0);
+//            mClusterManager.addItem(offsetItem);
+//        }
+//    }
 
-        // Set some lat/lng coordinates to start with.
-//        double lat = 51.5145160;
-//        double lng = -0.1270060;
+    private void addGroupsToCluster(List<Group> groups){
+        if (groups.size() > 0){
+            for (int i = 0; i < groups.size(); i++) {
+                Group group = groups.get(i);
+                int grpId = group.getGroupId();
+                String grpDesc = group.getGroupDescription();
+                double lat = group.getStartLat();
+                double lng = group.getStartLng();
 
-        // Add ten cluster items in close proximity, for purposes of this example.
-        for (int i = 0; i < 10; i++) {
+                MyItem newItem = new MyItem(lat, lng, "Group " + grpId + "- " + grpDesc, "Click to join group", grpId);
+                mClusterManager.addItem(newItem);
+            }
+        }
+    }
+
+    // For testing locally created groups only- setup 2 groups consisting of 5 users each locally
+    private List<Group> createLocalTestGroups(double lat, double lng){
+        List<Group> groups = new ArrayList<>();
+
+        for (int i = 0; i < 2; i++){
+            Group group = new Group();
+            group.setGroupId(i);
+            group.setGroupDescription("Local group " + i);
+
+            List<User> members = new ArrayList<>();
+
+            for (int j = 0; j < 5; j++){
+                User member = new User();
+                member.setName("Local user " + j);
+                members.add(member);
+
+                if (j == 0){
+                    group.setLeader(member);
+                }
+            }
+            group.setGroupMembers(members);
+
             double offset = i / 200d;
             lat = lat + offset;
             lng = lng + offset;
-            MyItem offsetItem = new MyItem(lat, lng, "Group " + i, "Click to join group");
-            mClusterManager.addItem(offsetItem);
+            group.setStartLat(lat);
+            group.setStartLng(lng);
+
+            groups.add(group);
+
+        }
+
+        return groups;
+    }
+
+    // For testing locally created groups only; server has getGroupById method
+    private Group getLocalGroupById(List<Group> groups, int grpId){
+        if (groups.size() > 0){
+            for(int i = 0; i < groups.size(); i++){
+                Group group = groups.get(i);
+                if (group.getGroupId() == grpId){
+                    return group;
+                }
+            }
+            return null;
+        } else {
+            return null;
         }
     }
 

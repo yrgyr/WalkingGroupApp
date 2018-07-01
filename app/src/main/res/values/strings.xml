@@ -19,4 +19,11 @@
         completions."
     </string>
     <string name="title_activity_maps">Map</string>
+
+    <!-- Join Group activity -->
+    <string name="join_group_grp_id">Group ID:</string>
+    <string name="join_group_grp_desc">Group description:</string>
+    <string name="join_group_btn_join">Join group!</string>
+    <string name="join_group_btn_cancel">Cancel</string>
+    <string name="join_group_grp_leader">Group leader:</string>
 </resources>
