@@ -71,8 +71,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if (mLocationPermissionsGranted) {
             getDeviceLocationSuccess = getDeviceLocation();
             if (getDeviceLocationSuccess) {
-
-
                 //setUpClusterer(70, 100);
                 // Test map with locally created groups
                 List<Group> groups = createLocalTestGroups(70, 100);
@@ -246,7 +244,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             for (int j = 0; j < 5; j++){
                 User member = new User();
-                member.setName("Local user " + j);
+                member.setName("Group " + i + " user " + j);
                 members.add(member);
 
                 if (j == 0){

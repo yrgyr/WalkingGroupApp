@@ -3,11 +3,16 @@ package ca.cmpt276.walkinggroup.app;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.List;
+
 import ca.cmpt276.walkinggroup.dataobjects.Group;
+import ca.cmpt276.walkinggroup.dataobjects.User;
 
 public class Join_Group extends AppCompatActivity {
 
@@ -24,7 +29,7 @@ public class Join_Group extends AppCompatActivity {
         populateGroupID();
         populateGroupDesc();
         populateGroupLeader();
-        populateGroupListView();
+        populateGroupMembersListView();
         setupJoinGroupButton();
         setupCancelJoinButton();
     }
@@ -44,7 +49,12 @@ public class Join_Group extends AppCompatActivity {
         txtGrpLeader.setText(leaderName);
     }
 
-    private void populateGroupListView() {
+    private void populateGroupMembersListView() {
+        String[] members = group.getGroupMembersNames();
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.group_member, members);
+        ListView membersList = findViewById(R.id.join_grp_members_listview);
+        membersList.setAdapter(adapter);
+
     }
 
     private void setupJoinGroupButton() {

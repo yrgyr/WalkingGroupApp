@@ -82,4 +82,22 @@
         android:layout_alignTop="@+id/txt_join_group_grp_leader"
         android:text="TextView"
         android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/txt_join_grp_members"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignStart="@+id/txt_join_grp_grpid"
+        android:layout_marginTop="166dp"
+        android:textSize="18sp"
+        android:text="@string/join_group_members"/>
+
+    <ListView
+        android:id="@+id/join_grp_members_listview"
+        android:layout_width="325dp"
+        android:layout_height="220dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignStart="@+id/txt_join_grp_grpid"
+        android:layout_marginBottom="86dp" />
 </RelativeLayout>

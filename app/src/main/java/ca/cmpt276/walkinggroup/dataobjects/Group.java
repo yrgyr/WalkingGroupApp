@@ -87,6 +87,19 @@ public class Group extends IdItemBase{
         this.routeLngArray = routeLngArray;
     }
 
+    public int getGroupSize(){return groupMembers.size();}
+
+    public String[] getGroupMembersNames(){
+        String[] names = new String[getGroupSize()];
+
+        for (int i = 0; i < getGroupSize(); i++){
+            User member = groupMembers.get(i);
+            names[i] = member.getName();
+        }
+
+        return names;
+    }
+
     public void setToGroup2Params(Group group2){
         this.id = group2.getGroupId();
         this.groupDescription = group2.getGroupDescription();

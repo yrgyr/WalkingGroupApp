@@ -26,4 +26,5 @@
     <string name="join_group_btn_join">Join group!</string>
     <string name="join_group_btn_cancel">Cancel</string>
     <string name="join_group_grp_leader">Group leader:</string>
+    <string name="join_group_members">Group members:</string>
 </resources>
