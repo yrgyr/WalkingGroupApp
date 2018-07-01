@@ -67,13 +67,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        LatLng currentLatLng;
 
         if (mLocationPermissionsGranted) {
-            getDeviceLocationSuccess = getDeviceLocation();
-            if (getDeviceLocationSuccess) {
+            currentLatLng = getDeviceLocation();
+            if (currentLatLng != null) {
                 //setUpClusterer(70, 100);
                 // Test map with locally created groups
-                List<Group> groups = createLocalTestGroups(70, 100);
+                List<Group> groups = createLocalTestGroups(currentLatLng);
                 setUpLocalGroupCluster(groups);
 
             }
@@ -132,7 +133,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
-    private boolean getDeviceLocation(){
+    private LatLng getDeviceLocation(){
         try{
             if (mLocationPermissionsGranted){
                 // Code obtained from StacksOverflow https://stackoverflow.com/questions/2227292/how-to-get-latitude-and-longitude-of-the-mobile-device-in-android
@@ -145,7 +146,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, DEFAULT_ZOOM));
 
                 Toast.makeText(this, "longitude: " + longitude + ", latitude: " + latitude, Toast.LENGTH_LONG).show();
-                return true;
+                return currentLatLng;
             }
 
         }catch (SecurityException e){
@@ -153,7 +154,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         }
 
-        return false;
+        return null;
     }
 
     // Map clusters
@@ -232,8 +233,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     // For testing locally created groups only- setup 2 groups consisting of 5 users each locally
-    private List<Group> createLocalTestGroups(double lat, double lng){
+    private List<Group> createLocalTestGroups(LatLng latlng){
         List<Group> groups = new ArrayList<>();
+        double lat = latlng.latitude;
+        double lng = latlng.longitude;
 
         for (int i = 0; i < 2; i++){
             Group group = new Group();
