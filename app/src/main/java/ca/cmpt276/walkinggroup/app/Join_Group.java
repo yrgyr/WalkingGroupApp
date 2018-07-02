@@ -1,8 +1,11 @@
 package ca.cmpt276.walkinggroup.app;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -14,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 import ca.cmpt276.walkinggroup.dataobjects.Group;
@@ -25,6 +29,7 @@ public class Join_Group extends AppCompatActivity {
     int grpId = group.getGroupId();
     String grpDesc = group.getGroupDescription();
     String leaderName = group.getLeader().getName();
+    String[] members = group.getGroupMembersNames();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +64,8 @@ public class Join_Group extends AppCompatActivity {
                 break;
             case R.id.menu_remove_user:
                 // Todo: launch remove user activity
+                List<Integer> membersToRemove = new ArrayList<>();
+                showRemoveMembersDialog(membersToRemove);
                 break;
             case R.id.menu_leave_group:
                 boolean isInGroup = true;
@@ -96,7 +103,6 @@ public class Join_Group extends AppCompatActivity {
     }
 
     private void populateGroupMembersListView() {
-        String[] members = group.getGroupMembersNames();
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.group_member, members);
         ListView membersList = findViewById(R.id.join_grp_members_listview);
         membersList.setAdapter(adapter);
@@ -106,6 +112,66 @@ public class Join_Group extends AppCompatActivity {
     private void setupActionBar(){
         Toolbar toolbar = findViewById(R.id.action_bar);
         setSupportActionBar(toolbar);
+    }
+
+    private void showRemoveMembersDialog(List<Integer> membersToRemove){
+        boolean[] checkedMembers = new boolean[members.length];
+
+        AlertDialog.Builder alertBuilder = new AlertDialog.Builder(Join_Group.this);
+        alertBuilder.setTitle("Select group members to remove:");
+        alertBuilder.setMultiChoiceItems(members, checkedMembers, new DialogInterface.OnMultiChoiceClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int position, boolean isChecked) {
+                //String userNameAtPosition = members[position];
+                if(isChecked){
+                    if(!membersToRemove.contains(position)){
+                        membersToRemove.add(position);
+                    }
+                } else if(membersToRemove.contains(position)){
+                    membersToRemove.remove(position);
+                }
+            }
+        });
+
+        alertBuilder.setCancelable(true);
+        //boolean cancelAlertDialog = false;
+
+        alertBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if (membersToRemove.size()> 0) {
+                    List<User> updatedMembers = group.getGroupMembers();
+
+                    for (int i = 0; i < updatedMembers.size(); i++){
+                        Log.e("MyApp", "Index " + i + ", user: " + updatedMembers.get(i).getName() + "\n");
+                    }
+
+                    for (int i = 0; i < membersToRemove.size(); i++) {
+                        int position = membersToRemove.get(i);
+                        //Toast.makeText(Join_Group.this, "Selected member in position: " + position, Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(Join_Group.this, "Member name in list: " + updatedMembers.get(position).getName(), Toast.LENGTH_LONG).show();
+                        updatedMembers.remove(position);
+                    }
+                    group.setGroupMembers(updatedMembers);
+                    members = group.getGroupMembersNames();
+                    populateGroupMembersListView();
+                } else {
+                    Toast.makeText(Join_Group.this, "No members selected", Toast.LENGTH_LONG).show();
+                }
+
+            }
+        });
+
+        alertBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        AlertDialog aDialog = alertBuilder.create();
+        aDialog.show();
+
     }
 
 }
