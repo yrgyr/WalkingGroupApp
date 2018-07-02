@@ -31,6 +31,7 @@ public class Join_Group extends AppCompatActivity {
     String leaderName = group.getLeader().getName();
     String[] members = group.getGroupMembersNames();
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,9 +64,12 @@ public class Join_Group extends AppCompatActivity {
                 // Todo: launch add user activity
                 break;
             case R.id.menu_remove_user:
-                // Todo: launch remove user activity
-                List<Integer> membersToRemove = new ArrayList<>();
-                showRemoveMembersDialog(membersToRemove);
+                // Todo: check if you're leader and get members list
+                if(members.length>0) {
+                    showRemoveMembersDialog();
+                } else {
+                    Toast.makeText(Join_Group.this, "This group is currently empty!", Toast.LENGTH_SHORT).show();
+                }
                 break;
             case R.id.menu_leave_group:
                 boolean isInGroup = true;
@@ -114,8 +118,9 @@ public class Join_Group extends AppCompatActivity {
         setSupportActionBar(toolbar);
     }
 
-    private void showRemoveMembersDialog(List<Integer> membersToRemove){
+    private void showRemoveMembersDialog(){
         boolean[] checkedMembers = new boolean[members.length];
+        List<Integer> membersToRemove = new ArrayList<>();
 
         AlertDialog.Builder alertBuilder = new AlertDialog.Builder(Join_Group.this);
         alertBuilder.setTitle("Select group members to remove:");
@@ -140,23 +145,18 @@ public class Join_Group extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 if (membersToRemove.size()> 0) {
-                    List<User> updatedMembers = group.getGroupMembers();
+                    List<User> updatedMembers = new ArrayList<>();
+                    List<User> originalMembers = group.getGroupMembers();
 
-                    for (int i = 0; i < updatedMembers.size(); i++){
-                        Log.e("MyApp", "Index " + i + ", user: " + updatedMembers.get(i).getName() + "\n");
-                    }
-
-                    for (int i = 0; i < membersToRemove.size(); i++) {
-                        int position = membersToRemove.get(i);
-                        //Toast.makeText(Join_Group.this, "Selected member in position: " + position, Toast.LENGTH_SHORT).show();
-                        //Toast.makeText(Join_Group.this, "Member name in list: " + updatedMembers.get(position).getName(), Toast.LENGTH_LONG).show();
-                        updatedMembers.remove(position);
+                    for (int i = 0; i < members.length; i++) {
+                        if (!membersToRemove.contains(i)){
+                            updatedMembers.add(originalMembers.get(i));
+                        }
                     }
                     group.setGroupMembers(updatedMembers);
                     members = group.getGroupMembersNames();
+                    // Todo: method to update group info on server
                     populateGroupMembersListView();
-                } else {
-                    Toast.makeText(Join_Group.this, "No members selected", Toast.LENGTH_LONG).show();
                 }
 
             }
