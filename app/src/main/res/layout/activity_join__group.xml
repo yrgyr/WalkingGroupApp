@@ -6,14 +6,18 @@
     android:layout_height="match_parent"
     tools:context="ca.cmpt276.walkinggroup.app.Join_Group">
 
+    <include
+        layout = "@layout/action_bar"
+        android:id="@+id/action_bar"></include>
+
     <TextView
         android:id="@+id/txt_join_grp_grpid"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_marginStart="25dp"
-        android:layout_marginTop="36dp"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="65dp"
         android:text="@string/join_group_grp_id"
         android:textSize="18sp" />
 
@@ -23,9 +27,9 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_alignStart="@+id/txt_join_grp_grpid"
-        android:layout_marginTop="83dp"
-        android:textSize="18sp"
-        android:text="@string/join_group_grp_desc" />
+        android:layout_marginTop="109dp"
+        android:text="@string/join_group_grp_desc"
+        android:textSize="18sp" />
 
     <TextView
         android:id="@+id/txt_join_grp_grpdesc_val"
@@ -41,28 +45,11 @@
         android:id="@+id/txt_join_grp_grpid_val"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
         android:layout_alignTop="@+id/txt_join_grp_grpid"
-        android:layout_toEndOf="@+id/btn_join_group"
+        android:layout_marginStart="126dp"
         android:text="TextView"
         android:textSize="18sp" />
-
-    <Button
-        android:id="@+id/btn_join_group"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignStart="@+id/txt_join_grp_grpid"
-        android:layout_marginBottom="30dp"
-        android:text="@string/join_group_btn_join" />
-
-    <Button
-        android:id="@+id/btn_join_group_cancel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignTop="@+id/btn_join_group"
-        android:layout_marginEnd="33dp"
-        android:text="@string/join_group_btn_cancel" />
 
     <TextView
         android:id="@+id/txt_join_group_grp_leader"
@@ -70,7 +57,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_alignStart="@+id/txt_join_grp_grpid"
-        android:layout_marginTop="128dp"
+        android:layout_marginTop="155dp"
         android:text="@string/join_group_grp_leader"
         android:textSize="18sp" />
 
@@ -89,15 +76,15 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_alignStart="@+id/txt_join_grp_grpid"
-        android:layout_marginTop="166dp"
-        android:textSize="18sp"
-        android:text="@string/join_group_members"/>
+        android:layout_marginTop="199dp"
+        android:text="@string/join_group_members"
+        android:textSize="18sp" />
 
     <ListView
         android:id="@+id/join_grp_members_listview"
-        android:layout_width="325dp"
-        android:layout_height="220dp"
+        android:layout_width="327dp"
+        android:layout_height="281dp"
         android:layout_alignParentBottom="true"
         android:layout_alignStart="@+id/txt_join_grp_grpid"
-        android:layout_marginBottom="86dp" />
+        android:layout_marginBottom="25dp" />
 </RelativeLayout>

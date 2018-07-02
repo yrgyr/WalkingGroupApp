@@ -226,7 +226,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 double lat = group.getStartLat();
                 double lng = group.getStartLng();
 
-                MyItem newItem = new MyItem(lat, lng, "Group " + grpId + "- " + grpDesc, "Click to join group", grpId);
+                MyItem newItem = new MyItem(lat, lng, "Group " + grpId + "- " + grpDesc, "Click here to view group", grpId);
                 mClusterManager.addItem(newItem);
             }
         }

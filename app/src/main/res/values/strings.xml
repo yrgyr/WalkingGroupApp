@@ -23,8 +23,11 @@
     <!-- Join Group activity -->
     <string name="join_group_grp_id">Group ID:</string>
     <string name="join_group_grp_desc">Group description:</string>
-    <string name="join_group_btn_join">Join group!</string>
-    <string name="join_group_btn_cancel">Cancel</string>
     <string name="join_group_grp_leader">Group leader:</string>
     <string name="join_group_members">Group members:</string>
+    <string name="menu_join_group">Join this group</string>
+    <string name="menu_add_user">Add someone to this group</string>
+    <string name="menu_remove_user">Remove someone from this group</string>
+    <string name="menu_leave_group">Leave this group</string>
+    <string name="menu_go_back">Go back</string>
 </resources>
