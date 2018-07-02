@@ -3,6 +3,7 @@
 
     <!--Hardcode your API key like this. Don't use this test one!-->
     <string name="apikey">3A8E4897-E11F-46F8-A444-E7A97A5FB3D26</string>
+    <string name ="google_maps_apikey">AIzaSyBSqncGPQQx71qyCDOJuHxk7H_1Cvkuivw</string>
     <string name="title_activity_login">Sign in</string>
 
     <!-- Strings related to login -->
@@ -18,4 +19,15 @@
         completions."
     </string>
     <string name="title_activity_maps">Map</string>
+
+    <!-- Join Group activity -->
+    <string name="join_group_grp_id">Group ID:</string>
+    <string name="join_group_grp_desc">Group description:</string>
+    <string name="join_group_grp_leader">Group leader:</string>
+    <string name="join_group_members">Group members:</string>
+    <string name="menu_join_group">Join this group</string>
+    <string name="menu_add_user">Add someone to this group</string>
+    <string name="menu_remove_user">Remove someone from this group</string>
+    <string name="menu_leave_group">Leave this group</string>
+    <string name="menu_go_back">Go back</string>
 </resources>

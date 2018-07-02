@@ -72,4 +72,5 @@ public class GroupTest2 {
             assertEquals("User " + i, user.getName());
         }
     }
+
 }
