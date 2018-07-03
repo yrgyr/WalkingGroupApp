@@ -1,6 +1,7 @@
 package ca.cmpt276.walkinggroup.app;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,6 +14,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
+import ca.cmpt276.walkinggroup.dataobjects.CurrentUserData;
 import ca.cmpt276.walkinggroup.dataobjects.EarnedRewards;
 import ca.cmpt276.walkinggroup.dataobjects.User;
 import ca.cmpt276.walkinggroup.proxy.ProxyBuilder;
@@ -23,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "my_activity";
     private WGServerProxy proxy;
+    private User currentUser;  // stores current user
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
         setupGetUsersBtn();
         setupLogInBtn();
         setupNewUserButton();
+        setUpCreateGroupBtn();
     }
     private String userEmail = "Mike64140@test.com";
     private String userPassword = "12345";
@@ -63,6 +67,8 @@ public class MainActivity extends AppCompatActivity {
         notifyUserViaLogAndToast("Server replied with user: " + user.toString());
         userId = user.getId();
         userEmail = user.getEmail();
+
+        currentUser = user;
     }
     private void setupGetUsersBtn() {
 
@@ -105,12 +111,6 @@ public class MainActivity extends AppCompatActivity {
         ListView users_list = (ListView) findViewById(R.id.usersList);
         users_list.setAdapter(adapter);
 
-
-
-
-
-
-
     }
     //=================================== LOG IN ===============================================
     private void setupLogInBtn(){
@@ -145,5 +145,20 @@ public class MainActivity extends AppCompatActivity {
     private void notifyUserViaLogAndToast(String message) {
         Log.w(TAG, message);
         Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+    }
+
+    private void setUpCreateGroupBtn(){
+        Button btn = findViewById(R.id.btn_make_group);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                CurrentUserData userData = CurrentUserData.getSingletonInstance();
+                userData.setCurrentProxy(proxy);
+                userData.setCurrentUser(currentUser);
+
+                Intent intent = new Intent(MainActivity.this, CreateGroup.class);
+                startActivity(intent);
+            }
+        });
     }
 }
