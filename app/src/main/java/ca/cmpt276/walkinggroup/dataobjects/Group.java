@@ -100,6 +100,17 @@ public class Group extends IdItemBase{
         return names;
     }
 
+    public long[] getGroupMembersIds(){
+        long[] Ids = new long[getGroupSize()];
+
+        for (int i = 0; i < getGroupSize(); i++){
+            User member = groupMembers.get(i);
+            Ids[i] = member.getId();
+        }
+
+        return Ids;
+    }
+
     public void setToGroup2Params(Group group2){
         this.id = group2.getGroupId();
         this.groupDescription = group2.getGroupDescription();

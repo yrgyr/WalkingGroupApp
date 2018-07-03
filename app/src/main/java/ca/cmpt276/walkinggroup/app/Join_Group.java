@@ -30,6 +30,8 @@ public class Join_Group extends AppCompatActivity {
     String grpDesc = group.getGroupDescription();
     String leaderName = group.getLeader().getName();
     String[] members = group.getGroupMembersNames();
+    long[] membersIds = group.getGroupMembersIds();
+    List<User> monitorsUsers = new ArrayList<>(); // Todo: get the array of monitors users by calling getMonitorsUsers
 
 
     @Override
@@ -61,12 +63,12 @@ public class Join_Group extends AppCompatActivity {
                 finish();
                 break;
             case R.id.menu_add_user:
-                // Todo: launch add user activity
+                showAddMembersDialogue();
                 break;
             case R.id.menu_remove_user:
-                // Todo: check if you're leader and get members list
+                boolean isLeader = checkIfUserIsLeader();
                 if(members.length>0) {
-                    showRemoveMembersDialog();
+                    showRemoveMembersDialog(isLeader);
                 } else {
                     Toast.makeText(Join_Group.this, "This group is currently empty!", Toast.LENGTH_SHORT).show();
                 }
@@ -107,6 +109,7 @@ public class Join_Group extends AppCompatActivity {
     }
 
     private void populateGroupMembersListView() {
+        members = group.getGroupMembersNames();
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.group_member, members);
         ListView membersList = findViewById(R.id.join_grp_members_listview);
         membersList.setAdapter(adapter);
@@ -118,13 +121,20 @@ public class Join_Group extends AppCompatActivity {
         setSupportActionBar(toolbar);
     }
 
-    private void showRemoveMembersDialog(){
+    private void showRemoveMembersDialog(boolean isLeader){
+        String[] membersList;
+        if (isLeader){
+            membersList = members;
+        } else {
+            membersList = (String[]) monitorsUsers.toArray();  // need to convert to array format for setMultiChoiceItems
+        }
+
         boolean[] checkedMembers = new boolean[members.length];
         List<Integer> membersToRemove = new ArrayList<>();
 
         AlertDialog.Builder alertBuilder = new AlertDialog.Builder(Join_Group.this);
         alertBuilder.setTitle("Select group members to remove:");
-        alertBuilder.setMultiChoiceItems(members, checkedMembers, new DialogInterface.OnMultiChoiceClickListener() {
+        alertBuilder.setMultiChoiceItems(membersList, checkedMembers, new DialogInterface.OnMultiChoiceClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int position, boolean isChecked) {
                 //String userNameAtPosition = members[position];
@@ -173,5 +183,96 @@ public class Join_Group extends AppCompatActivity {
         aDialog.show();
 
     }
+
+    private void showAddMembersDialogue(){
+        createLostMonitorsUser(); // todo: delete this later
+        String[] monitorsUsersArr = new String[monitorsUsers.size()];
+        boolean[] checkedMembers = new boolean[monitorsUsers.size()];
+        List<Integer> membersToAdd = new ArrayList<>();
+
+        // Todo: add check to see if any monitorsUsers is already in group?
+        // Create monitorsUsersArr (names of monitorsUsers) from monitorsUsers List
+        for (int i = 0; i < monitorsUsers.size(); i++){
+            monitorsUsersArr[i] = monitorsUsers.get(i).getName();
+        }
+
+        AlertDialog.Builder alertBuilder = new AlertDialog.Builder(Join_Group.this);
+        alertBuilder.setTitle("Select group members to add:");
+        alertBuilder.setMultiChoiceItems(monitorsUsersArr, checkedMembers, new DialogInterface.OnMultiChoiceClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int position, boolean isChecked) {
+                if(isChecked){
+                    if(!membersToAdd.contains(position)){
+                        membersToAdd.add(position);
+                    }
+                } else if(membersToAdd.contains(position)){
+                    membersToAdd.remove(position);
+                }
+            }
+        });
+
+        alertBuilder.setCancelable(true);
+
+        alertBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if (membersToAdd.size()> 0) {
+
+                    for (int i = 0; i < membersToAdd.size(); i++) {
+                        User user = monitorsUsers.get(i);
+                        addLocalUserToGroup(user);  // Todo: replace with addGroupMember call to server
+                    }
+                    populateGroupMembersListView();
+                }
+
+            }
+        });
+
+        alertBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        AlertDialog aDialog = alertBuilder.create();
+        aDialog.show();
+    }
+
+    private boolean checkIfUserIsLeader(){
+        // Todo: check with server if the current user is the group leader
+        return true;
+    }
+
+    // Todo: delete this testing method later
+    private void addLocalUserToGroup(User user){
+        List<User> updatedMembers = group.getGroupMembers();
+        updatedMembers.add(user);
+        group.setGroupMembers(updatedMembers);
+    }
+
+    // Todo: delete this later
+    private void deleteLocalGroupMembersById(long userId){
+        List<User> updatedMembers = group.getGroupMembers();
+        for (int i = 0; i < updatedMembers.size(); i++){
+            User user = updatedMembers.get(i);
+            if (user.getId() == userId) {
+                updatedMembers.remove(i);
+                break;
+            }
+        }
+
+        group.setGroupMembers(updatedMembers);
+    }
+
+    // Todo: delete this later
+    private void createLostMonitorsUser(){
+        for (int i = 0; i < 2; i++) {
+            User user = new User();
+            user.setName("Monitor " + i);
+            monitorsUsers.add(user);
+        }
+    }
+
 
 }

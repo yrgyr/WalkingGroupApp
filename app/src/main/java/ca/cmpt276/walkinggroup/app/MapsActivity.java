@@ -232,7 +232,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
-    // For testing locally created groups only- setup 2 groups consisting of 5 users each locally
+    // Todo: remove later; for testing locally created groups only- setup 2 groups consisting of 5 users each locally
     private List<Group> createLocalTestGroups(LatLng latlng){
         List<Group> groups = new ArrayList<>();
         double lat = latlng.latitude;
@@ -248,6 +248,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             for (int j = 0; j < 5; j++){
                 User member = new User();
                 member.setName("Group " + i + " user " + j);
+                member.setId((long)j);
                 members.add(member);
 
                 if (j == 0){
@@ -269,7 +270,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         return groups;
     }
 
-    // For testing locally created groups only; server has getGroupById method
+    // Todo: remove later; for testing locally created groups only; server has getGroupById method
     private Group getLocalGroupById(List<Group> groups, int grpId){
         if (groups.size() > 0){
             for(int i = 0; i < groups.size(); i++){
