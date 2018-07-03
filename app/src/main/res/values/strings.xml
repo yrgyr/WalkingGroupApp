@@ -3,7 +3,7 @@
 
     <!--Hardcode your API key like this. Don't use this test one!-->
     <string name="apikey">3A8E4897-E11F-46F8-A444-E7A97A5FB3D26</string>
-    <string name ="google_maps_apikey">AIzaSyBSqncGPQQx71qyCDOJuHxk7H_1Cvkuivw</string>
+    <string name="google_maps_apikey">AIzaSyBSqncGPQQx71qyCDOJuHxk7H_1Cvkuivw</string>
     <string name="title_activity_login">Sign in</string>
 
     <!-- Strings related to login -->

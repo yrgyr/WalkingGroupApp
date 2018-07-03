@@ -1,6 +1,10 @@
 package ca.cmpt276.walkinggroup.app;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -8,6 +12,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -23,17 +28,41 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "my_activity";
     private WGServerProxy proxy;
+    public static String userToken;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         proxy = ProxyBuilder.getProxy(getString(R.string.apikey), null);
+
+
+
         setupGetUsersBtn();
         setupLogInBtn();
         setupNewUserButton();
+        setupAddMonitorBtn();
+
     }
-    private String userEmail = "Mike64140@test.com";
+
+    //===============================================================
+    private void setupAddMonitorBtn() {
+
+        Button btn = (Button) findViewById(R.id.addMonitorBtn);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this,AddWhomUserMointor.class);
+                startActivityForResult(intent,42);
+            }
+        });
+    }
+
+    public static String getUserEmail() {
+        return userEmail;
+    }
+
+    public static String userEmail = "Mike64140@test.com";
     private String userPassword = "12345";
     private Long userId;
 
@@ -64,6 +93,8 @@ public class MainActivity extends AppCompatActivity {
         userId = user.getId();
         userEmail = user.getEmail();
     }
+
+    // ==========================================GET USERS ========================================================
     private void setupGetUsersBtn() {
 
         Button btn = (Button) findViewById(R.id.getUsersBtn);
@@ -80,11 +111,11 @@ public class MainActivity extends AppCompatActivity {
     }
     private void response(List<User> returnedUsers) {
 
-        notifyUserViaLogAndToast("Got list of " + returnedUsers.size() + " users! See logcat.");
-        Log.w(TAG, "All Users:");
-        for (User user : returnedUsers) {
-            Log.w(TAG, "    User: " + user.toString());
-        }
+//        notifyUserViaLogAndToast("Got list of " + returnedUsers.size() + " users! See logcat.");
+//        Log.w(TAG, "All Users:");
+//        for (User user : returnedUsers) {
+//            Log.w(TAG, "    User: " + user.toString());
+//        }
         // ===================================================
 
         ArrayList<String> ALL_USERS = new ArrayList<String>();
@@ -105,13 +136,10 @@ public class MainActivity extends AppCompatActivity {
         ListView users_list = (ListView) findViewById(R.id.usersList);
         users_list.setAdapter(adapter);
 
-
-
-
-
-
-
     }
+
+
+
     //=================================== LOG IN ===============================================
     private void setupLogInBtn(){
         Button btn = (Button) findViewById(R.id.logInBtn);
@@ -129,6 +157,9 @@ public class MainActivity extends AppCompatActivity {
                 // Make call
                 Call<Void> caller = proxy.login(user);
                 ProxyBuilder.callProxy(MainActivity.this, caller, returnedNothing -> response(returnedNothing));
+
+                TextView txt = (TextView) findViewById(R.id.userInfo);
+                txt.setText("user "+ user.getEmail()+" has already logged In ");
             }
         });
     }
@@ -136,14 +167,49 @@ public class MainActivity extends AppCompatActivity {
         // Replace the current proxy with one that uses the token!
         Log.w(TAG, "   --> NOW HAVE TOKEN: " + token);
         Toast.makeText(this, token, Toast.LENGTH_LONG).show();
+
+
         proxy = ProxyBuilder.getProxy(getString(R.string.apikey), token);
+
+
+        userToken = token;
+
+
     }
     private void response(Void returnedNothing) {
         notifyUserViaLogAndToast("Server replied to login request (no content was expected).");
     }
 
+
+
     private void notifyUserViaLogAndToast(String message) {
         Log.w(TAG, message);
         Toast.makeText(this, message, Toast.LENGTH_LONG).show();
     }
+
+    public static String getUserToken(){
+        return userToken;
+    }
+
+//    private void saveToken(String token){
+//
+//        SharedPreferences tokenShare = this.getSharedPreferences("tokenShare",MODE_PRIVATE);
+//        SharedPreferences.Editor editor = tokenShare.edit();
+//
+//        editor.putString("user token",token);
+//        editor.apply();
+//
+//    }
+//
+//    public static String getToken(Context context){
+//
+//
+//        SharedPreferences share = context.getSharedPreferences("user token",MODE_PRIVATE);
+//
+//        String token
+//
+//                share.getString()
+//
+//
+//    }
 }
