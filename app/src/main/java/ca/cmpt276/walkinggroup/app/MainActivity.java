@@ -25,10 +25,14 @@ import ca.cmpt276.walkinggroup.proxy.WGServerProxy;
 import retrofit2.Call;
 
 public class MainActivity extends AppCompatActivity {
-
     private static final String TAG = "my_activity";
+
     private WGServerProxy proxy;
     public static String userToken;
+
+    public static String userEmail = "Mike64140@test.com";
+    private String userPassword = "12345";
+    private Long userId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +40,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         proxy = ProxyBuilder.getProxy(getString(R.string.apikey), null);
 
+
+        Call<User> getUserCaller = proxy.getUserByEmail(userEmail);
+        ProxyBuilder.callProxy(MainActivity.this, getUserCaller, returnedLogInUser -> responseLoginUser(returnedLogInUser));
 
 
         setupGetUsersBtn();
@@ -45,7 +52,13 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    private void responseLoginUser(User returnedLoginUser){
+        // logged in user Info
+        userId = returnedLoginUser.getId();
+
+    }
     //===============================================================
+
     private void setupAddMonitorBtn() {
 
         Button btn = (Button) findViewById(R.id.addMonitorBtn);
@@ -61,11 +74,6 @@ public class MainActivity extends AppCompatActivity {
     public static String getUserEmail() {
         return userEmail;
     }
-
-    public static String userEmail = "Mike64140@test.com";
-    private String userPassword = "12345";
-    private Long userId;
-
     private void setupNewUserButton() {
         Button btn = findViewById(R.id.newUserBtn);
         btn.setOnClickListener(new View.OnClickListener() {
@@ -88,12 +96,12 @@ public class MainActivity extends AppCompatActivity {
         });
     }
     // ------------------------------------------------------------------------------------------
+
     private void response(User user) {
         notifyUserViaLogAndToast("Server replied with user: " + user.toString());
         userId = user.getId();
         userEmail = user.getEmail();
     }
-
     // ==========================================GET USERS ========================================================
     private void setupGetUsersBtn() {
 
@@ -109,6 +117,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
     private void response(List<User> returnedUsers) {
 
 //        notifyUserViaLogAndToast("Got list of " + returnedUsers.size() + " users! See logcat.");
@@ -139,7 +148,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
     //=================================== LOG IN ===============================================
     private void setupLogInBtn(){
         Button btn = (Button) findViewById(R.id.logInBtn);
@@ -158,11 +166,17 @@ public class MainActivity extends AppCompatActivity {
                 Call<Void> caller = proxy.login(user);
                 ProxyBuilder.callProxy(MainActivity.this, caller, returnedNothing -> response(returnedNothing));
 
+
+
                 TextView txt = (TextView) findViewById(R.id.userInfo);
                 txt.setText("user "+ user.getEmail()+" has already logged In ");
             }
         });
     }
+    private void response(Void returnedNothing) {
+        notifyUserViaLogAndToast("Server replied to login request (no content was expected).");
+    }
+
     private void onReceiveToken(String token) {
         // Replace the current proxy with one that uses the token!
         Log.w(TAG, "   --> NOW HAVE TOKEN: " + token);
@@ -175,9 +189,6 @@ public class MainActivity extends AppCompatActivity {
         userToken = token;
 
 
-    }
-    private void response(Void returnedNothing) {
-        notifyUserViaLogAndToast("Server replied to login request (no content was expected).");
     }
 
 
