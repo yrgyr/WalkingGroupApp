@@ -30,7 +30,7 @@ public class Join_Group extends AppCompatActivity {
     String grpDesc = group.getGroupDescription();
     String leaderName = group.getLeader().getName();
     String[] members = group.getGroupMembersNames();
-    long[] membersIds = group.getGroupMembersIds();
+    //long[] membersIds = group.getGroupMembersIds();
     List<User> monitorsUsers = new ArrayList<>(); // Todo: get the array of monitors users by calling getMonitorsUsers
 
 
@@ -129,7 +129,7 @@ public class Join_Group extends AppCompatActivity {
             membersList = (String[]) monitorsUsers.toArray();  // need to convert to array format for setMultiChoiceItems
         }
 
-        boolean[] checkedMembers = new boolean[members.length];
+        boolean[] checkedMembers = new boolean[membersList.length];
         List<Integer> membersToRemove = new ArrayList<>();
 
         AlertDialog.Builder alertBuilder = new AlertDialog.Builder(Join_Group.this);
@@ -137,7 +137,6 @@ public class Join_Group extends AppCompatActivity {
         alertBuilder.setMultiChoiceItems(membersList, checkedMembers, new DialogInterface.OnMultiChoiceClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int position, boolean isChecked) {
-                //String userNameAtPosition = members[position];
                 if(isChecked){
                     if(!membersToRemove.contains(position)){
                         membersToRemove.add(position);
@@ -155,17 +154,13 @@ public class Join_Group extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 if (membersToRemove.size()> 0) {
-                    List<User> updatedMembers = new ArrayList<>();
                     List<User> originalMembers = group.getGroupMembers();
-
-                    for (int i = 0; i < members.length; i++) {
-                        if (!membersToRemove.contains(i)){
-                            updatedMembers.add(originalMembers.get(i));
-                        }
+                    for (int i = 0; i < membersToRemove.size(); i++){
+                        int j = membersToRemove.get(i);
+                        User user = originalMembers.get(j);
+                        long userId = user.getId();
+                        deleteLocalGroupMembersById(userId);  // Todo: replace with removeFromMonitorsUsers server call
                     }
-                    group.setGroupMembers(updatedMembers);
-                    members = group.getGroupMembersNames();
-                    // Todo: method to update group info on server
                     populateGroupMembersListView();
                 }
 
@@ -253,12 +248,13 @@ public class Join_Group extends AppCompatActivity {
 
     // Todo: delete this later
     private void deleteLocalGroupMembersById(long userId){
-        List<User> updatedMembers = group.getGroupMembers();
-        for (int i = 0; i < updatedMembers.size(); i++){
-            User user = updatedMembers.get(i);
-            if (user.getId() == userId) {
-                updatedMembers.remove(i);
-                break;
+        List<User> originalMembers = group.getGroupMembers();
+        List<User> updatedMembers = new ArrayList<>();
+
+        for (int i = 0; i < originalMembers.size(); i++){
+            User user = originalMembers.get(i);
+            if (user.getId() != userId){
+                updatedMembers.add(user);
             }
         }
 
@@ -272,6 +268,16 @@ public class Join_Group extends AppCompatActivity {
             user.setName("Monitor " + i);
             monitorsUsers.add(user);
         }
+    }
+
+    private long[] createMonitorsUserIds(){
+        long[] Ids = new long[monitorsUsers.size()];
+        for(int i = 0; i < monitorsUsers.size(); i++){
+            User user = monitorsUsers.get(i);
+            Ids[i] = user.getId();
+        }
+
+        return Ids;
     }
 
 
