@@ -33,7 +33,10 @@ public class MainActivity extends AppCompatActivity {
 
     public static String userEmail = "Mike64140@test.com";
     private String userPassword = "12345";
-    private Long userId;
+
+
+
+    public static Long userId;
 
     private List<User> usersList;
 
@@ -53,13 +56,19 @@ public class MainActivity extends AppCompatActivity {
         setupAddMonitorBtn();
         setupMapBtn();
 
-        listViewOnclick();
 
-//        getAllUsersBtn();
+        getAllUsersBtn();
 
 
 
     }
+
+    // ==================== GET USER ID =============================
+    public static Long getUserId() {
+        return userId;
+    }
+
+
 
     private void setupMapBtn() {
 
@@ -124,13 +133,19 @@ public class MainActivity extends AppCompatActivity {
     // ==========================================GET MONITOR USERS ========================================================
     private void setupGetMonitorUsersBtn() {
 
+
+
+
         Button btn = (Button) findViewById(R.id.getUsersBtn);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                Call<List<User>> caller = proxy.getMonitorsUsers(userId);
-                ProxyBuilder.callProxy(MainActivity.this, caller, returnedUsers -> response(returnedUsers));
+                Intent intent = new Intent(MainActivity.this,MonitorUsersList.class);
+                startActivity(intent);
+
+//                Call<List<User>> caller = proxy.getMonitorsUsers(userId);
+//                ProxyBuilder.callProxy(MainActivity.this, caller, returnedUsers -> response(returnedUsers));
             }
         });
     }
@@ -162,43 +177,21 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    // ================================= DELETE  MONITOR USER  BY CLICK ON ITEM ===================================
-    private void listViewOnclick() {
 
-        ListView lv = (ListView) findViewById(R.id.usersList);
-        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+    // ================================= GET ALL USERS ==========================================
+
+    private void getAllUsersBtn(){
+
+        Button btn = (Button) findViewById(R.id.allUsersBtn);
+        btn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                User litterUser = usersList.get(position);
-
-                Long deleteID = litterUser.getId();
-
-
-
-                Call<Void> caller = proxy.removeFromMonitorsUsers(userId,deleteID);
-                ProxyBuilder.callProxy(MainActivity.this, caller, nothing -> responseVoid(nothing));
-
-                Call<List<User>> caller2 = proxy.getMonitorsUsers(userId);
-                ProxyBuilder.callProxy(MainActivity.this, caller2, returnedUsers -> response(returnedUsers));
+            public void onClick(View v) {
+                Call<List<User>> caller = proxy.getUsers();
+                ProxyBuilder.callProxy(MainActivity.this, caller, returnedUsers -> response(returnedUsers));
             }
         });
     }
-    private void responseVoid(Void nothing){
-        notifyUserViaLogAndToast("Server replied to delete request.");
-    }
-    // ================================= GET ALL USERS ==========================================
-
-//    private void getAllUsersBtn(){
-//
-//        Button btn = (Button) findViewById(R.id.allUsersBtn);
-//        btn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Call<List<User>> caller = proxy.getUsers();
-//                ProxyBuilder.callProxy(MainActivity.this, caller, returnedUsers -> response(returnedUsers));
-//            }
-//        });
-//    }
 
 
     //=================================== LOG IN ===============================================
@@ -209,6 +202,8 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
 
                 User user = new User();
+
+
                 user.setEmail(userEmail);
                 user.setPassword(userPassword);
 

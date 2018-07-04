@@ -52,7 +52,9 @@
             android:name=".MapsActivity"
             android:label="@string/title_activity_maps" />
         <activity android:name=".Join_Group" />
-        <activity android:name=".AddWhomUserMointor"></activity>
+        <activity android:name=".AddWhomUserMointor" />
+        <activity android:name=".MonitorUsersList" />
+        <activity android:name=".MonitorByUsersList"></activity>
     </application>
 
 </manifest>

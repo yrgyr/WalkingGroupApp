@@ -58,7 +58,7 @@
         app:layout_constraintVertical_bias="0.184" />
 
     <ListView
-        android:id="@+id/MonitorsUsersListView"
+        android:id="@+id/addMonitorsUsersList"
         android:layout_width="368dp"
         android:layout_height="298dp"
         android:layout_marginBottom="8dp"
