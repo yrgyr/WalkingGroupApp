@@ -21,6 +21,7 @@ import java.util.List;
 
 import ca.cmpt276.walkinggroup.dataobjects.CurrentUserData;
 import ca.cmpt276.walkinggroup.dataobjects.EarnedRewards;
+import ca.cmpt276.walkinggroup.dataobjects.Group;
 import ca.cmpt276.walkinggroup.dataobjects.User;
 import ca.cmpt276.walkinggroup.proxy.ProxyBuilder;
 import ca.cmpt276.walkinggroup.proxy.WGServerProxy;
@@ -115,6 +116,8 @@ public class MainActivity extends AppCompatActivity {
     public static String getUserEmail() {
         return userEmail;
     }
+
+    // =====================================  CREATE NEW USER ==========================================================
     private void setupNewUserButton() {
         Button btn = findViewById(R.id.newUserBtn);
         btn.setOnClickListener(new View.OnClickListener() {
@@ -122,6 +125,14 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 // Build new user (with random email to avoid conflicts)
                 User user = new User();
+
+//                Group group = Group.getGroupSingletonInstance();
+//
+//                Call<Group> caller = proxy.createGroup(group);
+//                ProxyBuilder.callProxy(MainActivity.this, caller, returnedCreatedGroup -> response(returnedCreatedGroup));
+
+
+
                 int random = (int) (Math.random() * 100000);
                 user.setEmail("Mike"+random+"@test.com");
                 user.setName("I am Mike");
@@ -130,18 +141,19 @@ public class MainActivity extends AppCompatActivity {
                 user.setTotalPointsEarned(2500);
                 user.setRewards(new EarnedRewards());
                 // Make call
-                Call<User> caller = proxy.createUser(user);
+//                Call<User> caller = proxy.createUser(user);
 
-                ProxyBuilder.callProxy(MainActivity.this, caller, returnedUser -> response(returnedUser));
+//                ProxyBuilder.callProxy(MainActivity.this, caller, returnedUser -> response(returnedUser));
             }
         });
     }
     // ------------------------------------------------------------------------------------------
 
-    private void response(User user) {
-        notifyUserViaLogAndToast("Server replied with user: " + user.toString());
-        userId = user.getId();
-        userEmail = user.getEmail();
+    private void response(Group returnedCreatedGroup) {
+
+//        notifyUserViaLogAndToast("Server replied with user: " + user.toString());
+//        userId = user.getId();
+//        userEmail = user.getEmail();
     }
     // ==========================================GET MONITOR USERS ========================================================
     private void setupGetMonitorUsersBtn() {
@@ -260,6 +272,7 @@ public class MainActivity extends AppCompatActivity {
     private void responseLoginUser(User returnedLoginUser){
         // logged in user Info
 
+        // set logged in users id to singleton instance
         userId = returnedLoginUser.getId();
         userSingleton.setID(userId);
 
