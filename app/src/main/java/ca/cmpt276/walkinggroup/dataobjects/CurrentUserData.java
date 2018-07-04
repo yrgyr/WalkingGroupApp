@@ -8,6 +8,7 @@ public class CurrentUserData {
     private static CurrentUserData singletonInstance;
     private WGServerProxy currentProxy;
     private User currentUser;
+    private String token;
 
     private CurrentUserData() {}
 
@@ -32,5 +33,13 @@ public class CurrentUserData {
 
     public void setCurrentUser(User currentUser) {
         this.currentUser = currentUser;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 }

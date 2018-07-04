@@ -137,6 +137,8 @@ public class MainActivity extends AppCompatActivity {
         Log.w(TAG, "   --> NOW HAVE TOKEN: " + token);
         Toast.makeText(this, token, Toast.LENGTH_LONG).show();
         proxy = ProxyBuilder.getProxy(getString(R.string.apikey), token);
+        CurrentUserData currentUserData = CurrentUserData.getSingletonInstance();
+        currentUserData.setToken(token);
     }
     private void response(Void returnedNothing) {
         notifyUserViaLogAndToast("Server replied to login request (no content was expected).");

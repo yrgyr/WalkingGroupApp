@@ -26,11 +26,13 @@ public class CreateGroup extends AppCompatActivity {
 
     private void createGroup(){
         CurrentUserData currentUserData = CurrentUserData.getSingletonInstance();
-        proxy = currentUserData.getCurrentProxy();
+        //proxy = currentUserData.getCurrentProxy();
+        proxy = ProxyBuilder.getProxy(getString(R.string.apikey), currentUserData.getToken());
         currentUser = currentUserData.getCurrentUser();
 
         Group newGroup = new Group();
         newGroup.setGroupDescription("First group on server");
+        newGroup.setLeader(currentUser);
         //newGroup.setStartLat(49.2);
         //newGroup.setStartLng(-100.2);
 
