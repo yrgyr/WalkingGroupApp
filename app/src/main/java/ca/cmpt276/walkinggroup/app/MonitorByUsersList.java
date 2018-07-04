@@ -11,6 +11,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
+import ca.cmpt276.walkinggroup.dataobjects.CurrentUserData;
 import ca.cmpt276.walkinggroup.dataobjects.User;
 import ca.cmpt276.walkinggroup.proxy.ProxyBuilder;
 import ca.cmpt276.walkinggroup.proxy.WGServerProxy;
@@ -23,15 +24,18 @@ public class MonitorByUsersList extends AppCompatActivity {
     private Long userID;
     private List<User> usersList;
 
+    private CurrentUserData userSingleton = CurrentUserData.getSingletonInstance();
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_monitor_by_users_list);
 
 
-        String token = MainActivity.getUserToken();
+        String token = userSingleton.getToken();
         proxy = ProxyBuilder.getProxy(getString(R.string.apikey),token);
-        userID =MainActivity.getUserId();
+        userID =userSingleton.getID();
 
         setupListView();
         listViewOnclick();

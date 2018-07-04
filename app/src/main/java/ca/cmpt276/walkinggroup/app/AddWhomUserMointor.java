@@ -7,11 +7,15 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import ca.cmpt276.walkinggroup.dataobjects.CurrentUserData;
 import ca.cmpt276.walkinggroup.dataobjects.User;
 import ca.cmpt276.walkinggroup.proxy.ProxyBuilder;
 import ca.cmpt276.walkinggroup.proxy.WGServerProxy;
@@ -27,20 +31,28 @@ public class AddWhomUserMointor extends AppCompatActivity {
     private Long loggedInUserID;
     private String token;
 
+
+
     private User loggedInUser;
     private User inputUser;
+
+
+    private CurrentUserData userSingleton = CurrentUserData.getSingletonInstance();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_whom_user_mointor);
 
 
+        loggedInUserID = userSingleton.getID();
+
         setupProxy();
 
         setupAddMonitorBtn();
         setupAddMonitorByBtn();
-        Call<User> caller = proxy.getUserByEmail(loggedInUserEmail);
-        ProxyBuilder.callProxy(AddWhomUserMointor.this, caller, returnedUser -> responseUserInfo(returnedUser));
+//        Call<User> caller = proxy.getUserByEmail(loggedInUserEmail);
+//        ProxyBuilder.callProxy(AddWhomUserMointor.this, caller, returnedUser -> responseUserInfo(returnedUser));
 
 
 
@@ -50,17 +62,17 @@ public class AddWhomUserMointor extends AppCompatActivity {
     }
 
     private void setupProxy() {
-        token = MainActivity.getUserToken();
+        token = userSingleton.getToken();
         Toast.makeText(this,token,Toast.LENGTH_LONG).show();
         proxy = ProxyBuilder.getProxy(getString(R.string.apikey), token);
     }
 
 
-    private void responseUserInfo(User returnedUser){
-        loggedInUserID = returnedUser.getId();
-
-        loggedInUser = returnedUser;
-    }
+//    private void responseUserInfo(User returnedUser){
+//        loggedInUserID = returnedUser.getId();
+//
+//        loggedInUser = returnedUser;
+//    }
 
 
 
@@ -100,6 +112,8 @@ public class AddWhomUserMointor extends AppCompatActivity {
         Call<List<User>> caller = proxy.addToMonitorsUsers(loggedInUserID,returnedUser);
         ProxyBuilder.callProxy(AddWhomUserMointor.this, caller, returnedUsers -> responseMonitor(returnedUsers));
 
+        TextView tv = (TextView) findViewById(R.id.addPageTv);
+        tv.setText("people you are monitoring :");
 
 
 
@@ -137,6 +151,8 @@ public class AddWhomUserMointor extends AppCompatActivity {
         Call<List<User>> caller = proxy.addToMonitoredByUsers(loggedInUserID,returnedUser);
         ProxyBuilder.callProxy(AddWhomUserMointor.this, caller, returnedUsers -> responseMonitor(returnedUsers));
 
+        TextView tv = (TextView) findViewById(R.id.addPageTv);
+        tv.setText("people monitoring you :");
 
 
 

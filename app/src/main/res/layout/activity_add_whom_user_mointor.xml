@@ -73,14 +73,13 @@
         app:layout_constraintVertical_bias="0.961" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/addPageTv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:text="people you are monitoring :"
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"

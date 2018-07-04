@@ -19,6 +19,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
+import ca.cmpt276.walkinggroup.dataobjects.CurrentUserData;
 import ca.cmpt276.walkinggroup.dataobjects.EarnedRewards;
 import ca.cmpt276.walkinggroup.dataobjects.User;
 import ca.cmpt276.walkinggroup.proxy.ProxyBuilder;
@@ -31,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
     private WGServerProxy proxy;
     public static String userToken;
 
-    public static String userEmail = "Mike62679@test.com";
+    public static String userEmail = "Mike64140@test.com";
     private String userPassword = "12345";
 
 
@@ -40,14 +41,14 @@ public class MainActivity extends AppCompatActivity {
 
     private List<User> usersList;
 
+    private CurrentUserData userSingleton = CurrentUserData.getSingletonInstance();
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         proxy = ProxyBuilder.getProxy(getString(R.string.apikey), null);
-
-
-
 
 //        getUserInfo();
         setupGetMonitorUsersBtn();
@@ -58,7 +59,6 @@ public class MainActivity extends AppCompatActivity {
 
 
         getAllUsersBtn();
-
         setupGetMonitorByBtn();
 
 
@@ -80,9 +80,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // ==================== GET USER ID =============================
-    public static Long getUserId() {
-        return userId;
-    }
 
 
 
@@ -223,6 +220,8 @@ public class MainActivity extends AppCompatActivity {
                 user.setEmail(userEmail);
                 user.setPassword(userPassword);
 
+                userSingleton.setCurrentUser(user);
+
                 // Register for token received:
                 ProxyBuilder.setOnTokenReceiveCallback( token -> onReceiveToken(token));
 
@@ -248,7 +247,9 @@ public class MainActivity extends AppCompatActivity {
 
 
         proxy = ProxyBuilder.getProxy(getString(R.string.apikey), token);
-        userToken = token;
+
+        userSingleton.setToken(token);
+//        userToken = token;
 
         Call<User> getUserCaller = proxy.getUserByEmail(userEmail);
         ProxyBuilder.callProxy(MainActivity.this, getUserCaller, returnedLogInUser -> responseLoginUser(returnedLogInUser));
@@ -258,7 +259,10 @@ public class MainActivity extends AppCompatActivity {
 
     private void responseLoginUser(User returnedLoginUser){
         // logged in user Info
+
         userId = returnedLoginUser.getId();
+        userSingleton.setID(userId);
+
 
     }
 
@@ -267,9 +271,7 @@ public class MainActivity extends AppCompatActivity {
         Toast.makeText(this, message, Toast.LENGTH_LONG).show();
     }
 
-    public static String getUserToken(){
-        return userToken;
-    }
+
 
 //    private void saveToken(String token){
 //

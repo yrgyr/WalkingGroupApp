@@ -12,6 +12,7 @@ import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.List;
 
+import ca.cmpt276.walkinggroup.dataobjects.CurrentUserData;
 import ca.cmpt276.walkinggroup.dataobjects.User;
 import ca.cmpt276.walkinggroup.proxy.ProxyBuilder;
 import ca.cmpt276.walkinggroup.proxy.WGServerProxy;
@@ -23,6 +24,8 @@ public class MonitorUsersList extends AppCompatActivity {
     private WGServerProxy proxy;
     private Long userID;
     private List<User> usersList;
+    private CurrentUserData userSingleton = CurrentUserData.getSingletonInstance();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,14 +34,18 @@ public class MonitorUsersList extends AppCompatActivity {
 
         // ----------- SET UP PROXY FIRST -------------------
 
-        String token = MainActivity.getUserToken();
+//        String token = MainActivity.getUserToken();
+
+        String token = userSingleton.getToken();
+
         proxy = ProxyBuilder.getProxy(getString(R.string.apikey),token);
 
 
 //        findUserIdByEmail();
 
 
-        userID =MainActivity.getUserId();
+//        userID =MainActivity.getUserId();
+        userID =userSingleton.getID();
 
 
         setupListView();
