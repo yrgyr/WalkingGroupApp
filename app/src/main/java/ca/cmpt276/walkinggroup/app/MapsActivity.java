@@ -75,6 +75,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 //setUpClusterer(70, 100);
                 // Test map with locally created groups
                 List<Group> groups = createLocalTestGroups(currentLatLng);
+                // Todo: change with server call to getGroups()
                 setUpLocalGroupCluster(groups);
 
             }
@@ -284,5 +285,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             return null;
         }
     }
+
+
 
 }
