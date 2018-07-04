@@ -46,30 +46,37 @@ public class User extends IdItemBase{
     // Basic User Data
     // -------------------------------------------------------------------------------------------
     public String getName() {
+
         return name;
     }
     public void setName(String name) {
+
         this.name = name;
     }
 
     public String getEmail() {
+
         return email;
     }
     public void setEmail(String email) {
+
         this.email = email;
     }
 
     // Note: Password never returned by the server; only used to send password to server.
     public String getPassword() {
+
         return password;
     }
     public void setPassword(String password) {
+
         this.password = password;
     }
 
     // Monitoring
     // -------------------------------------------------------------------------------------------
     public List<User> getMonitoredByUsers() {
+
         return monitoredByUsers;
     }
     public void setMonitoredByUsers(List<User> monitoredByUsers) {
@@ -77,6 +84,7 @@ public class User extends IdItemBase{
     }
 
     public List<User> getMonitorsUsers() {
+
         return monitorsUsers;
     }
     public void setMonitorsUsers(List<User> monitorsUsers) {
@@ -85,7 +93,8 @@ public class User extends IdItemBase{
 
     // Groups
     // -------------------------------------------------------------------------------------------
-    public List<Group> getMemberOfGroups() {
+    public List<Group> getMemberOfGroups()
+    {
         return memberOfGroups;
     }
     public void setMemberOfGroups(List<Group> memberOfGroups) {
@@ -93,6 +102,7 @@ public class User extends IdItemBase{
     }
 
     public List<Group> getLeadsGroups() {
+
         return leadsGroups;
     }
     public void setLeadsGroups(List<Group> leadsGroups) {
@@ -103,13 +113,15 @@ public class User extends IdItemBase{
     // Rewards (custom JSON data)
     // -------------------------------------------------------------------------------------------
     public Integer getCurrentPoints() {
+
         return currentPoints;
     }
     public void setCurrentPoints(Integer currentPoints) {
         this.currentPoints = currentPoints;
     }
 
-    public Integer getTotalPointsEarned() {
+    public Integer getTotalPointsEarned()
+    {
         return totalPointsEarned;
     }
     public void setTotalPointsEarned(Integer totalPointsEarned) {
