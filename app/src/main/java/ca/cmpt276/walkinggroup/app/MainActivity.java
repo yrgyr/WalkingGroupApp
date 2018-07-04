@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
     private WGServerProxy proxy;
     public static String userToken;
 
-    public static String userEmail = "Mike64140@test.com";
+    public static String userEmail = "Mike62679@test.com";
     private String userPassword = "12345";
 
 
@@ -52,15 +52,31 @@ public class MainActivity extends AppCompatActivity {
 //        getUserInfo();
         setupGetMonitorUsersBtn();
         setupLogInBtn();
-        setupNewUserButton();
+//        setupNewUserButton();
         setupAddMonitorBtn();
         setupMapBtn();
 
 
         getAllUsersBtn();
 
+        setupGetMonitorByBtn();
 
 
+
+
+    }
+
+    private void setupGetMonitorByBtn() {
+
+        Button btn = (Button) findViewById(R.id.getMonitorByBtn);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this,MonitorByUsersList.class);
+                startActivity(intent);
+
+            }
+        });
     }
 
     // ==================== GET USER ID =============================
@@ -89,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void setupAddMonitorBtn() {
 
-        Button btn = (Button) findViewById(R.id.addMonitorBtn);
+        Button btn = (Button) findViewById(R.id.addUsers);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

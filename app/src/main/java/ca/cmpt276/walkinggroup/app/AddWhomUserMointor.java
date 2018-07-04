@@ -1,18 +1,14 @@
 package ca.cmpt276.walkinggroup.app;
 
-import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,8 +16,6 @@ import ca.cmpt276.walkinggroup.dataobjects.User;
 import ca.cmpt276.walkinggroup.proxy.ProxyBuilder;
 import ca.cmpt276.walkinggroup.proxy.WGServerProxy;
 import retrofit2.Call;
-import retrofit2.http.Body;
-import retrofit2.http.Path;
 
 public class AddWhomUserMointor extends AppCompatActivity {
 
@@ -34,6 +28,7 @@ public class AddWhomUserMointor extends AppCompatActivity {
     private String token;
 
     private User loggedInUser;
+    private User inputUser;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,7 +37,8 @@ public class AddWhomUserMointor extends AppCompatActivity {
 
         setupProxy();
 
-        setupOkBtn();
+        setupAddMonitorBtn();
+        setupAddMonitorByBtn();
         Call<User> caller = proxy.getUserByEmail(loggedInUserEmail);
         ProxyBuilder.callProxy(AddWhomUserMointor.this, caller, returnedUser -> responseUserInfo(returnedUser));
 
@@ -66,36 +62,39 @@ public class AddWhomUserMointor extends AppCompatActivity {
         loggedInUser = returnedUser;
     }
 
+
+
     //  ==============================  FIRST FIND THIS INPUT USER =====================================
 
-    private void setupOkBtn() {
+    private void setupAddMonitorBtn() {
 
-        Button btn = (Button) findViewById(R.id.okBtn);
+        Button btn = (Button) findViewById(R.id.addMonitorBtn);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
 
-                EditText emailInput = (EditText) findViewById(R.id.emailET);
 
+
+                EditText emailInput = (EditText) findViewById(R.id.emailET);
                 String email = emailInput.getText() + "";
 
 //                Toast.makeText(AddWhomUserMointor.this,email,Toast.LENGTH_LONG).show();
 
                 //  ---------------FIND INPUT USER BY EMAIL --------------------------
                 Call<User> caller = proxy.getUserByEmail(email);
-                ProxyBuilder.callProxy(AddWhomUserMointor.this, caller, returnedUser -> response(returnedUser));
+                ProxyBuilder.callProxy(AddWhomUserMointor.this, caller, returnedUser -> responseAddMonitor(returnedUser));
+
+
             }
         });
     }
-
-    // =============================== AFTER FOUND THE USER, MAKE ADD REQUEST ============================
-
-    private void response(User returnedUser){
+    private void responseAddMonitor(User returnedUser){
 
         String USER_NAME= returnedUser.getName();
         String USER_EMAIL = returnedUser.getEmail();
         Long UserID = returnedUser.getId();
+        Toast.makeText(this,"returned: "+ USER_NAME+ " , "+ USER_EMAIL+" , "+ UserID,Toast.LENGTH_LONG).show();
 
 
         Call<List<User>> caller = proxy.addToMonitorsUsers(loggedInUserID,returnedUser);
@@ -103,8 +102,48 @@ public class AddWhomUserMointor extends AppCompatActivity {
 
 
 
-        Toast.makeText(this,USER_NAME+ " , "+ USER_EMAIL+" , "+ UserID,Toast.LENGTH_LONG).show();
+
     }
+
+    // =======================ADD MONITOR BY ==============================================================
+
+    private void setupAddMonitorByBtn(){
+
+        Button btn = (Button) findViewById(R.id.addMonitorByBtn);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                EditText emailInput = (EditText) findViewById(R.id.emailET);
+                String email = emailInput.getText() + "";
+
+
+                Call<User> caller = proxy.getUserByEmail(email);
+                ProxyBuilder.callProxy(AddWhomUserMointor.this, caller, returnedUser -> responseAddMonitorBy(returnedUser));
+
+            }
+        });
+
+    }
+
+    private void responseAddMonitorBy(User returnedUser){
+
+        String USER_NAME= returnedUser.getName();
+        String USER_EMAIL = returnedUser.getEmail();
+        Long UserID = returnedUser.getId();
+        Toast.makeText(this,"returned: "+ USER_NAME+ " , "+ USER_EMAIL+" , "+ UserID,Toast.LENGTH_LONG).show();
+
+
+        Call<List<User>> caller = proxy.addToMonitoredByUsers(loggedInUserID,returnedUser);
+        ProxyBuilder.callProxy(AddWhomUserMointor.this, caller, returnedUsers -> responseMonitor(returnedUsers));
+
+
+
+
+    }
+
+    // =============================== AFTER FOUND THE USER, MAKE ADD REQUEST ============================
+
 
     // ==================================  AFTER ADD IT SUCCESSFULLY, DISPLAY ON THE SCREEN ====================
     private void responseMonitor(List<User> returnedUsers){
@@ -120,11 +159,5 @@ public class AddWhomUserMointor extends AppCompatActivity {
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(AddWhomUserMointor.this,R.layout.users_list,returned_users);
         ListView users_list = (ListView) findViewById(R.id.addMonitorsUsersList);
         users_list.setAdapter(adapter);
-    }
-
-
-    private void responseMonitorBy(List<User> returnedUsers){
-
-        Toast.makeText(this,"server response you! you are here!",Toast.LENGTH_LONG).show();
     }
 }
