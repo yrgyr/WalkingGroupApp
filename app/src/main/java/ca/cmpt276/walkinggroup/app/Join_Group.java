@@ -82,6 +82,7 @@ public class Join_Group extends AppCompatActivity {
             case R.id.menu_leave_group:
                 boolean isInGroup = true;
                 // Todo: server codes to check if I'm currently in this group
+                checkIfIAmInGroup();
 
                 if (isInGroup){
                     // Todo: server codes to remove myself from this group
@@ -97,6 +98,10 @@ public class Join_Group extends AppCompatActivity {
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void checkIfIAmInGroup() {
+
     }
 
     private void populateGroupID() {
@@ -164,8 +169,9 @@ public class Join_Group extends AppCompatActivity {
                     for (int i = 0; i < membersToRemove.size(); i++){
                         int j = membersToRemove.get(i);
                         User user = originalMembers.get(j);
-                        long userId = user.getId();
-                        deleteLocalGroupMembersById(userId);  // Todo: replace with removeFromMonitorsUsers server call
+                        Long userId = user.getId();
+                        //deleteLocalGroupMembersById(userId);  // Todo: replace with removeFromMonitorsUsers server call
+                        removeUserFromGroup(grpId, userId);
                     }
                     populateGroupMembersListView();
                 }
@@ -186,7 +192,7 @@ public class Join_Group extends AppCompatActivity {
     }
 
     private void showAddMembersDialogue(){
-        createLostMonitorsUser(); // todo: delete this later
+        //createLostMonitorsUser(); // todo: delete this later
         String[] monitorsUsersArr = new String[monitorsUsers.size()];
         boolean[] checkedMembers = new boolean[monitorsUsers.size()];
         List<Integer> membersToAdd = new ArrayList<>();
@@ -221,7 +227,8 @@ public class Join_Group extends AppCompatActivity {
 
                     for (int i = 0; i < membersToAdd.size(); i++) {
                         User user = monitorsUsers.get(i);
-                        addLocalUserToGroup(user);  // Todo: replace with addGroupMember call to server
+                        //addLocalUserToGroup(user);  // Todo: replace with addGroupMember call to server
+                        addUserToGroup(grpId, user);
                     }
                     populateGroupMembersListView();
                 }
