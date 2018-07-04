@@ -31,7 +31,7 @@ public class CreateGroup extends AppCompatActivity {
         currentUser = currentUserData.getCurrentUser();
 
         Group newGroup = new Group();
-        newGroup.setGroupDescription("Raspberry");
+        newGroup.setGroupDescription("Raspberry-Mohamad");
         newGroup.setLeader(currentUser);
         //newGroup.setStartLat(49.2);
         //newGroup.setStartLng(-100.2);
