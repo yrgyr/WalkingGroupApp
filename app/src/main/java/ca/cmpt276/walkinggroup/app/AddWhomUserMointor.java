@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -47,7 +48,16 @@ public class AddWhomUserMointor extends AppCompatActivity {
 
 
 
+
     }
+
+    private void setupProxy() {
+        token = MainActivity.getUserToken();
+        Toast.makeText(this,token,Toast.LENGTH_LONG).show();
+        proxy = ProxyBuilder.getProxy(getString(R.string.apikey), token);
+    }
+
+
     private void responseUserInfo(User userInfo){
         loggedInUserID = userInfo.getId();
     }
@@ -73,11 +83,6 @@ public class AddWhomUserMointor extends AppCompatActivity {
         });
     }
 
-    private void setupProxy() {
-        token = MainActivity.getUserToken();
-        Toast.makeText(this,token,Toast.LENGTH_LONG).show();
-        proxy = ProxyBuilder.getProxy(getString(R.string.apikey), token);
-    }
 
     private void response(User returnedUser){
 
@@ -96,13 +101,13 @@ public class AddWhomUserMointor extends AppCompatActivity {
     }
 
     private void responseMonitor(List<User> returnedUsers){
-        Log.w(TAG, "All Users:");
-        for (User user : returnedUsers) {
-            Log.w(TAG, "    User: " + user.toString());
-            Toast.makeText(this,user.toString(),Toast.LENGTH_LONG).show();
-        }
+//        Log.w(TAG, "All Users:");
+//        for (User user : returnedUsers) {
+//            Log.w(TAG, "    User: " + user.toString());
+//            Toast.makeText(this,user.toString(),Toast.LENGTH_LONG).show();
+//        }
 
-//        ListView LV = (ListView) findViewById(R.id.MonitorsUsersListView);
+        // ====================== display list of monitoring users ===================================
 
         ArrayList<String> returned_users = new ArrayList<String>();
         for(int i =0; i < returnedUsers.size();i++){

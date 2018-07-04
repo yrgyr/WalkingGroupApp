@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -34,6 +35,8 @@ public class MainActivity extends AppCompatActivity {
     private String userPassword = "12345";
     private Long userId;
 
+    private List<User> usersList;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,22 +44,38 @@ public class MainActivity extends AppCompatActivity {
         proxy = ProxyBuilder.getProxy(getString(R.string.apikey), null);
 
 
-        Call<User> getUserCaller = proxy.getUserByEmail(userEmail);
-        ProxyBuilder.callProxy(MainActivity.this, getUserCaller, returnedLogInUser -> responseLoginUser(returnedLogInUser));
 
 
-        setupGetUsersBtn();
+//        getUserInfo();
+        setupGetMonitorUsersBtn();
         setupLogInBtn();
         setupNewUserButton();
         setupAddMonitorBtn();
+        setupMapBtn();
+
+        listViewOnclick();
+
+//        getAllUsersBtn();
+
+
 
     }
 
-    private void responseLoginUser(User returnedLoginUser){
-        // logged in user Info
-        userId = returnedLoginUser.getId();
+    private void setupMapBtn() {
+
+        Button btn = (Button) findViewById(R.id.mapBtn);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this,MapsActivity.class);
+                startActivity(intent);
+            }
+        });
+
 
     }
+
+
     //===============================================================
 
     private void setupAddMonitorBtn() {
@@ -102,18 +121,16 @@ public class MainActivity extends AppCompatActivity {
         userId = user.getId();
         userEmail = user.getEmail();
     }
-    // ==========================================GET USERS ========================================================
-    private void setupGetUsersBtn() {
+    // ==========================================GET MONITOR USERS ========================================================
+    private void setupGetMonitorUsersBtn() {
 
         Button btn = (Button) findViewById(R.id.getUsersBtn);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                Call<List<User>> caller = proxy.getUsers();
+                Call<List<User>> caller = proxy.getMonitorsUsers(userId);
                 ProxyBuilder.callProxy(MainActivity.this, caller, returnedUsers -> response(returnedUsers));
-
-
             }
         });
     }
@@ -125,20 +142,18 @@ public class MainActivity extends AppCompatActivity {
 //        for (User user : returnedUsers) {
 //            Log.w(TAG, "    User: " + user.toString());
 //        }
-        // ===================================================
 
         ArrayList<String> ALL_USERS = new ArrayList<String>();
         for(int i =0; i < returnedUsers.size();i++){
 
+            usersList = returnedUsers;
             User THIS_USER = returnedUsers.get(i);
             String email = THIS_USER.getEmail();
             Long ID = THIS_USER.getId();
+            String name = THIS_USER.getName();
 
-            String DISPLAY_THIS_USER = "ID: "+ ID + " , email: " + email;
-
+            String DISPLAY_THIS_USER = "Name: " + name + " , ID: "+ ID + " , email: " + email;
             ALL_USERS.add(DISPLAY_THIS_USER);
-
-
         }
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(MainActivity.this,R.layout.users_list,ALL_USERS);
@@ -146,6 +161,44 @@ public class MainActivity extends AppCompatActivity {
         users_list.setAdapter(adapter);
 
     }
+
+    // ================================= DELETE  MONITOR USER  BY CLICK ON ITEM ===================================
+    private void listViewOnclick() {
+
+        ListView lv = (ListView) findViewById(R.id.usersList);
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                User litterUser = usersList.get(position);
+
+                Long deleteID = litterUser.getId();
+
+
+
+                Call<Void> caller = proxy.removeFromMonitorsUsers(userId,deleteID);
+                ProxyBuilder.callProxy(MainActivity.this, caller, nothing -> responseVoid(nothing));
+
+                Call<List<User>> caller2 = proxy.getMonitorsUsers(userId);
+                ProxyBuilder.callProxy(MainActivity.this, caller2, returnedUsers -> response(returnedUsers));
+            }
+        });
+    }
+    private void responseVoid(Void nothing){
+        notifyUserViaLogAndToast("Server replied to delete request.");
+    }
+    // ================================= GET ALL USERS ==========================================
+
+//    private void getAllUsersBtn(){
+//
+//        Button btn = (Button) findViewById(R.id.allUsersBtn);
+//        btn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Call<List<User>> caller = proxy.getUsers();
+//                ProxyBuilder.callProxy(MainActivity.this, caller, returnedUsers -> response(returnedUsers));
+//            }
+//        });
+//    }
 
 
     //=================================== LOG IN ===============================================
@@ -184,14 +237,19 @@ public class MainActivity extends AppCompatActivity {
 
 
         proxy = ProxyBuilder.getProxy(getString(R.string.apikey), token);
-
-
         userToken = token;
+
+        Call<User> getUserCaller = proxy.getUserByEmail(userEmail);
+        ProxyBuilder.callProxy(MainActivity.this, getUserCaller, returnedLogInUser -> responseLoginUser(returnedLogInUser));
 
 
     }
 
+    private void responseLoginUser(User returnedLoginUser){
+        // logged in user Info
+        userId = returnedLoginUser.getId();
 
+    }
 
     private void notifyUserViaLogAndToast(String message) {
         Log.w(TAG, message);
