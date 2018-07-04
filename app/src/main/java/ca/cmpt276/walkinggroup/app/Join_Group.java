@@ -32,7 +32,7 @@ public class Join_Group extends AppCompatActivity {
     List<User> groupMembers;
 
     private Group group = Group.getGroupSingletonInstance();
-    int grpId = group.getGroupId();
+    Long grpId = group.getId();
     String grpDesc = group.getGroupDescription();
     String leaderName = group.getLeader().getName();
     String[] members = group.getGroupMembersNames();  // Todo: replace with groupMembers
@@ -65,6 +65,7 @@ public class Join_Group extends AppCompatActivity {
             case R.id.menu_join_group:
                 Toast.makeText(Join_Group.this, "You have joined group " + grpDesc + "!", Toast.LENGTH_SHORT).show();
                 // Todo: call addUserToGroup with current user's ID
+                addUserToGroup(grpId, currentUser);
                 finish();
                 break;
             case R.id.menu_add_user:
@@ -84,8 +85,8 @@ public class Join_Group extends AppCompatActivity {
 
                 if (isInGroup){
                     // Todo: server codes to remove myself from this group
+                    removeUserFromGroup(grpId, currentUser.getId());
                     Toast.makeText(this, "You have left group " + grpDesc, Toast.LENGTH_SHORT).show();
-                    isInGroup = false;
                     break;
                 } else{
                     Toast.makeText(this, "You're not currently in group " + grpDesc, Toast.LENGTH_SHORT).show();

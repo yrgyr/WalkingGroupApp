@@ -35,7 +35,8 @@ import retrofit2.Call;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
-    WGServerProxy proxy; // Todo: get this proxy from singleton class
+    //WGServerProxy proxy;
+    WGServerProxy proxy = ProxyBuilder.getProxy(getString(R.string.apikey), null);; // Todo: get this proxy from singleton class
 
     private GoogleMap mMap;
     private static final String TAG = "MapsActivity";
@@ -49,7 +50,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private ClusterManager<MyItem> mClusterManager;
 
-    private List<Group> groupsOnServer;  // Todo: call server method
+    public List<Group> groupsOnServer;
     private Group groupSelected;
 
 
@@ -84,7 +85,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 // Test map with locally created groups
                 List<Group> groups = createLocalTestGroups(currentLatLng);
                 // Todo: change with server call to getGroups()
-                setUpLocalGroupCluster(groups);
+                getRemoteGroups();
+                //setUpLocalGroupCluster(groups);
+                setUpLocalGroupCluster(groupsOnServer);
 
             }
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -200,9 +203,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public void onClusterItemInfoWindowClick(MyItem myItem) {
                 int grpId = myItem.getGrpId();
-                Group group = getLocalGroupById(groups, grpId);  // Todo: replace with server call method and use groupSelected variable
+                //Group group = getLocalGroupById(groups, grpId);  // Todo: replace with server call method and use groupSelected variable
+                getRemoteGroupById(Long.valueOf(grpId));
+                Group group = groupSelected;
+
                 Group groupToLaunch = Group.getGroupSingletonInstance();
-                groupToLaunch.setToGroup2Params(group);  // Todo: replace group with groupSelected variable
+                groupToLaunch.setToGroup2Params(group);
                 Intent intent = new Intent(MapsActivity.this, Join_Group.class);
                 startActivity(intent);
             }
@@ -298,6 +304,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private void getRemoteGroups() {
         Call<List<Group>> caller = proxy.getGroups();
         ProxyBuilder.callProxy(MapsActivity.this, caller, returnedGroups -> returnGroups(returnedGroups));
+        getRemoteGroupById(Long.valueOf(391));
     }
 
     private void returnGroups(List<Group> returnedGroups){
@@ -311,12 +318,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private void returnedGroupById(Group group){
         groupSelected = group;
+        Log.e(TAG, "Group ID is: " + groupSelected.getId());
     }
-
-
-
-
-
-
 
 }
