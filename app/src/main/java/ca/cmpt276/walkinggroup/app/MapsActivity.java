@@ -29,8 +29,13 @@ import java.util.List;
 import ca.cmpt276.walkinggroup.dataobjects.Group;
 import ca.cmpt276.walkinggroup.dataobjects.MyItem;
 import ca.cmpt276.walkinggroup.dataobjects.User;
+import ca.cmpt276.walkinggroup.proxy.ProxyBuilder;
+import ca.cmpt276.walkinggroup.proxy.WGServerProxy;
+import retrofit2.Call;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
+
+    WGServerProxy proxy; // Todo: get this proxy from singleton class
 
     private GoogleMap mMap;
     private static final String TAG = "MapsActivity";
@@ -43,6 +48,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private FusedLocationProviderClient mFusedLocationProviderClient;
 
     private ClusterManager<MyItem> mClusterManager;
+
+    private List<Group> groupsOnServer;  // Todo: call server method
+    private Group groupSelected;
 
 
 
@@ -90,6 +98,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 //        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
 //        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
     }
+
 
     private void initializeMap(){
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
@@ -191,9 +200,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public void onClusterItemInfoWindowClick(MyItem myItem) {
                 int grpId = myItem.getGrpId();
-                Group group = getLocalGroupById(groups, grpId);
+                Group group = getLocalGroupById(groups, grpId);  // Todo: replace with server call method and use groupSelected variable
                 Group groupToLaunch = Group.getGroupSingletonInstance();
-                groupToLaunch.setToGroup2Params(group);
+                groupToLaunch.setToGroup2Params(group);  // Todo: replace group with groupSelected variable
                 Intent intent = new Intent(MapsActivity.this, Join_Group.class);
                 startActivity(intent);
             }
@@ -285,6 +294,28 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             return null;
         }
     }
+
+    private void getRemoteGroups() {
+        Call<List<Group>> caller = proxy.getGroups();
+        ProxyBuilder.callProxy(MapsActivity.this, caller, returnedGroups -> returnGroups(returnedGroups));
+    }
+
+    private void returnGroups(List<Group> returnedGroups){
+        groupsOnServer = returnedGroups;
+    }
+
+    private void getRemoteGroupById(Long id){
+        Call<Group> caller = proxy.getGroupById(id);
+        ProxyBuilder.callProxy(MapsActivity.this, caller, returnedGroup -> returnedGroupById(returnedGroup));
+    }
+
+    private void returnedGroupById(Group group){
+        groupSelected = group;
+    }
+
+
+
+
 
 
 
