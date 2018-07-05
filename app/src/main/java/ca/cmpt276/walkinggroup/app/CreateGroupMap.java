@@ -20,6 +20,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -123,15 +124,32 @@ public class CreateGroupMap extends FragmentActivity implements OnMapReadyCallba
                 double latitude = location.getLatitude();
 
                 LatLng currentLatLng = new LatLng(latitude, longitude);
-                mMap.moveCamera(CameraUpdateFactory.newLatLng(currentLatLng));
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, DEFAULT_ZOOM));
 
                 // set up click listener to click anywhere on the map to get that point's coordinates
                 mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
                     @Override
                     public void onMapClick(LatLng latLng) {
-                        double lat = latLng.latitude;
-                        double lng = latLng.longitude;
-                        Toast.makeText(CreateGroupMap.this, "You clicked on point: " + lat + ", " + lng, Toast.LENGTH_LONG).show();
+                        mMap.clear();
+                        Marker marker = mMap.addMarker(new MarkerOptions().position(latLng).title("Click on marker again to select this location"));
+                        marker.showInfoWindow();
+                        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+
+
+                    }
+                });
+
+                mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                    @Override
+                    public boolean onMarkerClick(Marker marker) {
+                        LatLng markerLocation = marker.getPosition();
+                        double lat = markerLocation.latitude;
+                        double lng = markerLocation.longitude;
+                        Toast.makeText(CreateGroupMap.this, "You have selected this location", Toast.LENGTH_LONG).show();
+
+                        // Todo: add lat and lng to newGroup singleton class, and close this activity to go back to CreateGroup
+
+                        return false;
                     }
                 });
 
