@@ -52,6 +52,9 @@
         <activity android:name=".AddWhomUserMointor" />
         <activity android:name=".MonitorUsersList" />
         <activity android:name=".MonitorByUsersList"></activity>
+        <activity android:name=".CreateGroup"></activity>
+        <activity android:name=".CreateGroupMap"></activity>
+
     </application>
 
 </manifest>

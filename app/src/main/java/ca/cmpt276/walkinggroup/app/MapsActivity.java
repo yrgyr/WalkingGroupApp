@@ -137,8 +137,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         try{
             if (mLocationPermissionsGranted){
                 // Code obtained from StacksOverflow https://stackoverflow.com/questions/2227292/how-to-get-latitude-and-longitude-of-the-mobile-device-in-android
-                LocationManager lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
-                Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                LocationManager lm = (LocationManager)this.getSystemService(Context.LOCATION_SERVICE);
+                Location location = lm.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
                 double longitude = location.getLongitude();
                 double latitude = location.getLatitude();
 

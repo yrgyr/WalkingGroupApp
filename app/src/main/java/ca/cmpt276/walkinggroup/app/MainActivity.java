@@ -58,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
         setupAddMonitorBtn();
         setupMapBtn();
         setupGetMonitorByBtn();
+        setupCreateGroupButton();
 
 
 
@@ -96,6 +97,17 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
+    }
+
+    private void setupCreateGroupButton(){
+        Button btn = findViewById(R.id.btn_create_group);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, CreateGroup.class);
+                startActivity(intent);
+            }
+        });
     }
 
 
