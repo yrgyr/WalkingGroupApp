@@ -9,6 +9,7 @@ public class CurrentUserData {
     private WGServerProxy currentProxy;
     private User currentUser;
     private String token;
+    private Long ID;
 
     private CurrentUserData() {}
 
@@ -42,4 +43,13 @@ public class CurrentUserData {
     public void setToken(String token) {
         this.token = token;
     }
+
+    public Long getID(){
+        return ID;
+    }
+    public void setID(Long newID){
+
+        ID = newID;
+    }
 }
+
