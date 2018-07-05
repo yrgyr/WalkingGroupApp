@@ -27,7 +27,6 @@ public class AddWhomUserMointor extends AppCompatActivity {
     private WGServerProxy proxy;
     private String TAG = "addMonitor";
 
-    private String loggedInUserEmail = MainActivity.getUserEmail();
     private Long loggedInUserID;
     private String token;
 
@@ -51,8 +50,6 @@ public class AddWhomUserMointor extends AppCompatActivity {
 
         setupAddMonitorBtn();
         setupAddMonitorByBtn();
-//        Call<User> caller = proxy.getUserByEmail(loggedInUserEmail);
-//        ProxyBuilder.callProxy(AddWhomUserMointor.this, caller, returnedUser -> responseUserInfo(returnedUser));
 
 
 
@@ -113,7 +110,7 @@ public class AddWhomUserMointor extends AppCompatActivity {
         ProxyBuilder.callProxy(AddWhomUserMointor.this, caller, returnedUsers -> responseMonitor(returnedUsers));
 
         TextView tv = (TextView) findViewById(R.id.addPageTv);
-        tv.setText("people you are monitoring :");
+        tv.setText(getString(R.string.responseAddMonitortext));
 
 
 
@@ -131,7 +128,6 @@ public class AddWhomUserMointor extends AppCompatActivity {
                 EditText emailInput = (EditText) findViewById(R.id.emailET);
                 String email = emailInput.getText() + "";
 
-
                 Call<User> caller = proxy.getUserByEmail(email);
                 ProxyBuilder.callProxy(AddWhomUserMointor.this, caller, returnedUser -> responseAddMonitorBy(returnedUser));
 
@@ -139,6 +135,8 @@ public class AddWhomUserMointor extends AppCompatActivity {
         });
 
     }
+    // =============================== AFTER FOUND THE USER, MAKE ADD REQUEST ============================
+
 
     private void responseAddMonitorBy(User returnedUser){
 
@@ -152,16 +150,16 @@ public class AddWhomUserMointor extends AppCompatActivity {
         ProxyBuilder.callProxy(AddWhomUserMointor.this, caller, returnedUsers -> responseMonitor(returnedUsers));
 
         TextView tv = (TextView) findViewById(R.id.addPageTv);
-        tv.setText("people monitoring you :");
+        tv.setText(getString(R.string.responseAddMonitorByText));
 
 
 
     }
 
-    // =============================== AFTER FOUND THE USER, MAKE ADD REQUEST ============================
 
 
     // ==================================  AFTER ADD IT SUCCESSFULLY, DISPLAY ON THE SCREEN ====================
+
     private void responseMonitor(List<User> returnedUsers){
         ArrayList<String> returned_users = new ArrayList<String>();
         for(int i =0; i < returnedUsers.size();i++){

@@ -34,17 +34,10 @@ public class MonitorUsersList extends AppCompatActivity {
 
         // ----------- SET UP PROXY FIRST -------------------
 
-//        String token = MainActivity.getUserToken();
-
         String token = userSingleton.getToken();
 
         proxy = ProxyBuilder.getProxy(getString(R.string.apikey),token);
 
-
-//        findUserIdByEmail();
-
-
-//        userID =MainActivity.getUserId();
         userID =userSingleton.getID();
 
 
@@ -54,17 +47,7 @@ public class MonitorUsersList extends AppCompatActivity {
 
 
     }
-//    // ========== FIND CURRENT USER'S ID BY EMAIL ========================================
-////    private void findUserIdByEmail(){
-////        String EMAIL = MainActivity.getUserEmail();
-////        Call<User> getUserCaller = proxy.getUserByEmail(EMAIL);
-////        ProxyBuilder.callProxy(this, getUserCaller, returnedLogInUser -> responseLoginUser(returnedLogInUser));
-////    }
-////
-////    private void responseLoginUser(User returnedLoginUser){
-////
-////        userID = returnedLoginUser.getId();
-////    }
+
 
     // ====================== POPULATE ListVIEW =============================================
 
@@ -77,11 +60,6 @@ public class MonitorUsersList extends AppCompatActivity {
 
     private void response(List<User> returnedUsers) {
 
-//        notifyUserViaLogAndToast("Got list of " + returnedUsers.size() + " users! See logcat.");
-//        Log.w(TAG, "All Users:");
-//        for (User user : returnedUsers) {
-//            Log.w(TAG, "    User: " + user.toString());
-//        }
 
         ArrayList<String> ALL_USERS = new ArrayList<String>();
         for(int i =0; i < returnedUsers.size();i++){
@@ -126,7 +104,7 @@ public class MonitorUsersList extends AppCompatActivity {
         });
     }
     private void responseVoid(Void nothing){
-        Toast.makeText(this,"Server replied to delete request.",Toast.LENGTH_LONG);
+        Toast.makeText(this,"Server replied to delete request.",Toast.LENGTH_LONG).show();
     }
 
 }

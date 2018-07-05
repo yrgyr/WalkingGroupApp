@@ -30,4 +30,11 @@
     <string name="menu_remove_user">Remove someone from this group</string>
     <string name="menu_leave_group">Leave this group</string>
     <string name="menu_go_back">Go back</string>
+    <string name="MonitorListBtn">check WHO I MONITOR</string>
+    <string name="AddUserBtnText">Add Users</string>
+    <string name="AllUserBtnText">All USERS</string>
+    <string name="MonitorByBtnList">Check who monitor me</string>
+    <string name="responseAddMonitortext">people you are monitoring :</string>
+    <string name="responseAddMonitorByText">people monitoring you :</string>
+    <string name="loginuserText">user %1$s has already logged In</string>>
 </resources>

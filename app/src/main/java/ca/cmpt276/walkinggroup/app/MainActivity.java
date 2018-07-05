@@ -33,8 +33,8 @@ public class MainActivity extends AppCompatActivity {
     private WGServerProxy proxy;
     public static String userToken;
 
-    public static String userEmail = "Mike64140@test.com";
-    private String userPassword = "12345";
+    public static String userEmail = "james@sfu.ca";
+    private String userPassword = "lin090628";
 
 
 
@@ -57,10 +57,10 @@ public class MainActivity extends AppCompatActivity {
 //        setupNewUserButton();
         setupAddMonitorBtn();
         setupMapBtn();
-
-
-        getAllUsersBtn();
         setupGetMonitorByBtn();
+
+
+
 
 
 
@@ -99,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    //===============================================================
+    //============================ ADD MONITOR USER ===================================
 
     private void setupAddMonitorBtn() {
 
@@ -108,58 +108,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this,AddWhomUserMointor.class);
-                startActivityForResult(intent,42);
+                startActivity(intent);
             }
         });
     }
 
-    public static String getUserEmail() {
-        return userEmail;
-    }
 
-    // =====================================  CREATE NEW USER ==========================================================
-    private void setupNewUserButton() {
-        Button btn = findViewById(R.id.newUserBtn);
-        btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // Build new user (with random email to avoid conflicts)
-                User user = new User();
-
-//                Group group = Group.getGroupSingletonInstance();
-//
-//                Call<Group> caller = proxy.createGroup(group);
-//                ProxyBuilder.callProxy(MainActivity.this, caller, returnedCreatedGroup -> response(returnedCreatedGroup));
-
-
-
-                int random = (int) (Math.random() * 100000);
-                user.setEmail("Mike"+random+"@test.com");
-                user.setName("I am Mike");
-                user.setPassword(userPassword);
-                user.setCurrentPoints(100);
-                user.setTotalPointsEarned(2500);
-                user.setRewards(new EarnedRewards());
-                // Make call
-//                Call<User> caller = proxy.createUser(user);
-
-//                ProxyBuilder.callProxy(MainActivity.this, caller, returnedUser -> response(returnedUser));
-            }
-        });
-    }
-    // ------------------------------------------------------------------------------------------
-
-    private void response(Group returnedCreatedGroup) {
-
-//        notifyUserViaLogAndToast("Server replied with user: " + user.toString());
-//        userId = user.getId();
-//        userEmail = user.getEmail();
-    }
     // ==========================================GET MONITOR USERS ========================================================
     private void setupGetMonitorUsersBtn() {
-
-
-
 
         Button btn = (Button) findViewById(R.id.getUsersBtn);
         btn.setOnClickListener(new View.OnClickListener() {
@@ -169,54 +125,10 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(MainActivity.this,MonitorUsersList.class);
                 startActivity(intent);
 
-//                Call<List<User>> caller = proxy.getMonitorsUsers(userId);
-//                ProxyBuilder.callProxy(MainActivity.this, caller, returnedUsers -> response(returnedUsers));
             }
         });
     }
-
-    private void response(List<User> returnedUsers) {
-
-//        notifyUserViaLogAndToast("Got list of " + returnedUsers.size() + " users! See logcat.");
-//        Log.w(TAG, "All Users:");
-//        for (User user : returnedUsers) {
-//            Log.w(TAG, "    User: " + user.toString());
-//        }
-
-        ArrayList<String> ALL_USERS = new ArrayList<String>();
-        for(int i =0; i < returnedUsers.size();i++){
-
-            usersList = returnedUsers;
-            User THIS_USER = returnedUsers.get(i);
-            String email = THIS_USER.getEmail();
-            Long ID = THIS_USER.getId();
-            String name = THIS_USER.getName();
-
-            String DISPLAY_THIS_USER = "Name: " + name + " , ID: "+ ID + " , email: " + email;
-            ALL_USERS.add(DISPLAY_THIS_USER);
-        }
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(MainActivity.this,R.layout.users_list,ALL_USERS);
-        ListView users_list = (ListView) findViewById(R.id.usersList);
-        users_list.setAdapter(adapter);
-
-    }
-
-
-
-    // ================================= GET ALL USERS ==========================================
-
-    private void getAllUsersBtn(){
-
-        Button btn = (Button) findViewById(R.id.allUsersBtn);
-        btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Call<List<User>> caller = proxy.getUsers();
-                ProxyBuilder.callProxy(MainActivity.this, caller, returnedUsers -> response(returnedUsers));
-            }
-        });
-    }
+//
 
 
     //=================================== LOG IN ===============================================
@@ -244,7 +156,7 @@ public class MainActivity extends AppCompatActivity {
 
 
                 TextView txt = (TextView) findViewById(R.id.userInfo);
-                txt.setText("user "+ user.getEmail()+" has already logged In ");
+                txt.setText(getString(R.string.loginuserText,user.getEmail()));
             }
         });
     }
@@ -259,9 +171,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         proxy = ProxyBuilder.getProxy(getString(R.string.apikey), token);
-
         userSingleton.setToken(token);
-//        userToken = token;
 
         Call<User> getUserCaller = proxy.getUserByEmail(userEmail);
         ProxyBuilder.callProxy(MainActivity.this, getUserCaller, returnedLogInUser -> responseLoginUser(returnedLogInUser));
@@ -270,7 +180,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void responseLoginUser(User returnedLoginUser){
-        // logged in user Info
 
         // set logged in users id to singleton instance
         userId = returnedLoginUser.getId();
@@ -283,28 +192,4 @@ public class MainActivity extends AppCompatActivity {
         Log.w(TAG, message);
         Toast.makeText(this, message, Toast.LENGTH_LONG).show();
     }
-
-
-
-//    private void saveToken(String token){
-//
-//        SharedPreferences tokenShare = this.getSharedPreferences("tokenShare",MODE_PRIVATE);
-//        SharedPreferences.Editor editor = tokenShare.edit();
-//
-//        editor.putString("user token",token);
-//        editor.apply();
-//
-//    }
-//
-//    public static String getToken(Context context){
-//
-//
-//        SharedPreferences share = context.getSharedPreferences("user token",MODE_PRIVATE);
-//
-//        String token
-//
-//                share.getString()
-//
-//
-//    }
 }
