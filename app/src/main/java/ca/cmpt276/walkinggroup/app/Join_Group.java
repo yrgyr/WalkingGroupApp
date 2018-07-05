@@ -29,15 +29,15 @@ import retrofit2.Call;
 public class Join_Group extends AppCompatActivity {
     WGServerProxy proxy; // Todo: get this proxy from singleton class
     User currentUser; // Todo: get this from singleton class
-    List<User> groupMembers;
+    public List<User> groupMembers;
 
-    private Group group = Group.getGroupSingletonInstance();
+    public Group group = Group.getGroupSingletonInstance();
     Long grpId = group.getId();
     String grpDesc = group.getGroupDescription();
     String leaderName = group.getLeader().getName();
     String[] members = group.getGroupMembersNames();  // Todo: replace with groupMembers
     //long[] membersIds = group.getGroupMembersIds();
-    List<User> monitorsUsers = new ArrayList<>(); // Todo: get the array of monitors users by calling getMonitorsUsers
+    public List<User> monitorsUsers; // Todo: get the array of monitors users by calling getMonitorsUsers
 
 
     @Override
@@ -80,9 +80,8 @@ public class Join_Group extends AppCompatActivity {
                 }
                 break;
             case R.id.menu_leave_group:
-                boolean isInGroup = true;
+                boolean isInGroup = checkIfIAmInGroup();
                 // Todo: server codes to check if I'm currently in this group
-                checkIfIAmInGroup();
 
                 if (isInGroup){
                     // Todo: server codes to remove myself from this group
@@ -100,9 +99,6 @@ public class Join_Group extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void checkIfIAmInGroup() {
-
-    }
 
     private void populateGroupID() {
         TextView txtGrpId = findViewById(R.id.txt_join_grp_grpid_val);
@@ -256,6 +252,20 @@ public class Join_Group extends AppCompatActivity {
         }
     }
 
+    private boolean checkIfIAmInGroup() {
+        getRemoteGroupMembers(grpId);
+
+        for (int i = 0; i < groupMembers.size(); i++){
+            User user = groupMembers.get(i);
+            if (currentUser.getId() == user.getId()){
+                return true;
+            }
+        }
+
+        return false;
+
+    }
+
     // Todo: delete this testing method later
     private void addLocalUserToGroup(User user){
         List<User> updatedMembers = group.getGroupMembers();
@@ -309,6 +319,15 @@ public class Join_Group extends AppCompatActivity {
     private void addUserToGroup(Long groupId, User user){
         Call<List<User>> caller = proxy.addGroupMember(groupId, user);
         ProxyBuilder.callProxy(Join_Group.this, caller, returnedUsers -> returnedMembers(returnedUsers));
+    }
+
+    private void getRemoteGroupMembers(Long groupId){
+        Call<List<User>> caller = proxy.getGroupMembers(groupId);
+        ProxyBuilder.callProxy(Join_Group.this, caller, returnedMembers -> returnGroupMembers(returnedMembers));
+    }
+
+    private void returnGroupMembers(List<User> returnedMembers){
+        groupMembers = returnedMembers;
     }
 
     private void removeUserFromGroup(Long groupId, Long userId){
