@@ -52,7 +52,10 @@
             android:name=".MapsActivity"
             android:label="@string/title_activity_maps" />
         <activity android:name=".Join_Group" />
-        <activity android:name=".CreateGroup"></activity>
+        <activity android:name=".CreateGroup" />
+        <activity
+            android:name=".CreateGroupMap"
+            android:label="@string/title_activity_create_group_map"></activity>
     </application>
 
 </manifest>

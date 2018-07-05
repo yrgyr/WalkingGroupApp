@@ -33,4 +33,5 @@
     <string name="menu_remove_user">Remove someone from this group</string>
     <string name="menu_leave_group">Leave this group</string>
     <string name="menu_go_back">Go back</string>
+    <string name="title_activity_create_group_map">Map</string>
 </resources>

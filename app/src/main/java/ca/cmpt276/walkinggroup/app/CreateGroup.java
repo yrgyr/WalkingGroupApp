@@ -20,29 +20,7 @@ public class CreateGroup extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_group);
 
-        createGroup();
 
     }
 
-    private void createGroup(){
-        CurrentUserData currentUserData = CurrentUserData.getSingletonInstance();
-        //proxy = currentUserData.getCurrentProxy();
-        proxy = ProxyBuilder.getProxy(getString(R.string.apikey), currentUserData.getToken());
-        currentUser = currentUserData.getCurrentUser();
-
-        Group newGroup = new Group();
-        newGroup.setGroupDescription("Raspberry-Mohamad");
-        newGroup.setLeader(currentUser);
-        //newGroup.setStartLat(49.2);
-        //newGroup.setStartLng(-100.2);
-
-        Call<Group> caller = proxy.createGroup(newGroup);
-        ProxyBuilder.callProxy(CreateGroup.this, caller, returnedGroup->response(returnedGroup));
-
-    }
-
-    private void response(Group group){
-        Toast.makeText(CreateGroup.this, "Server replied with group: " + group.getGroupDescription(), Toast.LENGTH_LONG).show();
-
-    }
 }
