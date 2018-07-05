@@ -44,12 +44,5 @@ public class CurrentUserData {
         this.token = token;
     }
 
-    public Long getID(){
-        return ID;
-    }
-    public void setID(Long newID){
-
-        ID = newID;
-    }
 }
 

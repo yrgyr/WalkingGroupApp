@@ -32,10 +32,10 @@ public class MonitorByUsersList extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_monitor_by_users_list);
 
+        proxy = userSingleton.getCurrentProxy();
+        User user = userSingleton.getCurrentUser();
+        userID = user.getId();
 
-        String token = userSingleton.getToken();
-        proxy = ProxyBuilder.getProxy(getString(R.string.apikey),token);
-        userID =userSingleton.getID();
 
         setupListView();
         listViewOnclick();
@@ -91,6 +91,6 @@ public class MonitorByUsersList extends AppCompatActivity {
         });
     }
     private void responseVoid(Void nothing){
-        Toast.makeText(this,"Server replied to delete request.",Toast.LENGTH_LONG);
+        Toast.makeText(this,"Server replied to delete request.",Toast.LENGTH_LONG).show();
     }
 }

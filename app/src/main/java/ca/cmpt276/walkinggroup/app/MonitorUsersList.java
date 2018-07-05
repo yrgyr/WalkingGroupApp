@@ -32,19 +32,14 @@ public class MonitorUsersList extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_monitor_users_list);
 
-        // ----------- SET UP PROXY FIRST -------------------
 
-        String token = userSingleton.getToken();
-
-        proxy = ProxyBuilder.getProxy(getString(R.string.apikey),token);
-
-        userID =userSingleton.getID();
+        proxy = userSingleton.getCurrentProxy();
+        User user = userSingleton.getCurrentUser();
+        userID = user.getId();
 
 
         setupListView();
-
         listViewOnclick();
-
 
     }
 

@@ -25,17 +25,7 @@ public class AddWhomUserMointor extends AppCompatActivity {
 
 
     private WGServerProxy proxy;
-    private String TAG = "addMonitor";
-
     private Long loggedInUserID;
-    private String token;
-
-
-
-    private User loggedInUser;
-    private User inputUser;
-
-
     private CurrentUserData userSingleton = CurrentUserData.getSingletonInstance();
 
     @Override
@@ -43,34 +33,14 @@ public class AddWhomUserMointor extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_whom_user_mointor);
 
-
-        loggedInUserID = userSingleton.getID();
-
-        setupProxy();
+        proxy = userSingleton.getCurrentProxy();
+        User user = userSingleton.getCurrentUser();
+        loggedInUserID = user.getId();
 
         setupAddMonitorBtn();
         setupAddMonitorByBtn();
 
-
-
-
-
-
     }
-
-    private void setupProxy() {
-        token = userSingleton.getToken();
-        Toast.makeText(this,token,Toast.LENGTH_LONG).show();
-        proxy = ProxyBuilder.getProxy(getString(R.string.apikey), token);
-    }
-
-
-//    private void responseUserInfo(User returnedUser){
-//        loggedInUserID = returnedUser.getId();
-//
-//        loggedInUser = returnedUser;
-//    }
-
 
 
     //  ==============================  FIRST FIND THIS INPUT USER =====================================
@@ -88,7 +58,6 @@ public class AddWhomUserMointor extends AppCompatActivity {
                 EditText emailInput = (EditText) findViewById(R.id.emailET);
                 String email = emailInput.getText() + "";
 
-//                Toast.makeText(AddWhomUserMointor.this,email,Toast.LENGTH_LONG).show();
 
                 //  ---------------FIND INPUT USER BY EMAIL --------------------------
                 Call<User> caller = proxy.getUserByEmail(email);

@@ -31,16 +31,9 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "my_activity";
 
     private WGServerProxy proxy;
-    public static String userToken;
 
     public static String userEmail = "james@sfu.ca";
     private String userPassword = "lin090628";
-
-
-
-    public static Long userId;
-
-    private List<User> usersList;
 
     private CurrentUserData userSingleton = CurrentUserData.getSingletonInstance();
 
@@ -51,21 +44,12 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         proxy = ProxyBuilder.getProxy(getString(R.string.apikey), null);
 
-//        getUserInfo();
-        setupGetMonitorUsersBtn();
         setupLogInBtn();
-//        setupNewUserButton();
+        setupGetMonitorUsersBtn();
         setupAddMonitorBtn();
         setupMapBtn();
         setupGetMonitorByBtn();
         setupCreateGroupButton();
-
-
-
-
-
-
-
     }
 
     private void setupGetMonitorByBtn() {
@@ -80,11 +64,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
-    // ==================== GET USER ID =============================
-
-
-
     private void setupMapBtn() {
 
         Button btn = (Button) findViewById(R.id.mapBtn);
@@ -140,9 +119,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-//
-
-
     //=================================== LOG IN ===============================================
     private void setupLogInBtn(){
         Button btn = (Button) findViewById(R.id.logInBtn);
@@ -165,8 +141,6 @@ public class MainActivity extends AppCompatActivity {
                 Call<Void> caller = proxy.login(user);
                 ProxyBuilder.callProxy(MainActivity.this, caller, returnedNothing -> response(returnedNothing));
 
-
-
                 TextView txt = (TextView) findViewById(R.id.userInfo);
                 txt.setText(getString(R.string.loginuserText,user.getEmail()));
             }
@@ -183,7 +157,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         proxy = ProxyBuilder.getProxy(getString(R.string.apikey), token);
-        userSingleton.setToken(token);
+        userSingleton.setCurrentProxy(proxy);
 
         Call<User> getUserCaller = proxy.getUserByEmail(userEmail);
         ProxyBuilder.callProxy(MainActivity.this, getUserCaller, returnedLogInUser -> responseLoginUser(returnedLogInUser));
@@ -194,8 +168,8 @@ public class MainActivity extends AppCompatActivity {
     private void responseLoginUser(User returnedLoginUser){
 
         // set logged in users id to singleton instance
-        userId = returnedLoginUser.getId();
-        userSingleton.setID(userId);
+
+        userSingleton.setCurrentUser(returnedLoginUser);
 
 
     }
