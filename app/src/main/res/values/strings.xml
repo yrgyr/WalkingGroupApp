@@ -46,4 +46,5 @@
     <string name="btn_set_destination">Set destination</string>
     <string name="btn_create_new_group">Create group!</string>
     <string name="btn_cancel_create_group">Cancel</string>
+    <string name="btn_view_groups">View Groups</string>
 </resources>

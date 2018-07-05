@@ -15,7 +15,7 @@ import ca.cmpt276.walkinggroup.proxy.WGServerProxy;
 import retrofit2.Call;
 
 public class CreateGroup extends AppCompatActivity {
-    private WGServerProxy proxy;
+    private WGServerProxy proxy;  // Todo: get proxy and user from singleton class
     private User currentUser;
     private Group newGroup = Group.getGroupSingletonInstance();
 
@@ -39,11 +39,8 @@ public class CreateGroup extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(CreateGroup.this, CreateGroupMap.class);
                 startActivity(intent);
-                // Todo: append coordinates to group singleton class
-                // Todo: need to add method in Group class to append latitude and longitude values to routeLatArray and routeLngArray
             }
         });
-
     }
 
     private void setupDestinationButton(){
@@ -51,7 +48,8 @@ public class CreateGroup extends AppCompatActivity {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Todo: append coordinates to Group singleton class
+                Intent intent = new Intent(CreateGroup.this, CreateGroupMap.class);
+                startActivity(intent);
             }
         });
 
@@ -63,6 +61,8 @@ public class CreateGroup extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 createNewGroup();
+                Toast.makeText(CreateGroup.this, "Created new group:" + newGroup.getGroupDescription(), Toast.LENGTH_SHORT).show();
+                finish();
             }
         });
 

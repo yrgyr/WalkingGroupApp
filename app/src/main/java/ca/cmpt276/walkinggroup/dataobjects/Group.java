@@ -67,6 +67,14 @@ public class Group extends IdItemBase{
         this.routeLngArray.add(lng);
     }
 
+    public void addLatCoordinate(double lat){
+        routeLatArray.add(lat);
+    }
+
+    public void addLngCoordinate(double lng){
+        routeLngArray.add(lng);
+    }
+
     public void setLeader(User leader) {
 
         this.leader = leader;
