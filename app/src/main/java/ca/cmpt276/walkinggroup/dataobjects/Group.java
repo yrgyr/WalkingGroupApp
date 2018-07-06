@@ -20,7 +20,7 @@ public class Group extends IdItemBase{
     private List<Double> routeLatArray = new ArrayList<>();
     private List<Double> routeLngArray = new ArrayList<>();
     private User leader;
-    private List<User> memberOfGroups = new ArrayList<>();
+    private List<User> memberUsers = new ArrayList<>();
 
     public Group() { }
 
@@ -88,14 +88,14 @@ public class Group extends IdItemBase{
         return leader;
     }
     //@JsonIgnore
-    public List<User> getMemberOfGroups()
+    public List<User> getMemberUsers()
     {
-        return memberOfGroups;
+        return memberUsers;
     }
 
-    public void setMemberOfGroups(List<User> memberOfGroups)
+    public void setMemberUsers(List<User> memberUsers)
     {
-        this.memberOfGroups = memberOfGroups;
+        this.memberUsers = memberUsers;
     }
 
     //@JsonIgnore
@@ -120,16 +120,16 @@ public class Group extends IdItemBase{
     }
     @JsonIgnore
     public int getGroupSize(){
-        return memberOfGroups.size();}
+        return memberUsers.size();}
     @JsonIgnore
     public String[] getGroupMembersNames(){
 
         String[] names;
-        if (memberOfGroups.size() > 0) {
+        if (memberUsers.size() > 0) {
             names = new String[getGroupSize()];
 
             for (int i = 0; i < getGroupSize(); i++) {
-                User member = memberOfGroups.get(i);
+                User member = memberUsers.get(i);
                 names[i] = member.getName();
             }
         } else {
@@ -142,7 +142,7 @@ public class Group extends IdItemBase{
         long[] Ids = new long[getGroupSize()];
 
         for (int i = 0; i < getGroupSize(); i++){
-            User member = memberOfGroups.get(i);
+            User member = memberUsers.get(i);
             Ids[i] = member.getId();
         }
 
@@ -155,7 +155,7 @@ public class Group extends IdItemBase{
         this.routeLatArray = group2.getRouteLatArray();
         this.routeLngArray = group2.getRouteLngArray();
         this.leader = group2.getLeader();
-        this.memberOfGroups = group2.getMemberOfGroups();
+        this.memberUsers = group2.getMemberUsers();
     }
 
 

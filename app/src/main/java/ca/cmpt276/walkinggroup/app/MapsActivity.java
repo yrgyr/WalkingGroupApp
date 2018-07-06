@@ -332,7 +332,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     group.setLeader(member);
                 }
             }
-            group.setMemberOfGroups(members);
+            group.setMemberUsers(members);
 
             double offset = i / 200d;
             lat = lat + offset;

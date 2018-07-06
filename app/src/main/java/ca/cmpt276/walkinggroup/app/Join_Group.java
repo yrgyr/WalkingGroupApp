@@ -126,6 +126,7 @@ public class Join_Group extends AppCompatActivity {
     private void populateGroupMembersListView() {
         members = groupSelected.getGroupMembersNames();
         Log.e("Join_Group", "Group size: " + groupSelected.getGroupSize());
+        Log.e("Join_Group", "members[0]: " + members[0]);
         if (members != null) {
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.group_member, members);
             ListView membersList = findViewById(R.id.join_grp_members_listview);
@@ -172,7 +173,7 @@ public class Join_Group extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 if (membersToRemove.size()> 0) {
-                    List<User> originalMembers = groupSelected.getMemberOfGroups();
+                    List<User> originalMembers = groupSelected.getMemberUsers();
                     for (int i = 0; i < membersToRemove.size(); i++){
                         int j = membersToRemove.get(i);
                         User user = originalMembers.get(j);
@@ -279,14 +280,14 @@ public class Join_Group extends AppCompatActivity {
 
     // Todo: delete this testing method later
     private void addLocalUserToGroup(User user){
-        List<User> updatedMembers = groupSelected.getMemberOfGroups();
+        List<User> updatedMembers = groupSelected.getMemberUsers();
         updatedMembers.add(user);
-        groupSelected.setMemberOfGroups(updatedMembers);
+        groupSelected.setMemberUsers(updatedMembers);
     }
 
     // Todo: delete this later
     private void deleteLocalGroupMembersById(long userId){
-        List<User> originalMembers = groupSelected.getMemberOfGroups();
+        List<User> originalMembers = groupSelected.getMemberUsers();
         List<User> updatedMembers = new ArrayList<>();
 
         for (int i = 0; i < originalMembers.size(); i++){
@@ -296,7 +297,7 @@ public class Join_Group extends AppCompatActivity {
             }
         }
 
-        groupSelected.setMemberOfGroups(updatedMembers);
+        groupSelected.setMemberUsers(updatedMembers);
     }
 
     // Todo: delete this later
