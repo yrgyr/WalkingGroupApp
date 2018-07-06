@@ -382,6 +382,8 @@ public class ProxyBuilder {
             if (token != null) {
                 builder.header("Authorization", token);
             }
+
+            builder.header("json-depth", "1"); // add this line to get all user infos when getGroupMembers is called
             Request modifiedRequest = builder.build();
 
             return chain.proceed(modifiedRequest);
