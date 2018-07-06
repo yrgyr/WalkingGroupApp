@@ -20,7 +20,7 @@ public class Group extends IdItemBase{
     private List<Double> routeLatArray = new ArrayList<>();
     private List<Double> routeLngArray = new ArrayList<>();
     private User leader;
-    private List<User> groupMembers = new ArrayList<>();
+    private List<User> memberUsers = new ArrayList<>();
 
     public Group() { }
 
@@ -87,15 +87,15 @@ public class Group extends IdItemBase{
 
         return leader;
     }
-    @JsonIgnore
-    public List<User> getGroupMembers()
+    //@JsonIgnore
+    public List<User> getMemberUsers()
     {
-        return groupMembers;
+        return memberUsers;
     }
 
-    public void setGroupMembers(List<User> groupMembers)
+    public void setMemberUsers(List<User> memberUsers)
     {
-        this.groupMembers = groupMembers;
+        this.memberUsers = memberUsers;
     }
 
     //@JsonIgnore
@@ -120,29 +120,42 @@ public class Group extends IdItemBase{
     }
     @JsonIgnore
     public int getGroupSize(){
-        return groupMembers.size();}
+        return memberUsers.size();}
     @JsonIgnore
     public String[] getGroupMembersNames(){
 
         String[] names;
-        if (groupMembers.size() > 0) {
+        if (memberUsers.size() > 0) {
             names = new String[getGroupSize()];
 
             for (int i = 0; i < getGroupSize(); i++) {
-                User member = groupMembers.get(i);
+                User member = memberUsers.get(i);
                 names[i] = member.getName();
             }
         } else {
-            names = null;
+            names = new String[0];
         }
         return names;
     }
+
+    @JsonIgnore
+    public List<User> removeGroupMember(Long userId){
+        for (int i = 0; i < memberUsers.size(); i++){
+            if (userId == memberUsers.get(i).getId()){
+                memberUsers.remove(i);
+                break;
+            }
+        }
+
+        return memberUsers;
+    }
+
     @JsonIgnore
     public long[] getGroupMembersIds(){
         long[] Ids = new long[getGroupSize()];
 
         for (int i = 0; i < getGroupSize(); i++){
-            User member = groupMembers.get(i);
+            User member = memberUsers.get(i);
             Ids[i] = member.getId();
         }
 
@@ -155,7 +168,7 @@ public class Group extends IdItemBase{
         this.routeLatArray = group2.getRouteLatArray();
         this.routeLngArray = group2.getRouteLngArray();
         this.leader = group2.getLeader();
-        this.groupMembers = group2.getGroupMembers();
+        this.memberUsers = group2.getMemberUsers();
     }
 
 
