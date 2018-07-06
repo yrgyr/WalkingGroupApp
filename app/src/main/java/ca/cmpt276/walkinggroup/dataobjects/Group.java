@@ -20,7 +20,7 @@ public class Group extends IdItemBase{
     private List<Double> routeLatArray = new ArrayList<>();
     private List<Double> routeLngArray = new ArrayList<>();
     private User leader;
-    private List<User> groupMembers = new ArrayList<>();
+    private List<User> memberOfGroups = new ArrayList<>();
 
     public Group() { }
 
@@ -87,15 +87,15 @@ public class Group extends IdItemBase{
 
         return leader;
     }
-    @JsonIgnore
-    public List<User> getGroupMembers()
+    //@JsonIgnore
+    public List<User> getMemberOfGroups()
     {
-        return groupMembers;
+        return memberOfGroups;
     }
 
-    public void setGroupMembers(List<User> groupMembers)
+    public void setMemberOfGroups(List<User> memberOfGroups)
     {
-        this.groupMembers = groupMembers;
+        this.memberOfGroups = memberOfGroups;
     }
 
     //@JsonIgnore
@@ -120,16 +120,16 @@ public class Group extends IdItemBase{
     }
     @JsonIgnore
     public int getGroupSize(){
-        return groupMembers.size();}
+        return memberOfGroups.size();}
     @JsonIgnore
     public String[] getGroupMembersNames(){
 
         String[] names;
-        if (groupMembers.size() > 0) {
+        if (memberOfGroups.size() > 0) {
             names = new String[getGroupSize()];
 
             for (int i = 0; i < getGroupSize(); i++) {
-                User member = groupMembers.get(i);
+                User member = memberOfGroups.get(i);
                 names[i] = member.getName();
             }
         } else {
@@ -142,7 +142,7 @@ public class Group extends IdItemBase{
         long[] Ids = new long[getGroupSize()];
 
         for (int i = 0; i < getGroupSize(); i++){
-            User member = groupMembers.get(i);
+            User member = memberOfGroups.get(i);
             Ids[i] = member.getId();
         }
 
@@ -155,7 +155,7 @@ public class Group extends IdItemBase{
         this.routeLatArray = group2.getRouteLatArray();
         this.routeLngArray = group2.getRouteLngArray();
         this.leader = group2.getLeader();
-        this.groupMembers = group2.getGroupMembers();
+        this.memberOfGroups = group2.getMemberOfGroups();
     }
 
 

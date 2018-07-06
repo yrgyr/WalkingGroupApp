@@ -20,6 +20,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
+import ca.cmpt276.walkinggroup.dataobjects.CurrentUserData;
 import ca.cmpt276.walkinggroup.dataobjects.Group;
 import ca.cmpt276.walkinggroup.dataobjects.User;
 import ca.cmpt276.walkinggroup.proxy.ProxyBuilder;
@@ -29,9 +30,10 @@ import retrofit2.Call;
 import static ca.cmpt276.walkinggroup.app.MapsActivity.groupSelected;
 
 public class Join_Group extends AppCompatActivity {
-    WGServerProxy proxy; // Todo: get this proxy from singleton class
-    User currentUser; // Todo: get this from singleton class
-    public List<User> groupMembers;
+    private CurrentUserData userSingleton = CurrentUserData.getSingletonInstance();
+    private WGServerProxy proxy = userSingleton.getCurrentProxy();
+    private User currentUser = userSingleton.getCurrentUser();
+    private List<User> groupMembers = new ArrayList<>();
 
     //private Group group = groupSelected;
     Long grpId = groupSelected.getId();
@@ -40,7 +42,7 @@ public class Join_Group extends AppCompatActivity {
     String[] members = groupSelected.getGroupMembersNames();  // Todo: replace with groupMembers
 
     //long[] membersIds = group.getGroupMembersIds();
-    public List<User> monitorsUsers; // Todo: get the array of monitors users by calling getMonitorsUsers
+    private List<User> monitorsUsers; // Todo: get the array of monitors users by calling getMonitorsUsers
 
 
     @Override
@@ -122,7 +124,8 @@ public class Join_Group extends AppCompatActivity {
     }
 
     private void populateGroupMembersListView() {
-        //members = groupSelected.getGroupMembersNames();
+        members = groupSelected.getGroupMembersNames();
+        Log.e("Join_Group", "Group size: " + groupSelected.getGroupSize());
         if (members != null) {
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.group_member, members);
             ListView membersList = findViewById(R.id.join_grp_members_listview);
@@ -169,7 +172,7 @@ public class Join_Group extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 if (membersToRemove.size()> 0) {
-                    List<User> originalMembers = groupSelected.getGroupMembers();
+                    List<User> originalMembers = groupSelected.getMemberOfGroups();
                     for (int i = 0; i < membersToRemove.size(); i++){
                         int j = membersToRemove.get(i);
                         User user = originalMembers.get(j);
@@ -276,14 +279,14 @@ public class Join_Group extends AppCompatActivity {
 
     // Todo: delete this testing method later
     private void addLocalUserToGroup(User user){
-        List<User> updatedMembers = groupSelected.getGroupMembers();
+        List<User> updatedMembers = groupSelected.getMemberOfGroups();
         updatedMembers.add(user);
-        groupSelected.setGroupMembers(updatedMembers);
+        groupSelected.setMemberOfGroups(updatedMembers);
     }
 
     // Todo: delete this later
     private void deleteLocalGroupMembersById(long userId){
-        List<User> originalMembers = groupSelected.getGroupMembers();
+        List<User> originalMembers = groupSelected.getMemberOfGroups();
         List<User> updatedMembers = new ArrayList<>();
 
         for (int i = 0; i < originalMembers.size(); i++){
@@ -293,7 +296,7 @@ public class Join_Group extends AppCompatActivity {
             }
         }
 
-        groupSelected.setGroupMembers(updatedMembers);
+        groupSelected.setMemberOfGroups(updatedMembers);
     }
 
     // Todo: delete this later
@@ -345,6 +348,7 @@ public class Join_Group extends AppCompatActivity {
 
     private void returnedMembers(List<User> users){
         groupMembers = users;
+        Log.e("Join_Group", "User list length after adding: " + groupMembers.size());
     }
 
     private void response(Void returnedNothing){

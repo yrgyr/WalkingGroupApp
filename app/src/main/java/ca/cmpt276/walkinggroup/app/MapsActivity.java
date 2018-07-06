@@ -41,7 +41,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private CurrentUserData userSingleton = CurrentUserData.getSingletonInstance();
     //WGServerProxy proxy;
-    private WGServerProxy proxy = userSingleton.getCurrentProxy(); // Todo: get this proxy from singleton class
+    private WGServerProxy proxy = userSingleton.getCurrentProxy();
 
     private GoogleMap mMap;
     private static final String TAG = "MapsActivity";
@@ -82,6 +82,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      * it inside the SupportMapFragment. This method will only be triggered once the user has
      * installed Google Play services and returned to the app.
      */
+
+    // Codes for google maps from Coding with Mitch tutorial video series: https://www.youtube.com/watch?v=OknMZUnTyds&list=PLgCYzUzKIBE-vInwQhGSdnbyJ62nixHCt
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
@@ -90,12 +92,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if (mLocationPermissionsGranted) {
             currentLatLng = getDeviceLocation();
             if (currentLatLng != null) {
-                //setUpClusterer(70, 100);
-                // Test map with locally created groups
-                //List<Group> groups = createLocalTestGroups(currentLatLng);
-                // Todo: change with server call to getGroups()
-                //getRemoteGroups();
-                //setUpLocalGroupCluster(groups);
                 groupsOnServer = groupsList;
                 Log.e("before cluster call:", "Group size: " + groupsOnServer.size());
                 setUpLocalGroupCluster(groupsOnServer);
@@ -245,7 +241,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public void onClusterItemInfoWindowClick(MyItem myItem) {
                 Long grpId = myItem.getGrpId();
-                //Group group = getLocalGroupById(groups, grpId);  // Todo: replace with server call method and use groupSelected variable
+                //Group group = getLocalGroupById(groups, grpId);
                 getRemoteGroupById(grpId);
 //                Group group = groupSelected;
 //
@@ -336,7 +332,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     group.setLeader(member);
                 }
             }
-            group.setGroupMembers(members);
+            group.setMemberOfGroups(members);
 
             double offset = i / 200d;
             lat = lat + offset;
@@ -388,6 +384,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 //        Group groupToLaunch = Group.getGroupSingletonInstance();
 //        groupToLaunch.setToGroup2Params(groupSelected);
         Log.e(TAG, "Group ID is: " + groupSelected.getId());
+        Log.e(TAG, "Group leader: " + groupSelected.getLeader());
         Intent intent = new Intent(MapsActivity.this, Join_Group.class);
         startActivity(intent);
 
