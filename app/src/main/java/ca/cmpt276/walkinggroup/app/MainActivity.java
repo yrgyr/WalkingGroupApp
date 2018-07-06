@@ -34,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
 
     private WGServerProxy proxy;
     public static boolean isLogOut = false;
+    public static List<Group> groupsList = new ArrayList<>();
     private String name = "default";
 
 
@@ -59,6 +60,8 @@ public class MainActivity extends AppCompatActivity {
 
         setUpName();
         setUpLogOut();
+
+        getRemoteGroups();
 
 //        setupLogInBtn();
         setupGetMonitorUsersBtn();
@@ -171,6 +174,17 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    private void getRemoteGroups() {
+        Call<List<Group>> caller = proxy.getGroups();
+        ProxyBuilder.callProxy(MainActivity.this, caller, returnedGroups -> returnGroups(returnedGroups));
+        //getRemoteGroupById(Long.valueOf(391));
+    }
+
+    private void returnGroups(List<Group> returnedGroups){
+        groupsList = returnedGroups;
+        //Log.e("groupsOnServer size: ", "Size: " + groupsOnServer.size());
     }
     //=================================== LOG IN ===============================================
 //    private void setupLogInBtn(){

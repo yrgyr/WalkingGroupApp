@@ -35,11 +35,13 @@ import ca.cmpt276.walkinggroup.proxy.ProxyBuilder;
 import ca.cmpt276.walkinggroup.proxy.WGServerProxy;
 import retrofit2.Call;
 
+import static ca.cmpt276.walkinggroup.app.MainActivity.groupsList;
+
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private CurrentUserData userSingleton = CurrentUserData.getSingletonInstance();
     //WGServerProxy proxy;
-    WGServerProxy proxy = userSingleton.getCurrentProxy(); // Todo: get this proxy from singleton class
+    private WGServerProxy proxy = userSingleton.getCurrentProxy(); // Todo: get this proxy from singleton class
 
     private GoogleMap mMap;
     private static final String TAG = "MapsActivity";
@@ -56,7 +58,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private ClusterManager<MyItem> mClusterManager;
 
-    public List<Group> groupsOnServer;
+    private List<Group> groupsOnServer = new ArrayList<>();
     private Group groupSelected;
 
 
@@ -66,7 +68,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         getLocationPermission();
-        getRemoteGroups();
+        //getRemoteGroups();
 
     }
 
@@ -92,9 +94,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 // Test map with locally created groups
                 //List<Group> groups = createLocalTestGroups(currentLatLng);
                 // Todo: change with server call to getGroups()
-                getRemoteGroups();
+                //getRemoteGroups();
                 //setUpLocalGroupCluster(groups);
-                //Log.e("before cluster call:", "Group size: " + groupsOnServer.size());
+                groupsOnServer = groupsList;
+                Log.e("before cluster call:", "Group size: " + groupsOnServer.size());
                 setUpLocalGroupCluster(groupsOnServer);
 
             }
@@ -274,7 +277,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 //    }
 
     private void addGroupsToCluster(List<Group> groups){
-        //Log.e("Cluster size:", "SIze: "+ groups.size());
+        Log.e("Cluster size:", "SIze: "+ groups.size());
         if (groups != null) {
             if (groups.size() > 0) {
                 Log.e("groups null?", "groups not null!, size = " + groups.size());
@@ -282,13 +285,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     Group group = groups.get(i);
                     int grpId = group.getGroupId();
                     String grpDesc = group.getGroupDescription();
-                    if (i == 0) {
-                        Toast.makeText(MapsActivity.this, "group desc: " + grpDesc, Toast.LENGTH_LONG).show();
-                    }
-                    Log.e("group desc:", " " + grpDesc);
+
 
                     List<Double> latArr = group.getRouteLatArray();
                     List<Double> lngArr = group.getRouteLngArray();
+
+                    if (i == groups.size() - 1){
+                        Toast.makeText(MapsActivity.this, grpDesc, Toast.LENGTH_LONG).show();
+                        Toast.makeText(MapsActivity.this, "latArr size: " + latArr.size(), Toast.LENGTH_LONG).show();
+                        Log.e("Grouppp latSize: ", ""+latArr.size());
+                    }
 
                     // only populate groups with non-empty lat and lng arrays
                     if (latArr.size() > 0 && lngArr.size() > 0) {
@@ -299,9 +305,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         mClusterManager.addItem(newItem);
                     }
                 }
+            } else {
+                Toast.makeText(MapsActivity.this, "Groups size is 0", Toast.LENGTH_LONG).show();
             }
         } else{
-            Log.e("Group size", "Group list is null!");
+            Toast.makeText(MapsActivity.this, "Groups list is null!", Toast.LENGTH_LONG).show();
         }
     }
 
