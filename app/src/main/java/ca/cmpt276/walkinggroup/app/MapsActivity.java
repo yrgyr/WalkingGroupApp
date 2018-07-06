@@ -59,7 +59,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private ClusterManager<MyItem> mClusterManager;
 
     private List<Group> groupsOnServer = new ArrayList<>();
-    private Group groupSelected;
+    public static Group groupSelected;
 
 
 
@@ -244,15 +244,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mClusterManager.setOnClusterItemInfoWindowClickListener(new ClusterManager.OnClusterItemInfoWindowClickListener<MyItem>() {
             @Override
             public void onClusterItemInfoWindowClick(MyItem myItem) {
-                int grpId = myItem.getGrpId();
+                Long grpId = myItem.getGrpId();
                 //Group group = getLocalGroupById(groups, grpId);  // Todo: replace with server call method and use groupSelected variable
-                getRemoteGroupById(Long.valueOf(grpId));
-                Group group = groupSelected;
-
-                Group groupToLaunch = Group.getGroupSingletonInstance();
-                groupToLaunch.setToGroup2Params(group);
-                Intent intent = new Intent(MapsActivity.this, Join_Group.class);
-                startActivity(intent);
+                getRemoteGroupById(grpId);
+//                Group group = groupSelected;
+//
+//                Group groupToLaunch = Group.getGroupSingletonInstance();
+//                groupToLaunch.setToGroup2Params(group);
+//                Intent intent = new Intent(MapsActivity.this, Join_Group.class);
+//                startActivity(intent);
             }
         });
 
@@ -283,7 +283,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 Log.e("groups null?", "groups not null!, size = " + groups.size());
                 for (int i = 0; i < groups.size(); i++) {
                     Group group = groups.get(i);
-                    int grpId = group.getGroupId();
+                    Long grpId = group.getId();
                     String grpDesc = group.getGroupDescription();
 
 
@@ -291,8 +291,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     List<Double> lngArr = group.getRouteLngArray();
 
                     if (i == groups.size() - 1){
-                        Toast.makeText(MapsActivity.this, grpDesc, Toast.LENGTH_LONG).show();
-                        Toast.makeText(MapsActivity.this, "latArr size: " + latArr.size(), Toast.LENGTH_LONG).show();
+                        //Toast.makeText(MapsActivity.this, grpDesc, Toast.LENGTH_LONG).show();
+                        //Toast.makeText(MapsActivity.this, "latArr size: " + latArr.size(), Toast.LENGTH_LONG).show();
                         Log.e("Grouppp latSize: ", ""+latArr.size());
                     }
 
@@ -301,7 +301,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         double lat = group.getStartLat();
                         double lng = group.getStartLng();
 
-                        MyItem newItem = new MyItem(lat, lng, "Group " + grpId + "- " + grpDesc, "Click here to view group", grpId);
+                        MyItem newItem = new MyItem(lat, lng, "Group -" + grpDesc, "Click here to view group", grpId);
                         mClusterManager.addItem(newItem);
                     }
                 }
@@ -384,7 +384,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private void returnedGroupById(Group group){
         groupSelected = group;
+
+//        Group groupToLaunch = Group.getGroupSingletonInstance();
+//        groupToLaunch.setToGroup2Params(groupSelected);
         Log.e(TAG, "Group ID is: " + groupSelected.getId());
+        Intent intent = new Intent(MapsActivity.this, Join_Group.class);
+        startActivity(intent);
+
     }
 
 }

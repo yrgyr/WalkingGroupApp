@@ -20,7 +20,7 @@ public class Group extends IdItemBase{
     private List<Double> routeLatArray = new ArrayList<>();
     private List<Double> routeLngArray = new ArrayList<>();
     private User leader;
-    private List<User> groupMembers;
+    private List<User> groupMembers = new ArrayList<>();
 
     public Group() { }
 
@@ -97,12 +97,13 @@ public class Group extends IdItemBase{
     {
         this.groupMembers = groupMembers;
     }
-    @JsonIgnore
+
+    //@JsonIgnore
     public List<Double> getRouteLatArray() {
 
         return routeLatArray;
     }
-    @JsonIgnore
+    //@JsonIgnore
     public List<Double> getRouteLngArray() {
 
         return routeLngArray;
@@ -122,13 +123,18 @@ public class Group extends IdItemBase{
         return groupMembers.size();}
     @JsonIgnore
     public String[] getGroupMembersNames(){
-        String[] names = new String[getGroupSize()];
 
-        for (int i = 0; i < getGroupSize(); i++){
-            User member = groupMembers.get(i);
-            names[i] = member.getName();
+        String[] names;
+        if (groupMembers.size() > 0) {
+            names = new String[getGroupSize()];
+
+            for (int i = 0; i < getGroupSize(); i++) {
+                User member = groupMembers.get(i);
+                names[i] = member.getName();
+            }
+        } else {
+            names = null;
         }
-
         return names;
     }
     @JsonIgnore

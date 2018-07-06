@@ -26,16 +26,19 @@ import ca.cmpt276.walkinggroup.proxy.ProxyBuilder;
 import ca.cmpt276.walkinggroup.proxy.WGServerProxy;
 import retrofit2.Call;
 
+import static ca.cmpt276.walkinggroup.app.MapsActivity.groupSelected;
+
 public class Join_Group extends AppCompatActivity {
     WGServerProxy proxy; // Todo: get this proxy from singleton class
     User currentUser; // Todo: get this from singleton class
     public List<User> groupMembers;
 
-    public Group group = Group.getGroupSingletonInstance();
-    Long grpId = group.getId();
-    String grpDesc = group.getGroupDescription();
-    String leaderName = group.getLeader().getName();
-    String[] members = group.getGroupMembersNames();  // Todo: replace with groupMembers
+    //private Group group = groupSelected;
+    Long grpId = groupSelected.getId();
+    String grpDesc = groupSelected.getGroupDescription();
+    String leaderName = groupSelected.getLeader().getName();
+    String[] members = groupSelected.getGroupMembersNames();  // Todo: replace with groupMembers
+
     //long[] membersIds = group.getGroupMembersIds();
     public List<User> monitorsUsers; // Todo: get the array of monitors users by calling getMonitorsUsers
 
@@ -45,9 +48,12 @@ public class Join_Group extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_join__group);
 
+        Log.e("grpID in join group:", "" + grpDesc);
+
         populateGroupID();
         populateGroupDesc();
         populateGroupLeader();
+
         populateGroupMembersListView();
         setupActionBar();
     }
@@ -116,10 +122,12 @@ public class Join_Group extends AppCompatActivity {
     }
 
     private void populateGroupMembersListView() {
-        members = group.getGroupMembersNames();
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.group_member, members);
-        ListView membersList = findViewById(R.id.join_grp_members_listview);
-        membersList.setAdapter(adapter);
+        //members = groupSelected.getGroupMembersNames();
+        if (members != null) {
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.group_member, members);
+            ListView membersList = findViewById(R.id.join_grp_members_listview);
+            membersList.setAdapter(adapter);
+        }
 
     }
 
@@ -161,7 +169,7 @@ public class Join_Group extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 if (membersToRemove.size()> 0) {
-                    List<User> originalMembers = group.getGroupMembers();
+                    List<User> originalMembers = groupSelected.getGroupMembers();
                     for (int i = 0; i < membersToRemove.size(); i++){
                         int j = membersToRemove.get(i);
                         User user = originalMembers.get(j);
@@ -245,7 +253,7 @@ public class Join_Group extends AppCompatActivity {
 
     private boolean checkIfUserIsLeader(){
         // Todo: check with server if the current user is the group leader
-        if (currentUser.getId() == group.getGroupId()){
+        if (currentUser.getId() == groupSelected.getGroupId()){
             return true;
         } else {
             return false;
@@ -268,14 +276,14 @@ public class Join_Group extends AppCompatActivity {
 
     // Todo: delete this testing method later
     private void addLocalUserToGroup(User user){
-        List<User> updatedMembers = group.getGroupMembers();
+        List<User> updatedMembers = groupSelected.getGroupMembers();
         updatedMembers.add(user);
-        group.setGroupMembers(updatedMembers);
+        groupSelected.setGroupMembers(updatedMembers);
     }
 
     // Todo: delete this later
     private void deleteLocalGroupMembersById(long userId){
-        List<User> originalMembers = group.getGroupMembers();
+        List<User> originalMembers = groupSelected.getGroupMembers();
         List<User> updatedMembers = new ArrayList<>();
 
         for (int i = 0; i < originalMembers.size(); i++){
@@ -285,7 +293,7 @@ public class Join_Group extends AppCompatActivity {
             }
         }
 
-        group.setGroupMembers(updatedMembers);
+        groupSelected.setGroupMembers(updatedMembers);
     }
 
     // Todo: delete this later
