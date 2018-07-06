@@ -22,16 +22,22 @@ import java.util.List;
 
 import ca.cmpt276.walkinggroup.dataobjects.Group;
 import ca.cmpt276.walkinggroup.dataobjects.User;
+import ca.cmpt276.walkinggroup.proxy.ProxyBuilder;
+import ca.cmpt276.walkinggroup.proxy.WGServerProxy;
+import retrofit2.Call;
 
 public class Join_Group extends AppCompatActivity {
+    WGServerProxy proxy; // Todo: get this proxy from singleton class
+    User currentUser; // Todo: get this from singleton class
+    public List<User> groupMembers;
 
-    private Group group = Group.getGroupSingletonInstance();
-    int grpId = group.getGroupId();
+    public Group group = Group.getGroupSingletonInstance();
+    Long grpId = group.getId();
     String grpDesc = group.getGroupDescription();
     String leaderName = group.getLeader().getName();
-    String[] members = group.getGroupMembersNames();
+    String[] members = group.getGroupMembersNames();  // Todo: replace with groupMembers
     //long[] membersIds = group.getGroupMembersIds();
-    List<User> monitorsUsers = new ArrayList<>(); // Todo: get the array of monitors users by calling getMonitorsUsers
+    public List<User> monitorsUsers; // Todo: get the array of monitors users by calling getMonitorsUsers
 
 
     @Override
@@ -58,8 +64,8 @@ public class Join_Group extends AppCompatActivity {
         switch(item.getItemId()){
             case R.id.menu_join_group:
                 Toast.makeText(Join_Group.this, "You have joined group " + grpDesc + "!", Toast.LENGTH_SHORT).show();
-                // Todo: server codes to join group
-
+                // Todo: call addUserToGroup with current user's ID
+                addUserToGroup(grpId, currentUser);
                 finish();
                 break;
             case R.id.menu_add_user:
@@ -74,13 +80,13 @@ public class Join_Group extends AppCompatActivity {
                 }
                 break;
             case R.id.menu_leave_group:
-                boolean isInGroup = true;
+                boolean isInGroup = checkIfIAmInGroup();
                 // Todo: server codes to check if I'm currently in this group
 
                 if (isInGroup){
                     // Todo: server codes to remove myself from this group
+                    removeUserFromGroup(grpId, currentUser.getId());
                     Toast.makeText(this, "You have left group " + grpDesc, Toast.LENGTH_SHORT).show();
-                    isInGroup = false;
                     break;
                 } else{
                     Toast.makeText(this, "You're not currently in group " + grpDesc, Toast.LENGTH_SHORT).show();
@@ -92,6 +98,7 @@ public class Join_Group extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
 
     private void populateGroupID() {
         TextView txtGrpId = findViewById(R.id.txt_join_grp_grpid_val);
@@ -158,8 +165,9 @@ public class Join_Group extends AppCompatActivity {
                     for (int i = 0; i < membersToRemove.size(); i++){
                         int j = membersToRemove.get(i);
                         User user = originalMembers.get(j);
-                        long userId = user.getId();
-                        deleteLocalGroupMembersById(userId);  // Todo: replace with removeFromMonitorsUsers server call
+                        Long userId = user.getId();
+                        //deleteLocalGroupMembersById(userId);  // Todo: replace with removeFromMonitorsUsers server call
+                        removeUserFromGroup(grpId, userId);
                     }
                     populateGroupMembersListView();
                 }
@@ -180,7 +188,7 @@ public class Join_Group extends AppCompatActivity {
     }
 
     private void showAddMembersDialogue(){
-        createLostMonitorsUser(); // todo: delete this later
+        //createLostMonitorsUser(); // todo: delete this later
         String[] monitorsUsersArr = new String[monitorsUsers.size()];
         boolean[] checkedMembers = new boolean[monitorsUsers.size()];
         List<Integer> membersToAdd = new ArrayList<>();
@@ -215,7 +223,8 @@ public class Join_Group extends AppCompatActivity {
 
                     for (int i = 0; i < membersToAdd.size(); i++) {
                         User user = monitorsUsers.get(i);
-                        addLocalUserToGroup(user);  // Todo: replace with addGroupMember call to server
+                        //addLocalUserToGroup(user);  // Todo: replace with addGroupMember call to server
+                        addUserToGroup(grpId, user);
                     }
                     populateGroupMembersListView();
                 }
@@ -236,7 +245,25 @@ public class Join_Group extends AppCompatActivity {
 
     private boolean checkIfUserIsLeader(){
         // Todo: check with server if the current user is the group leader
-        return true;
+        if (currentUser.getId() == group.getGroupId()){
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private boolean checkIfIAmInGroup() {
+        getRemoteGroupMembers(grpId);
+
+        for (int i = 0; i < groupMembers.size(); i++){
+            User user = groupMembers.get(i);
+            if (currentUser.getId() == user.getId()){
+                return true;
+            }
+        }
+
+        return false;
+
     }
 
     // Todo: delete this testing method later
@@ -280,5 +307,39 @@ public class Join_Group extends AppCompatActivity {
         return Ids;
     }
 
+    private void getRemoteMonitorsUsers(Long userId){
+        Call<List<User>> caller = proxy.getMonitorsUsers(userId);
+        ProxyBuilder.callProxy(Join_Group.this, caller, returnedUsers -> returnedMonitorsUser(returnedUsers));
+    }
 
+    private void returnedMonitorsUser(List<User> users){
+        monitorsUsers = users;
+    }
+
+    private void addUserToGroup(Long groupId, User user){
+        Call<List<User>> caller = proxy.addGroupMember(groupId, user);
+        ProxyBuilder.callProxy(Join_Group.this, caller, returnedUsers -> returnedMembers(returnedUsers));
+    }
+
+    private void getRemoteGroupMembers(Long groupId){
+        Call<List<User>> caller = proxy.getGroupMembers(groupId);
+        ProxyBuilder.callProxy(Join_Group.this, caller, returnedMembers -> returnGroupMembers(returnedMembers));
+    }
+
+    private void returnGroupMembers(List<User> returnedMembers){
+        groupMembers = returnedMembers;
+    }
+
+    private void removeUserFromGroup(Long groupId, Long userId){
+        Call<Void> caller = proxy.removeGroupMember(groupId, userId);
+        ProxyBuilder.callProxy(Join_Group.this, caller, returnedNothing -> response(returnedNothing));
+    }
+
+    private void returnedMembers(List<User> users){
+        groupMembers = users;
+    }
+
+    private void response(Void returnedNothing){
+
+    }
 }

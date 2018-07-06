@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -29,8 +30,14 @@ import java.util.List;
 import ca.cmpt276.walkinggroup.dataobjects.Group;
 import ca.cmpt276.walkinggroup.dataobjects.MyItem;
 import ca.cmpt276.walkinggroup.dataobjects.User;
+import ca.cmpt276.walkinggroup.proxy.ProxyBuilder;
+import ca.cmpt276.walkinggroup.proxy.WGServerProxy;
+import retrofit2.Call;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
+
+    //WGServerProxy proxy;
+    WGServerProxy proxy = ProxyBuilder.getProxy(getString(R.string.apikey), null);; // Todo: get this proxy from singleton class
 
     private GoogleMap mMap;
     private static final String TAG = "MapsActivity";
@@ -42,7 +49,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private static final float DEFAULT_ZOOM = 15f;
     private FusedLocationProviderClient mFusedLocationProviderClient;
 
+    public double latitude;
+    public double longitude;
+
     private ClusterManager<MyItem> mClusterManager;
+
+    public List<Group> groupsOnServer;
+    private Group groupSelected;
 
 
 
@@ -75,7 +88,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 //setUpClusterer(70, 100);
                 // Test map with locally created groups
                 List<Group> groups = createLocalTestGroups(currentLatLng);
-                setUpLocalGroupCluster(groups);
+                // Todo: change with server call to getGroups()
+                getRemoteGroups();
+                //setUpLocalGroupCluster(groups);
+                setUpLocalGroupCluster(groupsOnServer);
 
             }
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -89,6 +105,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 //        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
 //        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
     }
+
 
     private void initializeMap(){
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
@@ -138,9 +155,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             if (mLocationPermissionsGranted){
                 // Code obtained from StacksOverflow https://stackoverflow.com/questions/2227292/how-to-get-latitude-and-longitude-of-the-mobile-device-in-android
                 LocationManager lm = (LocationManager)this.getSystemService(Context.LOCATION_SERVICE);
-                Location location = lm.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
-                double longitude = location.getLongitude();
-                double latitude = location.getLatitude();
+                Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+
+                if (location != null){
+                    longitude = location.getLongitude();
+                    latitude = location.getLatitude();
+                }
+                lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 10, locationListener);
+
 
                 LatLng currentLatLng = new LatLng(latitude, longitude);
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, DEFAULT_ZOOM));
@@ -156,6 +178,30 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         return null;
     }
+
+    private final LocationListener locationListener = new LocationListener() {
+        @Override
+        public void onLocationChanged(Location location) {
+            longitude = location.getLongitude();
+            latitude = location.getLatitude();
+
+        }
+
+        @Override
+        public void onStatusChanged(String provider, int status, Bundle extras) {
+
+        }
+
+        @Override
+        public void onProviderEnabled(String provider) {
+
+        }
+
+        @Override
+        public void onProviderDisabled(String provider) {
+
+        }
+    };
 
     // Map clusters
     // Documentation: https://developers.google.com/maps/documentation/android-sdk/utility/marker-clustering
@@ -190,7 +236,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public void onClusterItemInfoWindowClick(MyItem myItem) {
                 int grpId = myItem.getGrpId();
-                Group group = getLocalGroupById(groups, grpId);
+                //Group group = getLocalGroupById(groups, grpId);  // Todo: replace with server call method and use groupSelected variable
+                getRemoteGroupById(Long.valueOf(grpId));
+                Group group = groupSelected;
+
                 Group groupToLaunch = Group.getGroupSingletonInstance();
                 groupToLaunch.setToGroup2Params(group);
                 Intent intent = new Intent(MapsActivity.this, Join_Group.class);
@@ -283,6 +332,26 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         } else {
             return null;
         }
+    }
+
+    private void getRemoteGroups() {
+        Call<List<Group>> caller = proxy.getGroups();
+        ProxyBuilder.callProxy(MapsActivity.this, caller, returnedGroups -> returnGroups(returnedGroups));
+        getRemoteGroupById(Long.valueOf(391));
+    }
+
+    private void returnGroups(List<Group> returnedGroups){
+        groupsOnServer = returnedGroups;
+    }
+
+    private void getRemoteGroupById(Long id){
+        Call<Group> caller = proxy.getGroupById(id);
+        ProxyBuilder.callProxy(MapsActivity.this, caller, returnedGroup -> returnedGroupById(returnedGroup));
+    }
+
+    private void returnedGroupById(Group group){
+        groupSelected = group;
+        Log.e(TAG, "Group ID is: " + groupSelected.getId());
     }
 
 }

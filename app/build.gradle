@@ -17,7 +17,7 @@ android {
         }
     }
 
-    // <<< ADDED >>>
+    // <<< ADDED >>>>
     // Required to support Lambda expressions
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
