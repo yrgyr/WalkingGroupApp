@@ -342,6 +342,7 @@ public class ProxyBuilder {
                 }
             }
 
+            
             @Override
             public void onFailure(Call<T> call, Throwable t) {
                 String message = "Error communicating with server: " + t.getMessage();
