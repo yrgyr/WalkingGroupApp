@@ -133,10 +133,23 @@ public class Group extends IdItemBase{
                 names[i] = member.getName();
             }
         } else {
-            names = null;
+            names = new String[0];
         }
         return names;
     }
+
+    @JsonIgnore
+    public List<User> removeGroupMember(Long userId){
+        for (int i = 0; i < memberUsers.size(); i++){
+            if (userId == memberUsers.get(i).getId()){
+                memberUsers.remove(i);
+                break;
+            }
+        }
+
+        return memberUsers;
+    }
+
     @JsonIgnore
     public long[] getGroupMembersIds(){
         long[] Ids = new long[getGroupSize()];

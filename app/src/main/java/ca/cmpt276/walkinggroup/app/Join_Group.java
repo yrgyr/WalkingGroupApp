@@ -33,12 +33,14 @@ public class Join_Group extends AppCompatActivity {
     private CurrentUserData userSingleton = CurrentUserData.getSingletonInstance();
     private WGServerProxy proxy = userSingleton.getCurrentProxy();
     private User currentUser = userSingleton.getCurrentUser();
-    private List<User> groupMembers = new ArrayList<>();
+    private List<User> groupMembers = groupSelected.getMemberUsers();
 
     //private Group group = groupSelected;
     Long grpId = groupSelected.getId();
     String grpDesc = groupSelected.getGroupDescription();
     String leaderName = groupSelected.getLeader().getName();
+
+
     String[] members = groupSelected.getGroupMembersNames();  // Todo: replace with groupMembers
 
     //long[] membersIds = group.getGroupMembersIds();
@@ -51,6 +53,7 @@ public class Join_Group extends AppCompatActivity {
         setContentView(R.layout.activity_join__group);
 
         Log.e("grpID in join group:", "" + grpDesc);
+
 
         populateGroupID();
         populateGroupDesc();
@@ -88,18 +91,22 @@ public class Join_Group extends AppCompatActivity {
                 }
                 break;
             case R.id.menu_leave_group:
-                boolean isInGroup = checkIfIAmInGroup();
-                // Todo: server codes to check if I'm currently in this group
+                // Todo: implement error message to show up when I'm not in the group
+                //boolean isInGroup = checkIfIAmInGroup();
 
-                if (isInGroup){
-                    // Todo: server codes to remove myself from this group
-                    removeUserFromGroup(grpId, currentUser.getId());
-                    Toast.makeText(this, "You have left group " + grpDesc, Toast.LENGTH_SHORT).show();
-                    break;
-                } else{
-                    Toast.makeText(this, "You're not currently in group " + grpDesc, Toast.LENGTH_SHORT).show();
-                    break;
-                }
+//                if (isInGroup){
+//                    removeUserFromGroup(grpId, currentUser.getId());
+//                    Toast.makeText(this, "You have left group " + grpDesc, Toast.LENGTH_SHORT).show();
+//                    break;
+//                } else{
+//                    Toast.makeText(this, "You're not currently in group " + grpDesc, Toast.LENGTH_SHORT).show();
+//                    break;
+//                }
+                Long currentUserId = currentUser.getId();
+                removeUserFromGroup(grpId, currentUserId);
+                Toast.makeText(Join_Group.this, "You have left this group!", Toast.LENGTH_SHORT).show();
+                finish();
+                break;
             case R.id.menu_go_back:
                 finish();
                 break;
@@ -124,14 +131,25 @@ public class Join_Group extends AppCompatActivity {
     }
 
     private void populateGroupMembersListView() {
+        // Todo: for testing
+        //List<User> membersTest = groupSelected.getMemberUsers();
+//        List<User> membersTest = groupMembers;
+//        User testUser = membersTest.get(0);
+//        Log.e("Join_Group", "First member ID: " + testUser.getId());
+//        Log.e("Join_Group", "First member name: " + testUser.getName());
         members = groupSelected.getGroupMembersNames();
-        Log.e("Join_Group", "Group size: " + groupSelected.getGroupSize());
-        Log.e("Join_Group", "members[0]: " + members[0]);
-        if (members != null) {
-            ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.group_member, members);
-            ListView membersList = findViewById(R.id.join_grp_members_listview);
-            membersList.setAdapter(adapter);
-        }
+        //Log.e("Join_Group", "Group size: " + groupSelected.getGroupSize());
+        //Log.e("Join_Group", "UserId: " + )
+        //Log.e("Join_Group", "members[0]: " + members[0]);
+
+//        if (members == null){
+//            members = new String[0];
+//        }
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.group_member, members);
+        ListView membersList = findViewById(R.id.join_grp_members_listview);
+        membersList.setAdapter(adapter);
+
 
     }
 
@@ -340,11 +358,13 @@ public class Join_Group extends AppCompatActivity {
 
     private void returnGroupMembers(List<User> returnedMembers){
         groupMembers = returnedMembers;
+        //List<User> = groupMembers.
     }
 
     private void removeUserFromGroup(Long groupId, Long userId){
         Call<Void> caller = proxy.removeGroupMember(groupId, userId);
         ProxyBuilder.callProxy(Join_Group.this, caller, returnedNothing -> response(returnedNothing));
+
     }
 
     private void returnedMembers(List<User> users){

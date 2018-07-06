@@ -383,8 +383,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 //        Group groupToLaunch = Group.getGroupSingletonInstance();
 //        groupToLaunch.setToGroup2Params(groupSelected);
+        User leader = groupSelected.getLeader();
         Log.e(TAG, "Group ID is: " + groupSelected.getId());
-        Log.e(TAG, "Group leader: " + groupSelected.getLeader());
+        //Log.e(TAG, "Group leader: " + groupSelected.getLeader());
+        Log.e(TAG, "Leader ID: " + leader.getId());
+        Log.e(TAG, "Leader name: " + leader.getName());
         Intent intent = new Intent(MapsActivity.this, Join_Group.class);
         startActivity(intent);
 
