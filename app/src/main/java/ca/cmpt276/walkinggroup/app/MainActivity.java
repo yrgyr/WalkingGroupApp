@@ -30,16 +30,11 @@ import ca.cmpt276.walkinggroup.proxy.WGServerProxy;
 import retrofit2.Call;
 
 public class MainActivity extends AppCompatActivity {
-    private static final String TAG = "my_activity";
 
     private WGServerProxy proxy;
     public static boolean isLogOut = false;
     public static List<Group> groupsList = new ArrayList<>();
     private String name = "default";
-
-
-    public static String userEmail = "james@sfu.ca";
-    private String userPassword = "lin090628";
 
     private CurrentUserData userSingleton = CurrentUserData.getSingletonInstance();
 
@@ -48,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         if(login.getToken(this) == null) {
             Intent intent = new Intent(this, login.class);
             startActivity(intent);
@@ -63,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
 
         getRemoteGroups();
 
-//        setupLogInBtn();
+
         setupGetMonitorUsersBtn();
         setupAddMonitorBtn();
         setupMapBtn();
@@ -96,6 +92,7 @@ public class MainActivity extends AppCompatActivity {
         TextView logOut = findViewById(R.id.LogOutText);
         logOut.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);
         logOut.setTextColor(Color.BLUE);
+
         logOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -116,7 +113,6 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this,MonitorByUsersList.class);
                 startActivity(intent);
-
             }
         });
     }
@@ -177,73 +173,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void getRemoteGroups() {
-        Call<List<Group>> caller = proxy.getGroups();
-        ProxyBuilder.callProxy(MainActivity.this, caller, returnedGroups -> returnGroups(returnedGroups));
-        //getRemoteGroupById(Long.valueOf(391));
+        if(login.getToken(MainActivity.this) != null) {
+            Call<List<Group>> caller = proxy.getGroups();
+            ProxyBuilder.callProxy(MainActivity.this, caller, returnedGroups -> returnGroups(returnedGroups));
+        }
+
     }
 
     private void returnGroups(List<Group> returnedGroups){
         groupsList = returnedGroups;
-        //Log.e("groupsOnServer size: ", "Size: " + groupsOnServer.size());
     }
-    //=================================== LOG IN ===============================================
-//    private void setupLogInBtn(){
-//        Button btn = (Button) findViewById(R.id.logInBtn);
-//        btn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//
-//                User user = new User();
-//
-//
-//                user.setEmail(userEmail);
-//                user.setPassword(userPassword);
-//
-////                userSingleton.setCurrentUser(user);
-//
-//                // Register for token received:
-//                ProxyBuilder.setOnTokenReceiveCallback( token -> onReceiveToken(token));
-//
-//                // Make call
-//                Call<Void> caller = proxy.login(user);
-//                ProxyBuilder.callProxy(MainActivity.this, caller, returnedNothing -> response(returnedNothing));
-//
-//                TextView txt = (TextView) findViewById(R.id.userInfo);
-//                txt.setText(getString(R.string.loginuserText,user.getEmail()));
-//            }
-//        });
-//    }
-//    private void response(Void returnedNothing) {
-//        notifyUserViaLogAndToast("Server replied to login request (no content was expected).");
-//    }
-//
-//    private void onReceiveToken(String token) {
-//        // Replace the current proxy with one that uses the token!
-//        Log.w(TAG, "   --> NOW HAVE TOKEN: " + token);
-//        Toast.makeText(this, token, Toast.LENGTH_LONG).show();
-//
-//
-//        proxy = ProxyBuilder.getProxy(getString(R.string.apikey), token);
-//        userSingleton.setCurrentProxy(proxy);
-//
-//        Call<User> getUserCaller = proxy.getUserByEmail(userEmail);
-//        ProxyBuilder.callProxy(MainActivity.this, getUserCaller, returnedLogInUser -> responseLoginUser(returnedLogInUser));
-//
-//
-//    }
-//
-//    private void responseLoginUser(User returnedLoginUser){
-//
-//        // set logged in users id to singleton instance
-//
-//
-//        userSingleton.setCurrentUser(returnedLoginUser);
-//
-//
-//    }
-//
-//    private void notifyUserViaLogAndToast(String message) {
-//        Log.w(TAG, message);
-//        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
-//    }
+
 }

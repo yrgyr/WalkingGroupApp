@@ -78,15 +78,12 @@ public class login extends AppCompatActivity {
 
                 Call<Void> caller = proxy.login(user);
                 ProxyBuilder.callProxyForLogin(login.this, caller, returnedNothing -> response(returnedNothing));
-
-
             }
         });
 
     }
 
     private void onReceiveToken(String token) {
-
         proxy = ProxyBuilder.getProxy(getString(R.string.apikey), token);
         tokenOfLoggingUser = token;
         saveToken(tokenOfLoggingUser);
@@ -100,10 +97,8 @@ public class login extends AppCompatActivity {
         startActivity(intent);
         finish();
     }
-    private void notifyUserViaLogAndToast(String message) {
-        Log.w(TAG, message);
-        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
-    }
+
+
     private void saveToken(String tokenOfLoggingUser) {
         SharedPreferences preferences = login.this.getSharedPreferences(APP_PREFERENCE,MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
@@ -130,6 +125,5 @@ public class login extends AppCompatActivity {
         return preferences.getString(EMAIL,null);
 
     }
-
 
 }

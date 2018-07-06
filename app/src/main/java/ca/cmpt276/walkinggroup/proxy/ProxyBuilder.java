@@ -6,7 +6,9 @@ import android.widget.Toast;
 
 import java.io.IOException;
 
+import ca.cmpt276.walkinggroup.app.MainActivity;
 import ca.cmpt276.walkinggroup.app.R;
+import ca.cmpt276.walkinggroup.app.login;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -133,7 +135,11 @@ public class ProxyBuilder {
                         e.printStackTrace();
                         message = "Unable to decode response (body or error's body).";
                     }
+
+
+
                     showFailure(message);
+
                 }
             }
 
@@ -231,7 +237,7 @@ public class ProxyBuilder {
                         e.printStackTrace();
                         message = "Unable to decode response (body or error's body).";
                     }
-                    String errorMessage = "Can't register, the email address have been used in register.";
+                    String errorMessage = context.getString(R.string.haveReg);
                     showFailure(errorMessage);
                 }
             }
@@ -250,9 +256,105 @@ public class ProxyBuilder {
         });
     }
 
+    public static <T extends Object> void callProxyForAddMonitor(
+            final Context context, Call<T> caller, final SimpleCallback<T> callback) {
+        caller.enqueue(new Callback<T>() {
+            @Override
+            public void onResponse(Call<T> call, retrofit2.Response<T> response) {
 
+                // Process the response
+                if (response.errorBody() == null) {
+                    // Check for authentication token:
+                    String tokenInHeader = response.headers().get("Authorization");
+                    if (tokenInHeader != null) {
+                        if (receivedTokenCallback != null) {
+                            receivedTokenCallback.callback(tokenInHeader);
+                        } else {
+                            // We got the token, but nobody wanted it!
+                            Log.w("ProxyBuilder", "WARNING: Received token but no callback registered for it!");
+                        }
+                    }
 
+                    if (callback != null) {
+                        T body = response.body();
+                        callback.callback(body);
+                    }
+                } else {
+                    String message;
+                    try {
+                        message = "CALL TO SERVER FAILED:\n" + response.errorBody().string();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        message = "Unable to decode response (body or error's body).";
+                    }
+                    String errorMessage = context.getString(R.string.AlreadyMon);
+                    showFailure(errorMessage);
+                }
+            }
 
+            @Override
+            public void onFailure(Call<T> call, Throwable t) {
+                String message = "Error communicating with server: " + t.getMessage();
+                showFailure(message);
+            }
+            private void showFailure(String message) {
+                Log.e("ProxyBuilder", message);
+                if (context != null) {
+                    Toast.makeText(context, message, Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+    }
+
+    public static <T extends Object> void callProxyForUser(
+            final Context context, Call<T> caller, final SimpleCallback<T> callback) {
+        caller.enqueue(new Callback<T>() {
+            @Override
+            public void onResponse(Call<T> call, retrofit2.Response<T> response) {
+
+                // Process the response
+                if (response.errorBody() == null) {
+                    // Check for authentication token:
+                    String tokenInHeader = response.headers().get("Authorization");
+                    if (tokenInHeader != null) {
+                        if (receivedTokenCallback != null) {
+                            receivedTokenCallback.callback(tokenInHeader);
+                        } else {
+                            // We got the token, but nobody wanted it!
+                            Log.w("ProxyBuilder", "WARNING: Received token but no callback registered for it!");
+                        }
+                    }
+
+                    if (callback != null) {
+                        T body = response.body();
+                        callback.callback(body);
+                    }
+                } else {
+                    String message;
+                    try {
+                        message = "CALL TO SERVER FAILED:\n" + response.errorBody().string();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        message = "Unable to decode response (body or error's body).";
+                    }
+                    String errorMessage = context.getString(R.string.NotEmail);
+                    showFailure(errorMessage);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<T> call, Throwable t) {
+                String message = "Error communicating with server: " + t.getMessage();
+                showFailure(message);
+            }
+            private void showFailure(String message) {
+                Log.e("ProxyBuilder", message);
+                if (context != null) {
+                    Toast.makeText(context, message, Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+    }
 
 
     // --------------------------------

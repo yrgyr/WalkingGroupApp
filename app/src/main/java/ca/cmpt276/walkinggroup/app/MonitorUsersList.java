@@ -92,14 +92,13 @@ public class MonitorUsersList extends AppCompatActivity {
                 Call<Void> caller = proxy.removeFromMonitorsUsers(userID,deleteID);
                 ProxyBuilder.callProxy(MonitorUsersList.this, caller, nothing -> responseVoid(nothing));
 
-                // ------------UPDATE LIST VIEW ----------------
-                Call<List<User>> caller2 = proxy.getMonitorsUsers(userID);
-                ProxyBuilder.callProxy(MonitorUsersList.this, caller2, returnedUsers -> response(returnedUsers));
             }
         });
     }
     private void responseVoid(Void nothing){
         Toast.makeText(this,"Server replied to delete request.",Toast.LENGTH_LONG).show();
+        Call<List<User>> caller2 = proxy.getMonitorsUsers(userID);
+        ProxyBuilder.callProxy(MonitorUsersList.this, caller2, returnedUsers -> response(returnedUsers));
     }
 
 }
