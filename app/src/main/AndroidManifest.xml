@@ -51,10 +51,11 @@
         <activity android:name=".Join_Group" />
         <activity android:name=".AddWhomUserMointor" />
         <activity android:name=".MonitorUsersList" />
-        <activity android:name=".MonitorByUsersList"></activity>
-        <activity android:name=".CreateGroup"></activity>
-        <activity android:name=".CreateGroupMap"></activity>
-
+        <activity android:name=".MonitorByUsersList" />
+        <activity android:name=".CreateGroup" />
+        <activity android:name=".CreateGroupMap" />
+        <activity android:name=".login" />
+        <activity android:name=".register" />
     </application>
 
 </manifest>

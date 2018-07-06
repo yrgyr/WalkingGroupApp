@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -31,6 +33,9 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "my_activity";
 
     private WGServerProxy proxy;
+    public static boolean isLogOut = false;
+    private String name = "default";
+
 
     public static String userEmail = "james@sfu.ca";
     private String userPassword = "lin090628";
@@ -42,15 +47,63 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        proxy = ProxyBuilder.getProxy(getString(R.string.apikey), null);
+        if(login.getToken(this) == null) {
+            Intent intent = new Intent(this, login.class);
+            startActivity(intent);
+            finish();
+        }
 
-        setupLogInBtn();
+
+        proxy = ProxyBuilder.getProxy(getString(R.string.apikey), login.getToken(this));
+        userSingleton.setCurrentProxy(proxy);
+
+        setUpName();
+        setUpLogOut();
+
+//        setupLogInBtn();
         setupGetMonitorUsersBtn();
         setupAddMonitorBtn();
         setupMapBtn();
         setupGetMonitorByBtn();
         setupCreateGroupButton();
     }
+
+    private void setUpName() {
+        String email = login.getEmail(MainActivity.this);
+        if(email != null) {
+            Call<User> caller = proxy.getUserByEmail(email);
+            ProxyBuilder.callProxy(MainActivity.this, caller, returnedUser -> response(returnedUser));
+        }
+
+    }
+    private void updateUI() {
+        TextView textView = findViewById(R.id.userName);
+        textView.setText(getString(R.string.welcome) + " " + name);
+    }
+
+    private void response(User user) {
+        name = user.getName();
+        userSingleton.setCurrentUser(user);
+
+        Toast.makeText(this, getString(R.string.welcome) + " " + name, Toast.LENGTH_LONG).show();
+        updateUI();
+
+    }
+    private void setUpLogOut() {
+        TextView logOut = findViewById(R.id.LogOutText);
+        logOut.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);
+        logOut.setTextColor(Color.BLUE);
+        logOut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                isLogOut = true;
+                Intent i = new Intent(MainActivity.this,login.class);
+                startActivity(i);
+                finish();
+            }
+        });
+    }
+
 
     private void setupGetMonitorByBtn() {
 
@@ -120,63 +173,63 @@ public class MainActivity extends AppCompatActivity {
         });
     }
     //=================================== LOG IN ===============================================
-    private void setupLogInBtn(){
-        Button btn = (Button) findViewById(R.id.logInBtn);
-        btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                User user = new User();
-
-
-                user.setEmail(userEmail);
-                user.setPassword(userPassword);
-
-//                userSingleton.setCurrentUser(user);
-
-                // Register for token received:
-                ProxyBuilder.setOnTokenReceiveCallback( token -> onReceiveToken(token));
-
-                // Make call
-                Call<Void> caller = proxy.login(user);
-                ProxyBuilder.callProxy(MainActivity.this, caller, returnedNothing -> response(returnedNothing));
-
-                TextView txt = (TextView) findViewById(R.id.userInfo);
-                txt.setText(getString(R.string.loginuserText,user.getEmail()));
-            }
-        });
-    }
-    private void response(Void returnedNothing) {
-        notifyUserViaLogAndToast("Server replied to login request (no content was expected).");
-    }
-
-    private void onReceiveToken(String token) {
-        // Replace the current proxy with one that uses the token!
-        Log.w(TAG, "   --> NOW HAVE TOKEN: " + token);
-        Toast.makeText(this, token, Toast.LENGTH_LONG).show();
-
-
-        proxy = ProxyBuilder.getProxy(getString(R.string.apikey), token);
-        userSingleton.setCurrentProxy(proxy);
-
-        Call<User> getUserCaller = proxy.getUserByEmail(userEmail);
-        ProxyBuilder.callProxy(MainActivity.this, getUserCaller, returnedLogInUser -> responseLoginUser(returnedLogInUser));
-
-
-    }
-
-    private void responseLoginUser(User returnedLoginUser){
-
-        // set logged in users id to singleton instance
-
-
-        userSingleton.setCurrentUser(returnedLoginUser);
-
-
-    }
-
-    private void notifyUserViaLogAndToast(String message) {
-        Log.w(TAG, message);
-        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
-    }
+//    private void setupLogInBtn(){
+//        Button btn = (Button) findViewById(R.id.logInBtn);
+//        btn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//
+//                User user = new User();
+//
+//
+//                user.setEmail(userEmail);
+//                user.setPassword(userPassword);
+//
+////                userSingleton.setCurrentUser(user);
+//
+//                // Register for token received:
+//                ProxyBuilder.setOnTokenReceiveCallback( token -> onReceiveToken(token));
+//
+//                // Make call
+//                Call<Void> caller = proxy.login(user);
+//                ProxyBuilder.callProxy(MainActivity.this, caller, returnedNothing -> response(returnedNothing));
+//
+//                TextView txt = (TextView) findViewById(R.id.userInfo);
+//                txt.setText(getString(R.string.loginuserText,user.getEmail()));
+//            }
+//        });
+//    }
+//    private void response(Void returnedNothing) {
+//        notifyUserViaLogAndToast("Server replied to login request (no content was expected).");
+//    }
+//
+//    private void onReceiveToken(String token) {
+//        // Replace the current proxy with one that uses the token!
+//        Log.w(TAG, "   --> NOW HAVE TOKEN: " + token);
+//        Toast.makeText(this, token, Toast.LENGTH_LONG).show();
+//
+//
+//        proxy = ProxyBuilder.getProxy(getString(R.string.apikey), token);
+//        userSingleton.setCurrentProxy(proxy);
+//
+//        Call<User> getUserCaller = proxy.getUserByEmail(userEmail);
+//        ProxyBuilder.callProxy(MainActivity.this, getUserCaller, returnedLogInUser -> responseLoginUser(returnedLogInUser));
+//
+//
+//    }
+//
+//    private void responseLoginUser(User returnedLoginUser){
+//
+//        // set logged in users id to singleton instance
+//
+//
+//        userSingleton.setCurrentUser(returnedLoginUser);
+//
+//
+//    }
+//
+//    private void notifyUserViaLogAndToast(String message) {
+//        Log.w(TAG, message);
+//        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+//    }
 }
