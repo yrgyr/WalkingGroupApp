@@ -56,7 +56,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private ClusterManager<MyItem> mClusterManager;
 
-    private List<Group> groupsOnServer;
+    public List<Group> groupsOnServer;
     private Group groupSelected;
 
 
@@ -94,7 +94,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 // Todo: change with server call to getGroups()
                 getRemoteGroups();
                 //setUpLocalGroupCluster(groups);
-                Log.e("before cluster call:", "Group size: " + groupsOnServer.size());
+                //Log.e("before cluster call:", "Group size: " + groupsOnServer.size());
                 setUpLocalGroupCluster(groupsOnServer);
 
             }
@@ -282,6 +282,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     Group group = groups.get(i);
                     int grpId = group.getGroupId();
                     String grpDesc = group.getGroupDescription();
+                    if (i == 0) {
+                        Toast.makeText(MapsActivity.this, "group desc: " + grpDesc, Toast.LENGTH_LONG).show();
+                    }
+                    Log.e("group desc:", " " + grpDesc);
 
                     List<Double> latArr = group.getRouteLatArray();
                     List<Double> lngArr = group.getRouteLngArray();
