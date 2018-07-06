@@ -104,7 +104,7 @@ public class Join_Group extends AppCompatActivity {
 //                }
                 Long currentUserId = currentUser.getId();
                 removeUserFromGroup(grpId, currentUserId);
-                Toast.makeText(Join_Group.this, "You have left this group!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(Join_Group.this, "You have left group " + grpDesc + "!", Toast.LENGTH_SHORT).show();
                 finish();
                 break;
             case R.id.menu_go_back:
