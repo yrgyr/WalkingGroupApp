@@ -27,6 +27,7 @@ import com.google.maps.android.clustering.ClusterManager;
 import java.util.ArrayList;
 import java.util.List;
 
+import ca.cmpt276.walkinggroup.dataobjects.CurrentUserData;
 import ca.cmpt276.walkinggroup.dataobjects.Group;
 import ca.cmpt276.walkinggroup.dataobjects.MyItem;
 import ca.cmpt276.walkinggroup.dataobjects.User;
@@ -36,8 +37,9 @@ import retrofit2.Call;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
+    private CurrentUserData userSingleton = CurrentUserData.getSingletonInstance();
     //WGServerProxy proxy;
-    WGServerProxy proxy = ProxyBuilder.getProxy(getString(R.string.apikey), null);; // Todo: get this proxy from singleton class
+    WGServerProxy proxy = userSingleton.getCurrentProxy(); // Todo: get this proxy from singleton class
 
     private GoogleMap mMap;
     private static final String TAG = "MapsActivity";
@@ -54,7 +56,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private ClusterManager<MyItem> mClusterManager;
 
-    public List<Group> groupsOnServer;
+    private List<Group> groupsOnServer;
     private Group groupSelected;
 
 
@@ -64,6 +66,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         getLocationPermission();
+        getRemoteGroups();
 
     }
 
@@ -87,10 +90,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             if (currentLatLng != null) {
                 //setUpClusterer(70, 100);
                 // Test map with locally created groups
-                List<Group> groups = createLocalTestGroups(currentLatLng);
+                //List<Group> groups = createLocalTestGroups(currentLatLng);
                 // Todo: change with server call to getGroups()
                 getRemoteGroups();
                 //setUpLocalGroupCluster(groups);
+                Log.e("before cluster call:", "Group size: " + groupsOnServer.size());
                 setUpLocalGroupCluster(groupsOnServer);
 
             }
@@ -158,10 +162,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 
                 if (location != null){
-                    longitude = location.getLongitude();
-                    latitude = location.getLatitude();
+                    longitude = -122.084;
+                    latitude = 37.422;
                 }
-                lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 10, locationListener);
+                //lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 10, locationListener);
 
 
                 LatLng currentLatLng = new LatLng(latitude, longitude);
@@ -179,29 +183,29 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         return null;
     }
 
-    private final LocationListener locationListener = new LocationListener() {
-        @Override
-        public void onLocationChanged(Location location) {
-            longitude = location.getLongitude();
-            latitude = location.getLatitude();
-
-        }
-
-        @Override
-        public void onStatusChanged(String provider, int status, Bundle extras) {
-
-        }
-
-        @Override
-        public void onProviderEnabled(String provider) {
-
-        }
-
-        @Override
-        public void onProviderDisabled(String provider) {
-
-        }
-    };
+//    private final LocationListener locationListener = new LocationListener() {
+//        @Override
+//        public void onLocationChanged(Location location) {
+//            longitude = location.getLongitude();
+//            latitude = location.getLatitude();
+//
+//        }
+//
+//        @Override
+//        public void onStatusChanged(String provider, int status, Bundle extras) {
+//
+//        }
+//
+//        @Override
+//        public void onProviderEnabled(String provider) {
+//
+//        }
+//
+//        @Override
+//        public void onProviderDisabled(String provider) {
+//
+//        }
+//    };
 
     // Map clusters
     // Documentation: https://developers.google.com/maps/documentation/android-sdk/utility/marker-clustering
@@ -228,6 +232,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 //    }
 
     private void setUpLocalGroupCluster(List<Group> groups){
+        Log.e("GroupCluster begins: ",  "SIze: "+ groups.size());
+        //getRemoteGroups();
         mClusterManager = new ClusterManager<MyItem>(this, mMap);
         mMap.setOnCameraIdleListener(mClusterManager);
         mMap.setOnInfoWindowClickListener(mClusterManager);
@@ -247,6 +253,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
 
+        Log.e("addGroupsCluster:", "SIze: "+ groups.size());
         addGroupsToCluster(groups);
     }
 
@@ -267,17 +274,30 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 //    }
 
     private void addGroupsToCluster(List<Group> groups){
-        if (groups.size() > 0){
-            for (int i = 0; i < groups.size(); i++) {
-                Group group = groups.get(i);
-                int grpId = group.getGroupId();
-                String grpDesc = group.getGroupDescription();
-                double lat = group.getStartLat();
-                double lng = group.getStartLng();
+        //Log.e("Cluster size:", "SIze: "+ groups.size());
+        if (groups != null) {
+            if (groups.size() > 0) {
+                Log.e("groups null?", "groups not null!, size = " + groups.size());
+                for (int i = 0; i < groups.size(); i++) {
+                    Group group = groups.get(i);
+                    int grpId = group.getGroupId();
+                    String grpDesc = group.getGroupDescription();
 
-                MyItem newItem = new MyItem(lat, lng, "Group " + grpId + "- " + grpDesc, "Click here to view group", grpId);
-                mClusterManager.addItem(newItem);
+                    List<Double> latArr = group.getRouteLatArray();
+                    List<Double> lngArr = group.getRouteLngArray();
+
+                    // only populate groups with non-empty lat and lng arrays
+                    if (latArr.size() > 0 && lngArr.size() > 0) {
+                        double lat = group.getStartLat();
+                        double lng = group.getStartLng();
+
+                        MyItem newItem = new MyItem(lat, lng, "Group " + grpId + "- " + grpDesc, "Click here to view group", grpId);
+                        mClusterManager.addItem(newItem);
+                    }
+                }
             }
+        } else{
+            Log.e("Group size", "Group list is null!");
         }
     }
 
@@ -337,11 +357,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private void getRemoteGroups() {
         Call<List<Group>> caller = proxy.getGroups();
         ProxyBuilder.callProxy(MapsActivity.this, caller, returnedGroups -> returnGroups(returnedGroups));
-        getRemoteGroupById(Long.valueOf(391));
+        //getRemoteGroupById(Long.valueOf(391));
     }
 
     private void returnGroups(List<Group> returnedGroups){
         groupsOnServer = returnedGroups;
+        Log.e("groupsOnServer size: ", "Size: " + groupsOnServer.size());
     }
 
     private void getRemoteGroupById(Long id){
