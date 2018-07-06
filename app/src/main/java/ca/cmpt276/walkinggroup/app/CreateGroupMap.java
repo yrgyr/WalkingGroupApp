@@ -158,10 +158,11 @@ public class CreateGroupMap extends FragmentActivity implements OnMapReadyCallba
 
                         // Todo: add lat and lng to newGroup singleton class, and close this activity to go back to CreateGroup
                         Group newGroup = Group.getGroupSingletonInstance();
-                        newGroup.addLatCoordinate(lat);
-                        newGroup.addLngCoordinate(lng);
 
-                        Toast.makeText(CreateGroupMap.this, "Added lat: " + newGroup.getStartLat() + " lng: " + newGroup.getStartLng(), Toast.LENGTH_LONG).show();
+//                        newGroup.addLatCoordinate(lat);
+//                        newGroup.addLngCoordinate(lng);
+
+//                        Toast.makeText(CreateGroupMap.this, "Added lat: " + newGroup.getStartLat() + " lng: " + newGroup.getStartLng(), Toast.LENGTH_LONG).show();
 
                         finish();
 

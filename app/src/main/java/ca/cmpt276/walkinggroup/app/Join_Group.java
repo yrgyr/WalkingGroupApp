@@ -5,13 +5,10 @@ import android.content.DialogInterface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -161,7 +158,7 @@ public class Join_Group extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 if (membersToRemove.size()> 0) {
-                    List<User> originalMembers = group.getGroupMembers();
+                    List<User> originalMembers = group.getMemberUsers();
                     for (int i = 0; i < membersToRemove.size(); i++){
                         int j = membersToRemove.get(i);
                         User user = originalMembers.get(j);
@@ -245,7 +242,7 @@ public class Join_Group extends AppCompatActivity {
 
     private boolean checkIfUserIsLeader(){
         // Todo: check with server if the current user is the group leader
-        if (currentUser.getId() == group.getGroupId()){
+        if (currentUser.getId() == group.getId()){
             return true;
         } else {
             return false;
@@ -268,14 +265,14 @@ public class Join_Group extends AppCompatActivity {
 
     // Todo: delete this testing method later
     private void addLocalUserToGroup(User user){
-        List<User> updatedMembers = group.getGroupMembers();
+        List<User> updatedMembers = group.getMemberUsers();
         updatedMembers.add(user);
-        group.setGroupMembers(updatedMembers);
+        group.setMemberUsers(updatedMembers);
     }
 
     // Todo: delete this later
     private void deleteLocalGroupMembersById(long userId){
-        List<User> originalMembers = group.getGroupMembers();
+        List<User> originalMembers = group.getMemberUsers();
         List<User> updatedMembers = new ArrayList<>();
 
         for (int i = 0; i < originalMembers.size(); i++){
@@ -285,7 +282,7 @@ public class Join_Group extends AppCompatActivity {
             }
         }
 
-        group.setGroupMembers(updatedMembers);
+        group.setMemberUsers(updatedMembers);
     }
 
     // Todo: delete this later

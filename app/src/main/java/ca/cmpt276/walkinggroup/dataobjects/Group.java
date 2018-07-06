@@ -15,12 +15,20 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Group extends IdItemBase{
     private static Group singletonInstance;
-    private int id;
+//    private int id;
     private String groupDescription;
-    private List<Double> routeLatArray = new ArrayList<>();
-    private List<Double> routeLngArray = new ArrayList<>();
+
+
+
+
+    //    private List<Double> routeLatArray = new ArrayList<>();
+//    private List<Double> routeLngArray = new ArrayList<>();
+    private double [] routeLatArray = new double[2];
+    private  double [] routeLngArray = new double[2];
+
+
     private User leader;
-    private List<User> groupMembers;
+    private List<User> memberUsers;
 
     public Group() { }
 
@@ -35,11 +43,25 @@ public class Group extends IdItemBase{
 
     // Basic group data getters and setters
 
-    public void setGroupId(int id){
-        this.id = id;
+//    public void setGroupId(int id){
+//        this.id = id;
+//    }
+//    public int getGroupId() {
+//        return id; }
+    public double[] getRouteLngArray() {
+        return routeLngArray;
     }
-    public int getGroupId() {
-        return id; }
+
+    public double[] getRouteLatArray() {
+        return routeLatArray;
+    }
+    public void setRouteLngArray(double[] routeLngArray) {
+        this.routeLngArray = routeLngArray;
+    }
+    public void setRouteLatArray(double[] routeLatArray) {
+        this.routeLatArray = routeLatArray;
+    }
+
 
 
     public void setGroupDescription(String groupDescription){
@@ -47,36 +69,38 @@ public class Group extends IdItemBase{
     }
     public String getGroupDescription() {
         return groupDescription; }
-    @JsonIgnore
-    public double getStartLat() {
-
-        return routeLatArray.get(0);
-    }
-
-    @JsonIgnore
-    public void setStartLat(double lat){
-
-        this.routeLatArray.add(lat);
-    }
-    @JsonIgnore
-    public double getStartLng() {
-
-        return routeLngArray.get(0);
-    }
-
-    @JsonIgnore
-    public void setStartLng(double lng){
-
-        this.routeLngArray.add(lng);
-    }
-
-    public void addLatCoordinate(double lat){
-        routeLatArray.add(lat);
-    }
-
-    public void addLngCoordinate(double lng){
-        routeLngArray.add(lng);
-    }
+//    @JsonIgnore
+//    public double getStartLat() {
+//
+//        return routeLatArray.get(0);
+//    }
+//
+//    @JsonIgnore
+//    public void setStartLat(double lat){
+//
+//        this.routeLatArray.add(lat);
+//    }
+//    @JsonIgnore
+//    public double getStartLng() {
+//
+//        return routeLngArray.get(0);
+//    }
+//
+//    @JsonIgnore
+//    public void setStartLng(double lng){
+//
+//        this.routeLngArray.add(lng);
+//    }
+//
+//    @JsonIgnore
+//    public void addLatCoordinate(double lat){
+//        routeLatArray.add(lat);
+//    }
+//
+//    @JsonIgnore
+//    public void addLngCoordinate(double lng){
+//        routeLngArray.add(lng);
+//    }
 
     public void setLeader(User leader) {
 
@@ -88,44 +112,44 @@ public class Group extends IdItemBase{
         return leader;
     }
     @JsonIgnore
-    public List<User> getGroupMembers()
+    public List<User> getMemberUsers()
     {
-        return groupMembers;
+        return memberUsers;
     }
 
-    public void setGroupMembers(List<User> groupMembers)
+    public void setMemberUsers(List<User> memberUsers)
     {
-        this.groupMembers = groupMembers;
+        this.memberUsers = memberUsers;
     }
-    @JsonIgnore
-    public List<Double> getRouteLatArray() {
-
-        return routeLatArray;
-    }
-    @JsonIgnore
-    public List<Double> getRouteLngArray() {
-
-        return routeLngArray;
-    }
-
-    public void setRouteLatArray(List<Double> routeLatArray)
-    {
-        this.routeLatArray = routeLatArray;
-    }
-
-    public void setRouteLngArray(List<Double> routeLngArray) {
-
-        this.routeLngArray = routeLngArray;
-    }
+//    @JsonIgnore
+//    public List<Double> getRouteLatArray() {
+//
+//        return routeLatArray;
+//    }
+//    @JsonIgnore
+//    public List<Double> getRouteLngArray() {
+//
+//        return routeLngArray;
+//    }
+//
+//    public void setRouteLatArray(List<Double> routeLatArray)
+//    {
+//        this.routeLatArray = routeLatArray;
+//    }
+//
+//    public void setRouteLngArray(List<Double> routeLngArray) {
+//
+//        this.routeLngArray = routeLngArray;
+//    }
     @JsonIgnore
     public int getGroupSize(){
-        return groupMembers.size();}
+        return memberUsers.size();}
     @JsonIgnore
     public String[] getGroupMembersNames(){
         String[] names = new String[getGroupSize()];
 
         for (int i = 0; i < getGroupSize(); i++){
-            User member = groupMembers.get(i);
+            User member = memberUsers.get(i);
             names[i] = member.getName();
         }
 
@@ -136,7 +160,7 @@ public class Group extends IdItemBase{
         long[] Ids = new long[getGroupSize()];
 
         for (int i = 0; i < getGroupSize(); i++){
-            User member = groupMembers.get(i);
+            User member = memberUsers.get(i);
             Ids[i] = member.getId();
         }
 
@@ -144,19 +168,19 @@ public class Group extends IdItemBase{
     }
     @JsonIgnore
     public void setToGroup2Params(Group group2){
-        this.id = group2.getGroupId();
+//        this.id = group2.getGroupId();
         this.groupDescription = group2.getGroupDescription();
         this.routeLatArray = group2.getRouteLatArray();
         this.routeLngArray = group2.getRouteLngArray();
         this.leader = group2.getLeader();
-        this.groupMembers = group2.getGroupMembers();
+        this.memberUsers = group2.getMemberUsers();
     }
 
 
     @Override
     public String toString() {
         return "Group{" +
-                "id :" + id +
+                "id=:" + getId() +
                 ", groupDescription : '" + groupDescription+ '\'' +
                 ", routeLatArray : '" + routeLatArray + '\'' +
                 ", routeLngArray : '" + routeLngArray + '\'' +

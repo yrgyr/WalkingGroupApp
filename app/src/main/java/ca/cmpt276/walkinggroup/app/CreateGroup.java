@@ -32,7 +32,6 @@ public class CreateGroup extends AppCompatActivity {
 
         proxy = userSingleton.getCurrentProxy();
 
-        // Todo: setup new method to get user input from editText for group description
 
         setupMeetingPlaceButton();
         setupDestinationButton();
@@ -99,8 +98,16 @@ public class CreateGroup extends AppCompatActivity {
         newGroup.setGroupDescription(groupName);
         newGroup.setLeader(currentUser);
 
-        newGroup.setStartLat(123.445);
-        newGroup.setStartLng(123.445);
+        double[] a1 = new double[2];
+        double[] a2 = new double[2];
+
+        a1[0] = 121.11;
+        a1[1] = 122.22;
+
+        a2[0] = 111.55;
+        a2[1] = 111.66;
+        newGroup.setRouteLatArray(a1);
+        newGroup.setRouteLngArray(a2);
 
 
 //        List<Double> lats = newGroup.getRouteLatArray();
@@ -111,9 +118,9 @@ public class CreateGroup extends AppCompatActivity {
 //
 //        double lng1 = lngs.get(0);
 //        double lng2 = lngs.get(1);
-
-
-
+//
+//
+//
 //        TextView tv = (TextView) findViewById(R.id.myTextView);
 //        tv.setText(lat1+" , " + lng1 + "second: " + lat2+ "," + lng2);
 
@@ -123,12 +130,15 @@ public class CreateGroup extends AppCompatActivity {
     }
 
 
-    private void response(Group group){
-//        Toast.makeText(CreateGroup.this, "Server replied with group: " + group.getGroupDescription(), Toast.LENGTH_LONG).show();
+    private void response(Group returnedGroup){
 
+        Long groupID = returnedGroup.getId();
 //        User leader = group.getLeader();
 //        String email = leader.getEmail();
-//
+        Toast.makeText(CreateGroup.this, "Server replied with group: " + groupID, Toast.LENGTH_LONG).show();
+
+
+
 //        TextView tv = (TextView) findViewById(R.id.myTextView);
 //        tv.setText(email);
 

@@ -21,7 +21,6 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.clustering.ClusterManager;
 
 import java.util.ArrayList;
@@ -235,7 +234,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mClusterManager.setOnClusterItemInfoWindowClickListener(new ClusterManager.OnClusterItemInfoWindowClickListener<MyItem>() {
             @Override
             public void onClusterItemInfoWindowClick(MyItem myItem) {
-                int grpId = myItem.getGrpId();
+                long grpId = myItem.getGrpId();
                 //Group group = getLocalGroupById(groups, grpId);  // Todo: replace with server call method and use groupSelected variable
                 getRemoteGroupById(Long.valueOf(grpId));
                 Group group = groupSelected;
@@ -270,13 +269,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if (groups.size() > 0){
             for (int i = 0; i < groups.size(); i++) {
                 Group group = groups.get(i);
-                int grpId = group.getGroupId();
+                long grpId = group.getId();
                 String grpDesc = group.getGroupDescription();
-                double lat = group.getStartLat();
-                double lng = group.getStartLng();
+                //double lat = group.getRouteLatArray();
+                //double lng = group.getRouteLngArray();
 
-                MyItem newItem = new MyItem(lat, lng, "Group " + grpId + "- " + grpDesc, "Click here to view group", grpId);
-                mClusterManager.addItem(newItem);
+                //MyItem newItem = new MyItem(lat, lng, "Group " + grpId + "- " + grpDesc, "Click here to view group", grpId);
+                //mClusterManager.addItem(newItem);
             }
         }
     }
@@ -289,7 +288,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         for (int i = 0; i < 2; i++){
             Group group = new Group();
-            group.setGroupId(i);
+//            group.setGroupId(i);
             group.setGroupDescription("Local group " + i);
 
             List<User> members = new ArrayList<>();
@@ -304,13 +303,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     group.setLeader(member);
                 }
             }
-            group.setGroupMembers(members);
+            group.setMemberUsers(members);
 
             double offset = i / 200d;
             lat = lat + offset;
             lng = lng + offset;
-            group.setStartLat(lat);
-            group.setStartLng(lng);
+            //group.setStartLat(lat);
+            //group.setStartLng(lng);
 
             groups.add(group);
 
@@ -324,7 +323,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if (groups.size() > 0){
             for(int i = 0; i < groups.size(); i++){
                 Group group = groups.get(i);
-                if (group.getGroupId() == grpId){
+                if (group.getId() == grpId){
                     return group;
                 }
             }
