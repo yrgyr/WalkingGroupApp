@@ -132,7 +132,7 @@ public class MainActivity extends AppCompatActivity {
                 user.setEmail(userEmail);
                 user.setPassword(userPassword);
 
-                userSingleton.setCurrentUser(user);
+//                userSingleton.setCurrentUser(user);
 
                 // Register for token received:
                 ProxyBuilder.setOnTokenReceiveCallback( token -> onReceiveToken(token));
@@ -168,6 +168,7 @@ public class MainActivity extends AppCompatActivity {
     private void responseLoginUser(User returnedLoginUser){
 
         // set logged in users id to singleton instance
+
 
         userSingleton.setCurrentUser(returnedLoginUser);
 

@@ -17,7 +17,7 @@
         android:text="@string/textview_group_name" />
 
     <EditText
-        android:id="@+id/input_group_desc"
+        android:id="@+id/groupNameEd"
         android:layout_width="179dp"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
@@ -60,5 +60,16 @@
         android:layout_marginBottom="107dp"
         android:layout_marginEnd="59dp"
         android:text="@string/btn_cancel_create_group" />
+
+    <TextView
+        android:id="@+id/myTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="177dp"
+        android:text="user here "
+        android:textSize="18sp"
+        android:textStyle="bold" />
 
 </RelativeLayout>

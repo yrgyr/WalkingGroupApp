@@ -25,6 +25,7 @@ public class Group extends IdItemBase{
     public Group() { }
 
     // Singleton support
+    @JsonIgnore
     public static Group getGroupSingletonInstance(){
         if (singletonInstance == null){
             singletonInstance = new Group();
@@ -52,6 +53,7 @@ public class Group extends IdItemBase{
         return routeLatArray.get(0);
     }
 
+    @JsonIgnore
     public void setStartLat(double lat){
 
         this.routeLatArray.add(lat);
@@ -62,6 +64,7 @@ public class Group extends IdItemBase{
         return routeLngArray.get(0);
     }
 
+    @JsonIgnore
     public void setStartLng(double lng){
 
         this.routeLngArray.add(lng);
@@ -79,7 +82,7 @@ public class Group extends IdItemBase{
 
         this.leader = leader;
     }
-    @JsonIgnore
+
     public User getLeader() {
 
         return leader;
