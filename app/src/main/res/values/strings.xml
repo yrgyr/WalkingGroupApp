@@ -47,4 +47,17 @@
     <string name="btn_create_new_group">Create group!</string>
     <string name="btn_cancel_create_group">Cancel</string>
     <string name="btn_view_groups">View Groups</string>
+    <string name="name">Name</string>
+    <string name="password">Password</string>
+    <string name="log_in">Log in</string>
+    <string name="register">Register</string>
+    <string name="emailAddress">Email address</string>
+    <string name="email_address">Email address</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="errorOfLogin">Can\'t log in, please check email address and password.</string>
+    <string name="registerSucceed">Register succeed!</string>
+    <string name="welcome">welcome,</string>
+    <string name="invalidEmail">Not a valid email address!</string>
+    <string name="invalidPassword">Password can\'t empty!</string>
+    <string name="invalidName">Invalid name!</string>
 </resources>
