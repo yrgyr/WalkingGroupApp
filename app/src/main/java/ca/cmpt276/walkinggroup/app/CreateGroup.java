@@ -1,5 +1,6 @@
 package ca.cmpt276.walkinggroup.app;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -22,6 +23,8 @@ import retrofit2.Call;
 public class CreateGroup extends AppCompatActivity {
     private WGServerProxy proxy;  // Todo: get proxy and user from singleton class
     private CurrentUserData userSingleton = CurrentUserData.getSingletonInstance();
+    private Group newGroup = Group.getGroupSingletonInstance();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,10 +49,21 @@ public class CreateGroup extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(CreateGroup.this, CreateGroupMap.class);
-                startActivity(intent);
+                startActivityForResult(intent,666);
+
+//                Intent intentForValues = getIntent();
+//
+//                double meetingLat = intentForValues.getDoubleExtra("latValue",0);
+//                double meetingLng = intentForValues.getDoubleExtra("lngValue",0);
+//
+//                newGroup.setRouteLatArray(0,meetingLat);
+//                newGroup.setRouteLngArray(0,meetingLng);
+
+
             }
         });
     }
+
 
     private void setupDestinationButton(){
         Button btn = findViewById(R.id.btn_set_destination);
@@ -57,10 +71,41 @@ public class CreateGroup extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(CreateGroup.this, CreateGroupMap.class);
-                startActivity(intent);
+                startActivityForResult(intent,888);
+
+
+//                Intent intentForValues = getIntent();
+//
+//                double meetingLat = intentForValues.getDoubleExtra("latValue",0);
+//                double meetingLng = intentForValues.getDoubleExtra("lngValue",0);
+//
+//                newGroup.setRouteLatArray(0,meetingLat);
+//                newGroup.setRouteLngArray(0,meetingLng);
             }
         });
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode){
+            case 666:
+                if(resultCode == Activity.RESULT_OK) {
+                    double meetingLat = data.getDoubleExtra("latValue", 0);
+                    double meetingLng = data.getDoubleExtra("lngValue", 0);
+
+                    newGroup.setRouteLatArray(0, meetingLat);
+                    newGroup.setRouteLngArray(0, meetingLng);
+                }
+            case 888:
+                if (resultCode == Activity.RESULT_OK){
+                    double meetingLat = data.getDoubleExtra("latValue", 0);
+                    double meetingLng = data.getDoubleExtra("lngValue", 0);
+
+                    newGroup.setRouteLatArray(1, meetingLat);
+                    newGroup.setRouteLngArray(1, meetingLng);
+                }
+        }
     }
 
     private void setupCreateGroupButton(){
@@ -92,22 +137,21 @@ public class CreateGroup extends AppCompatActivity {
         String groupName = ed.getText()+"";
 
         User currentUser = userSingleton.getCurrentUser();
-//        Group newGroup = Group.getGroupSingletonInstance();
-        Group newGroup = new Group();
+//        Group newGroup = new Group();
 
         newGroup.setGroupDescription(groupName);
         newGroup.setLeader(currentUser);
 
-        double[] a1 = new double[2];
-        double[] a2 = new double[2];
-
-        a1[0] = 121.11;
-        a1[1] = 122.22;
-
-        a2[0] = 111.55;
-        a2[1] = 111.66;
-        newGroup.setRouteLatArray(a1);
-        newGroup.setRouteLngArray(a2);
+//        double[] a1 = new double[2];
+//        double[] a2 = new double[2];
+//
+//        a1[0] = 121.11;
+//        a1[1] = 122.22;
+//
+//        a2[0] = 111.55;
+//        a2[1] = 111.66;
+//        newGroup.setRouteLatArray(a1);
+//        newGroup.setRouteLngArray(a2);
 
 
 //        List<Double> lats = newGroup.getRouteLatArray();

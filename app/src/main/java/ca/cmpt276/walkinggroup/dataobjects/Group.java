@@ -55,11 +55,12 @@ public class Group extends IdItemBase{
     public double[] getRouteLatArray() {
         return routeLatArray;
     }
-    public void setRouteLngArray(double[] routeLngArray) {
-        this.routeLngArray = routeLngArray;
+    public void setRouteLngArray(int index,double value) {
+        this.routeLngArray[index] = value;
     }
-    public void setRouteLatArray(double[] routeLatArray) {
-        this.routeLatArray = routeLatArray;
+    public void setRouteLatArray(int index,double value) {
+        this.routeLatArray[index] = value;
+
     }
 
 

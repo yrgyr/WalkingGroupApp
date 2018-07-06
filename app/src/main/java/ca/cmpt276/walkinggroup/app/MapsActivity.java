@@ -271,6 +271,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 Group group = groups.get(i);
                 long grpId = group.getId();
                 String grpDesc = group.getGroupDescription();
+                // TODO: CHANGE THESE METHODS. THEY MAY NOT BE EXISTS ANY MORE
                 //double lat = group.getRouteLatArray();
                 //double lng = group.getRouteLngArray();
 
@@ -288,6 +289,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         for (int i = 0; i < 2; i++){
             Group group = new Group();
+            // TODO: CHANGE THIS METHODS. THEY MAY NOT BE EXISTS ANY MORE
 //            group.setGroupId(i);
             group.setGroupDescription("Local group " + i);
 
@@ -308,6 +310,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             double offset = i / 200d;
             lat = lat + offset;
             lng = lng + offset;
+
+            // TODO : CHANGE THESE METHODS
             //group.setStartLat(lat);
             //group.setStartLng(lng);
 
