@@ -80,15 +80,16 @@ public class Join_Group extends AppCompatActivity {
                 finish();
                 break;
             case R.id.menu_add_user:
-                getRemoteMonitorsUsers(currentUser.getId());
+                addRemotesUsers(currentUser.getId());
                 break;
             case R.id.menu_remove_user:
-                boolean isLeader = checkIfUserIsLeader();
-                if(members.length>0) {
-                    showRemoveMembersDialog(isLeader);
-                } else {
-                    Toast.makeText(Join_Group.this, "This group is currently empty!", Toast.LENGTH_SHORT).show();
-                }
+//                boolean isLeader = checkIfUserIsLeader();
+//                if(members.length>0) {
+//                    showRemoveMembersDialog(isLeader);
+//                } else {
+//                    Toast.makeText(Join_Group.this, "This group is currently empty!", Toast.LENGTH_SHORT).show();
+//                }
+                removeRemoteUsers(currentUser.getId());
                 break;
             case R.id.menu_leave_group:
                 // Todo: implement error message to show up when I'm not in the group
@@ -163,7 +164,14 @@ public class Join_Group extends AppCompatActivity {
         if (isLeader){
             membersList = members;
         } else {
-            membersList = (String[]) monitorsUsers.toArray();  // need to convert to array format for setMultiChoiceItems
+
+            membersList = new String[monitorsUsers.size()];
+
+            for (int i = 0; i < monitorsUsers.size(); i++){
+                User user = monitorsUsers.get(i);
+                membersList[i] = user.getName();
+            }
+            //membersList = (String[]) monitorsUsers.toArray();  // need to convert to array format for setMultiChoiceItems
         }
 
         boolean[] checkedMembers = new boolean[membersList.length];
@@ -175,11 +183,11 @@ public class Join_Group extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int position, boolean isChecked) {
                 if(isChecked){
-                    if(!membersToRemove.contains(position)){
-                        membersToRemove.add(position);
+                    if(!membersToRemove.contains(Integer.valueOf(position))){
+                        membersToRemove.add(Integer.valueOf(position));
                     }
-                } else if(membersToRemove.contains(position)){
-                    membersToRemove.remove(position);
+                } else if(membersToRemove.contains(Integer.valueOf(position))){
+                    membersToRemove.remove(Integer.valueOf(position));
                 }
             }
         });
@@ -349,8 +357,32 @@ public class Join_Group extends AppCompatActivity {
 
     private void returnedMonitorsUser(List<User> users){
         monitorsUsers = users;
-        showAddMembersDialogue();
+    }
 
+    private void addRemotesUsers(Long userId){
+        Call<List<User>> caller = proxy.getMonitorsUsers(userId);
+        ProxyBuilder.callProxy(Join_Group.this, caller, returnedUsers -> responseAddRemoteUser(returnedUsers));
+    }
+
+    private void responseAddRemoteUser(List<User> users){
+        monitorsUsers = users;
+        showAddMembersDialogue();
+    }
+
+
+    private void removeRemoteUsers(Long userId){
+        Long leaderId = groupSelected.getLeader().getId();
+        if (userId != leaderId){
+            Call<List<User>> caller = proxy.getMonitorsUsers(userId);
+            ProxyBuilder.callProxy(Join_Group.this, caller, returnedUsers -> responseRemoveRemoteUsersNonLeader(returnedUsers));
+        } else {
+            showRemoveMembersDialog(true);
+        }
+    }
+
+    private void responseRemoveRemoteUsersNonLeader(List<User> users){
+        monitorsUsers = users;
+        showRemoveMembersDialog(false);
     }
 
     private void addUserToGroup(Long groupId, User user){
