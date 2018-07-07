@@ -40,7 +40,6 @@ import static ca.cmpt276.walkinggroup.app.MainActivity.groupsList;
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private CurrentUserData userSingleton = CurrentUserData.getSingletonInstance();
-    //WGServerProxy proxy;
     private WGServerProxy proxy = userSingleton.getCurrentProxy();
 
     private GoogleMap mMap;
@@ -48,10 +47,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
     private static final String COARSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
     private boolean mLocationPermissionsGranted = false;
-    private boolean getDeviceLocationSuccess = false;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1234;
     private static final float DEFAULT_ZOOM = 15f;
-    private FusedLocationProviderClient mFusedLocationProviderClient;
 
     public double latitude;
     public double longitude;
@@ -68,7 +65,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         getLocationPermission();
-        //getRemoteGroups();
 
     }
 
@@ -93,7 +89,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             currentLatLng = getDeviceLocation();
             if (currentLatLng != null) {
                 groupsOnServer = groupsList;
-                Log.e("before cluster call:", "Group size: " + groupsOnServer.size());
                 setUpLocalGroupCluster(groupsOnServer);
 
             }
@@ -103,15 +98,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             mMap.setMyLocationEnabled(true);
         }
 
-        // Add a marker in Sydney and move the camera
-//        LatLng sydney = new LatLng(-34, 151);
-//        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-//        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
     }
 
 
     private void initializeMap(){
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
@@ -161,78 +151,27 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 
                 if (location != null){
+                    // default location in emulator
                     longitude = -122.084;
                     latitude = 37.422;
                 }
-                //lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 10, locationListener);
-
 
                 LatLng currentLatLng = new LatLng(latitude, longitude);
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, DEFAULT_ZOOM));
 
-                Toast.makeText(this, "longitude: " + longitude + ", latitude: " + latitude, Toast.LENGTH_LONG).show();
                 return currentLatLng;
             }
 
         }catch (SecurityException e){
-            Log.e(TAG, "getDeviceLocation: SecurityException: " + e.getMessage() );
+            Log.e(TAG, getString(R.string.getDeviceLocation_exception) + e.getMessage() );
 
         }
 
         return null;
     }
 
-//    private final LocationListener locationListener = new LocationListener() {
-//        @Override
-//        public void onLocationChanged(Location location) {
-//            longitude = location.getLongitude();
-//            latitude = location.getLatitude();
-//
-//        }
-//
-//        @Override
-//        public void onStatusChanged(String provider, int status, Bundle extras) {
-//
-//        }
-//
-//        @Override
-//        public void onProviderEnabled(String provider) {
-//
-//        }
-//
-//        @Override
-//        public void onProviderDisabled(String provider) {
-//
-//        }
-//    };
-
-    // Map clusters
-    // Documentation: https://developers.google.com/maps/documentation/android-sdk/utility/marker-clustering
-//    private void setUpClusterer(double lat, double lng) {
-//        // Initialize the manager with the context and the map.
-//        // (Activity extends context, so we can pass 'this' in the constructor.)
-//        mClusterManager = new ClusterManager<MyItem>(this, mMap);
-//
-//        // Point the map's listeners at the listeners implemented by the cluster
-//        // manager.
-//        mMap.setOnCameraIdleListener(mClusterManager);
-//        mMap.setOnInfoWindowClickListener(mClusterManager);
-//
-//        mClusterManager.setOnClusterItemInfoWindowClickListener(new ClusterManager.OnClusterItemInfoWindowClickListener<MyItem>() {
-//            @Override
-//            public void onClusterItemInfoWindowClick(MyItem myItem) {
-//                Intent intent = new Intent(MapsActivity.this, Join_Group.class);
-//                startActivity(intent);
-//            }
-//        });
-//
-//        // Add cluster items (markers) to the cluster manager.
-//        addItems(lat, lng);
-//    }
 
     private void setUpLocalGroupCluster(List<Group> groups){
-        Log.e("GroupCluster begins: ",  "SIze: "+ groups.size());
-        //getRemoteGroups();
         mClusterManager = new ClusterManager<MyItem>(this, mMap);
         mMap.setOnCameraIdleListener(mClusterManager);
         mMap.setOnInfoWindowClickListener(mClusterManager);
@@ -241,42 +180,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public void onClusterItemInfoWindowClick(MyItem myItem) {
                 Long grpId = myItem.getGrpId();
-                //Group group = getLocalGroupById(groups, grpId);
                 getRemoteGroupById(grpId);
-//                Group group = groupSelected;
-//
-//                Group groupToLaunch = Group.getGroupSingletonInstance();
-//                groupToLaunch.setToGroup2Params(group);
-//                Intent intent = new Intent(MapsActivity.this, Join_Group.class);
-//                startActivity(intent);
             }
         });
 
-        Log.e("addGroupsCluster:", "SIze: "+ groups.size());
         addGroupsToCluster(groups);
     }
 
-//    private void addItems(double lat, double lng) {
-//
-//        // Set some lat/lng coordinates to start with.
-////        double lat = 51.5145160;
-////        double lng = -0.1270060;
-//
-//        // Add ten cluster items in close proximity, for purposes of this example.
-//        for (int i = 0; i < 10; i++) {
-//            double offset = i / 200d;
-//            lat = lat + offset;
-//            lng = lng + offset;
-//            MyItem offsetItem = new MyItem(lat, lng, "Group " + i, "Click to join group", 0);
-//            mClusterManager.addItem(offsetItem);
-//        }
-//    }
 
     private void addGroupsToCluster(List<Group> groups){
-        Log.e("Cluster size:", "SIze: "+ groups.size());
         if (groups != null) {
             if (groups.size() > 0) {
-                Log.e("groups null?", "groups not null!, size = " + groups.size());
                 for (int i = 0; i < groups.size(); i++) {
                     Group group = groups.get(i);
                     Long grpId = group.getId();
@@ -286,92 +200,24 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     List<Double> latArr = group.getRouteLatArray();
                     List<Double> lngArr = group.getRouteLngArray();
 
-                    if (i == groups.size() - 1){
-                        //Toast.makeText(MapsActivity.this, grpDesc, Toast.LENGTH_LONG).show();
-                        //Toast.makeText(MapsActivity.this, "latArr size: " + latArr.size(), Toast.LENGTH_LONG).show();
-                        Log.e("Grouppp latSize: ", ""+latArr.size());
-                    }
 
                     // only populate groups with non-empty lat and lng arrays
                     if (latArr.size() > 0 && lngArr.size() > 0) {
                         double lat = group.getStartLat();
                         double lng = group.getStartLng();
 
-                        MyItem newItem = new MyItem(lat, lng, "Group -" + grpDesc, "Click here to view group", grpId);
+                        MyItem newItem = new MyItem(lat, lng, getString(R.string.tag_on_info_window) + grpDesc, getString(R.string.group_info_window_snippet), grpId);
                         mClusterManager.addItem(newItem);
                     }
                 }
             } else {
-                Toast.makeText(MapsActivity.this, "Groups size is 0", Toast.LENGTH_LONG).show();
+                Toast.makeText(MapsActivity.this, R.string.group_size_zero, Toast.LENGTH_LONG).show();
             }
         } else{
-            Toast.makeText(MapsActivity.this, "Groups list is null!", Toast.LENGTH_LONG).show();
+            Toast.makeText(MapsActivity.this, R.string.group_list_null, Toast.LENGTH_LONG).show();
         }
     }
 
-    // Todo: remove later; for testing locally created groups only- setup 2 groups consisting of 5 users each locally
-    private List<Group> createLocalTestGroups(LatLng latlng){
-        List<Group> groups = new ArrayList<>();
-        double lat = latlng.latitude;
-        double lng = latlng.longitude;
-
-        for (int i = 0; i < 2; i++){
-            Group group = new Group();
-            group.setGroupId(i);
-            group.setGroupDescription("Local group " + i);
-
-            List<User> members = new ArrayList<>();
-
-            for (int j = 0; j < 5; j++){
-                User member = new User();
-                member.setName("Group " + i + " user " + j);
-                member.setId((long)j);
-                members.add(member);
-
-                if (j == 0){
-                    group.setLeader(member);
-                }
-            }
-            group.setMemberUsers(members);
-
-            double offset = i / 200d;
-            lat = lat + offset;
-            lng = lng + offset;
-            group.setStartLat(lat);
-            group.setStartLng(lng);
-
-            groups.add(group);
-
-        }
-
-        return groups;
-    }
-
-    // Todo: remove later; for testing locally created groups only; server has getGroupById method
-    private Group getLocalGroupById(List<Group> groups, int grpId){
-        if (groups.size() > 0){
-            for(int i = 0; i < groups.size(); i++){
-                Group group = groups.get(i);
-                if (group.getGroupId() == grpId){
-                    return group;
-                }
-            }
-            return null;
-        } else {
-            return null;
-        }
-    }
-
-    private void getRemoteGroups() {
-        Call<List<Group>> caller = proxy.getGroups();
-        ProxyBuilder.callProxy(MapsActivity.this, caller, returnedGroups -> returnGroups(returnedGroups));
-        //getRemoteGroupById(Long.valueOf(391));
-    }
-
-    private void returnGroups(List<Group> returnedGroups){
-        groupsOnServer = returnedGroups;
-        Log.e("groupsOnServer size: ", "Size: " + groupsOnServer.size());
-    }
 
     private void getRemoteGroupById(Long id){
         Call<Group> caller = proxy.getGroupById(id);
@@ -380,14 +226,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private void returnedGroupById(Group group){
         groupSelected = group;
-
-//        Group groupToLaunch = Group.getGroupSingletonInstance();
-//        groupToLaunch.setToGroup2Params(groupSelected);
-        User leader = groupSelected.getLeader();
-        Log.e(TAG, "Group ID is: " + groupSelected.getId());
-        //Log.e(TAG, "Group leader: " + groupSelected.getLeader());
-        Log.e(TAG, "Leader ID: " + leader.getId());
-        Log.e(TAG, "Leader name: " + leader.getName());
         Intent intent = new Intent(MapsActivity.this, Join_Group.class);
         startActivity(intent);
 
