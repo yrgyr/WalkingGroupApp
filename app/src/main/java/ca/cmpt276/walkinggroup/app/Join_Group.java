@@ -44,7 +44,7 @@ public class Join_Group extends AppCompatActivity {
     String[] members = groupSelected.getGroupMembersNames();  // Todo: replace with groupMembers
 
     //long[] membersIds = group.getGroupMembersIds();
-    private List<User> monitorsUsers; // Todo: get the array of monitors users by calling getMonitorsUsers
+    private List<User> monitorsUsers = new ArrayList<>(); // Todo: get the array of monitors users by calling getMonitorsUsers
 
 
     @Override
@@ -80,7 +80,7 @@ public class Join_Group extends AppCompatActivity {
                 finish();
                 break;
             case R.id.menu_add_user:
-                showAddMembersDialogue();
+                getRemoteMonitorsUsers(currentUser.getId());
                 break;
             case R.id.menu_remove_user:
                 boolean isLeader = checkIfUserIsLeader();
@@ -235,11 +235,12 @@ public class Join_Group extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int position, boolean isChecked) {
                 if(isChecked){
-                    if(!membersToAdd.contains(position)){
-                        membersToAdd.add(position);
+                    if(!membersToAdd.contains(Integer.valueOf(position))){
+                        membersToAdd.add(Integer.valueOf(position));
+                        //Toast.makeText(Join_Group.this, "You have selected pos: " + position, Toast.LENGTH_LONG).show();
                     }
-                } else if(membersToAdd.contains(position)){
-                    membersToAdd.remove(position);
+                } else if(membersToAdd.contains(Integer.valueOf(position))){
+                    membersToAdd.remove(Integer.valueOf(position));
                 }
             }
         });
@@ -252,12 +253,16 @@ public class Join_Group extends AppCompatActivity {
                 if (membersToAdd.size()> 0) {
 
                     for (int i = 0; i < membersToAdd.size(); i++) {
-                        User user = monitorsUsers.get(i);
-                        //addLocalUserToGroup(user);  // Todo: replace with addGroupMember call to server
+                        Integer j = membersToAdd.get(i);
+                        User user = monitorsUsers.get(j);
+                        //addLocalUserToGroup(user);  //
+                        //Toast.makeText(Join_Group.this, "You're adding user: " + user.getName(), Toast.LENGTH_LONG).show();
                         addUserToGroup(grpId, user);
                     }
                     populateGroupMembersListView();
                 }
+
+                finish();
 
             }
         });
@@ -344,11 +349,13 @@ public class Join_Group extends AppCompatActivity {
 
     private void returnedMonitorsUser(List<User> users){
         monitorsUsers = users;
+        showAddMembersDialogue();
+
     }
 
     private void addUserToGroup(Long groupId, User user){
         Call<List<User>> caller = proxy.addGroupMember(groupId, user);
-        ProxyBuilder.callProxy(Join_Group.this, caller, returnedUsers -> returnedMembers(returnedUsers));
+        ProxyBuilder.callProxyForAddUserToGroup(Join_Group.this, caller, returnedUsers -> returnedMembers(returnedUsers));
     }
 
     private void getRemoteGroupMembers(Long groupId){
