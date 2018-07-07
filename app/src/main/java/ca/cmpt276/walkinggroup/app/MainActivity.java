@@ -179,9 +179,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
-
     private void returnGroups(List<Group> returnedGroups){
         groupsList = returnedGroups;
     }
-
 }

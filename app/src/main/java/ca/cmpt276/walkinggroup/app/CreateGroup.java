@@ -1,5 +1,6 @@
 package ca.cmpt276.walkinggroup.app;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -22,6 +23,8 @@ import retrofit2.Call;
 public class CreateGroup extends AppCompatActivity {
     private WGServerProxy proxy;  // Todo: get proxy and user from singleton class
     private CurrentUserData userSingleton = CurrentUserData.getSingletonInstance();
+    private Group newGroup = Group.getGroupSingletonInstance();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +35,6 @@ public class CreateGroup extends AppCompatActivity {
 
         proxy = userSingleton.getCurrentProxy();
 
-        // Todo: setup new method to get user input from editText for group description
 
         setupMeetingPlaceButton();
         setupDestinationButton();
@@ -47,10 +49,21 @@ public class CreateGroup extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(CreateGroup.this, CreateGroupMap.class);
-                startActivity(intent);
+                startActivityForResult(intent,666);
+
+//                Intent intentForValues = getIntent();
+//
+//                double meetingLat = intentForValues.getDoubleExtra("latValue",0);
+//                double meetingLng = intentForValues.getDoubleExtra("lngValue",0);
+//
+//                newGroup.setRouteLatArray(0,meetingLat);
+//                newGroup.setRouteLngArray(0,meetingLng);
+
+
             }
         });
     }
+
 
     private void setupDestinationButton(){
         Button btn = findViewById(R.id.btn_set_destination);
@@ -58,9 +71,42 @@ public class CreateGroup extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(CreateGroup.this, CreateGroupMap.class);
-                startActivity(intent);
+                startActivityForResult(intent,888);
+
+
+//                Intent intentForValues = getIntent();
+//
+//                double meetingLat = intentForValues.getDoubleExtra("latValue",0);
+//                double meetingLng = intentForValues.getDoubleExtra("lngValue",0);
+//
+//                newGroup.setRouteLatArray(0,meetingLat);
+//                newGroup.setRouteLngArray(0,meetingLng);
             }
         });
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+            if(requestCode == 666){
+                if(resultCode == Activity.RESULT_OK) {
+                    double meetingLat = data.getDoubleExtra("latValue", 0);
+                    double meetingLng = data.getDoubleExtra("lngValue", 0);
+
+                    newGroup.addLatCoordinate(0,meetingLat);
+                    newGroup.addLngCoordinate(0,meetingLng);
+                }
+            }
+
+            if(requestCode == 888) {
+                if (resultCode == Activity.RESULT_OK) {
+                    double meetingLat = data.getDoubleExtra("latValue", 0);
+                    double meetingLng = data.getDoubleExtra("lngValue", 0);
+
+                    newGroup.addLatCoordinate(1,meetingLat);
+                    newGroup.addLngCoordinate(1,meetingLng);
+                }
+            }
 
     }
 
@@ -93,14 +139,21 @@ public class CreateGroup extends AppCompatActivity {
         String groupName = ed.getText()+"";
 
         User currentUser = userSingleton.getCurrentUser();
-//        Group newGroup = Group.getGroupSingletonInstance();
-        Group newGroup = new Group();
+//        Group newGroup = new Group();
 
         newGroup.setGroupDescription(groupName);
         newGroup.setLeader(currentUser);
 
-        newGroup.setStartLat(123.445);
-        newGroup.setStartLng(123.445);
+//        double[] a1 = new double[2];
+//        double[] a2 = new double[2];
+//
+//        a1[0] = 121.11;
+//        a1[1] = 122.22;
+//
+//        a2[0] = 111.55;
+//        a2[1] = 111.66;
+//        newGroup.setRouteLatArray(a1);
+//        newGroup.setRouteLngArray(a2);
 
 
 //        List<Double> lats = newGroup.getRouteLatArray();
@@ -111,9 +164,9 @@ public class CreateGroup extends AppCompatActivity {
 //
 //        double lng1 = lngs.get(0);
 //        double lng2 = lngs.get(1);
-
-
-
+//
+//
+//
 //        TextView tv = (TextView) findViewById(R.id.myTextView);
 //        tv.setText(lat1+" , " + lng1 + "second: " + lat2+ "," + lng2);
 
@@ -123,12 +176,15 @@ public class CreateGroup extends AppCompatActivity {
     }
 
 
-    private void response(Group group){
-//        Toast.makeText(CreateGroup.this, "Server replied with group: " + group.getGroupDescription(), Toast.LENGTH_LONG).show();
+    private void response(Group returnedGroup){
 
+        Long groupID = returnedGroup.getId();
 //        User leader = group.getLeader();
 //        String email = leader.getEmail();
-//
+        Toast.makeText(CreateGroup.this, "Server replied with group: " + groupID, Toast.LENGTH_LONG).show();
+
+
+
 //        TextView tv = (TextView) findViewById(R.id.myTextView);
 //        tv.setText(email);
 

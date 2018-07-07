@@ -64,8 +64,8 @@ public class GroupTest2 {
             testUsers.add(user);
         }
 
-        TestGroup.setGroupMembers(testUsers);
-        List<User> returnedUsers = TestGroup.getGroupMembers();
+        TestGroup.setMemberUsers(testUsers);
+        List<User> returnedUsers = TestGroup.getMemberUsers();
 
         for (int i = 0; i < 2; i++){
             User user = returnedUsers.get(i);
