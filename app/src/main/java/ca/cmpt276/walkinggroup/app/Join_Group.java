@@ -129,6 +129,7 @@ public class Join_Group extends AppCompatActivity {
         setSupportActionBar(toolbar);
     }
 
+    // Alert dialogue box: https://www.youtube.com/watch?v=wfADRuyul04
     private void showRemoveMembersDialog(boolean isLeader){
         String[] membersList;
         if (isLeader){
@@ -209,6 +210,7 @@ public class Join_Group extends AppCompatActivity {
 
     }
 
+    // Alert dialogue box: https://www.youtube.com/watch?v=wfADRuyul04
     private void showAddMembersDialogue(){
         String[] monitorsUsersArr = new String[monitorsUsers.size()];
         boolean[] checkedMembers = new boolean[monitorsUsers.size()];
