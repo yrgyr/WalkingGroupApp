@@ -5,10 +5,13 @@ import android.content.DialogInterface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -17,24 +20,31 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
+import ca.cmpt276.walkinggroup.dataobjects.CurrentUserData;
 import ca.cmpt276.walkinggroup.dataobjects.Group;
 import ca.cmpt276.walkinggroup.dataobjects.User;
 import ca.cmpt276.walkinggroup.proxy.ProxyBuilder;
 import ca.cmpt276.walkinggroup.proxy.WGServerProxy;
 import retrofit2.Call;
 
-public class Join_Group extends AppCompatActivity {
-    WGServerProxy proxy; // Todo: get this proxy from singleton class
-    User currentUser; // Todo: get this from singleton class
-    public List<User> groupMembers;
+import static ca.cmpt276.walkinggroup.app.MapsActivity.groupSelected;
 
-    public Group group = Group.getGroupSingletonInstance();
-    Long grpId = group.getId();
-    String grpDesc = group.getGroupDescription();
-    String leaderName = group.getLeader().getName();
-    String[] members = group.getGroupMembersNames();  // Todo: replace with groupMembers
+public class Join_Group extends AppCompatActivity {
+    private CurrentUserData userSingleton = CurrentUserData.getSingletonInstance();
+    private WGServerProxy proxy = userSingleton.getCurrentProxy();
+    private User currentUser = userSingleton.getCurrentUser();
+    private List<User> groupMembers = groupSelected.getMemberUsers();
+
+    //private Group group = groupSelected;
+    Long grpId = groupSelected.getId();
+    String grpDesc = groupSelected.getGroupDescription();
+    String leaderName = groupSelected.getLeader().getName();
+
+
+    String[] members = groupSelected.getGroupMembersNames();  // Todo: replace with groupMembers
+
     //long[] membersIds = group.getGroupMembersIds();
-    public List<User> monitorsUsers; // Todo: get the array of monitors users by calling getMonitorsUsers
+    private List<User> monitorsUsers; // Todo: get the array of monitors users by calling getMonitorsUsers
 
 
     @Override
@@ -42,9 +52,13 @@ public class Join_Group extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_join__group);
 
+        Log.e("grpID in join group:", "" + grpDesc);
+
+
         populateGroupID();
         populateGroupDesc();
         populateGroupLeader();
+
         populateGroupMembersListView();
         setupActionBar();
     }
@@ -77,18 +91,22 @@ public class Join_Group extends AppCompatActivity {
                 }
                 break;
             case R.id.menu_leave_group:
-                boolean isInGroup = checkIfIAmInGroup();
-                // Todo: server codes to check if I'm currently in this group
+                // Todo: implement error message to show up when I'm not in the group
+                //boolean isInGroup = checkIfIAmInGroup();
 
-                if (isInGroup){
-                    // Todo: server codes to remove myself from this group
-                    removeUserFromGroup(grpId, currentUser.getId());
-                    Toast.makeText(this, "You have left group " + grpDesc, Toast.LENGTH_SHORT).show();
-                    break;
-                } else{
-                    Toast.makeText(this, "You're not currently in group " + grpDesc, Toast.LENGTH_SHORT).show();
-                    break;
-                }
+//                if (isInGroup){
+//                    removeUserFromGroup(grpId, currentUser.getId());
+//                    Toast.makeText(this, "You have left group " + grpDesc, Toast.LENGTH_SHORT).show();
+//                    break;
+//                } else{
+//                    Toast.makeText(this, "You're not currently in group " + grpDesc, Toast.LENGTH_SHORT).show();
+//                    break;
+//                }
+                Long currentUserId = currentUser.getId();
+                removeUserFromGroup(grpId, currentUserId);
+                Toast.makeText(Join_Group.this, "You have left group " + grpDesc + "!", Toast.LENGTH_SHORT).show();
+                finish();
+                break;
             case R.id.menu_go_back:
                 finish();
                 break;
@@ -113,10 +131,25 @@ public class Join_Group extends AppCompatActivity {
     }
 
     private void populateGroupMembersListView() {
-        members = group.getGroupMembersNames();
+        // Todo: for testing
+        //List<User> membersTest = groupSelected.getMemberUsers();
+//        List<User> membersTest = groupMembers;
+//        User testUser = membersTest.get(0);
+//        Log.e("Join_Group", "First member ID: " + testUser.getId());
+//        Log.e("Join_Group", "First member name: " + testUser.getName());
+        members = groupSelected.getGroupMembersNames();
+        //Log.e("Join_Group", "Group size: " + groupSelected.getGroupSize());
+        //Log.e("Join_Group", "UserId: " + )
+        //Log.e("Join_Group", "members[0]: " + members[0]);
+
+//        if (members == null){
+//            members = new String[0];
+//        }
+
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.group_member, members);
         ListView membersList = findViewById(R.id.join_grp_members_listview);
         membersList.setAdapter(adapter);
+
 
     }
 
@@ -158,7 +191,7 @@ public class Join_Group extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 if (membersToRemove.size()> 0) {
-                    List<User> originalMembers = group.getMemberUsers();
+                    List<User> originalMembers = groupSelected.getMemberUsers();
                     for (int i = 0; i < membersToRemove.size(); i++){
                         int j = membersToRemove.get(i);
                         User user = originalMembers.get(j);
@@ -242,7 +275,7 @@ public class Join_Group extends AppCompatActivity {
 
     private boolean checkIfUserIsLeader(){
         // Todo: check with server if the current user is the group leader
-        if (currentUser.getId() == group.getId()){
+        if (currentUser.getId() == groupSelected.getGroupId()){
             return true;
         } else {
             return false;
@@ -265,14 +298,14 @@ public class Join_Group extends AppCompatActivity {
 
     // Todo: delete this testing method later
     private void addLocalUserToGroup(User user){
-        List<User> updatedMembers = group.getMemberUsers();
+        List<User> updatedMembers = groupSelected.getMemberUsers();
         updatedMembers.add(user);
-        group.setMemberUsers(updatedMembers);
+        groupSelected.setMemberUsers(updatedMembers);
     }
 
     // Todo: delete this later
     private void deleteLocalGroupMembersById(long userId){
-        List<User> originalMembers = group.getMemberUsers();
+        List<User> originalMembers = groupSelected.getMemberUsers();
         List<User> updatedMembers = new ArrayList<>();
 
         for (int i = 0; i < originalMembers.size(); i++){
@@ -282,7 +315,7 @@ public class Join_Group extends AppCompatActivity {
             }
         }
 
-        group.setMemberUsers(updatedMembers);
+        groupSelected.setMemberUsers(updatedMembers);
     }
 
     // Todo: delete this later
@@ -325,15 +358,18 @@ public class Join_Group extends AppCompatActivity {
 
     private void returnGroupMembers(List<User> returnedMembers){
         groupMembers = returnedMembers;
+        //List<User> = groupMembers.
     }
 
     private void removeUserFromGroup(Long groupId, Long userId){
         Call<Void> caller = proxy.removeGroupMember(groupId, userId);
         ProxyBuilder.callProxy(Join_Group.this, caller, returnedNothing -> response(returnedNothing));
+
     }
 
     private void returnedMembers(List<User> users){
         groupMembers = users;
+        Log.e("Join_Group", "User list length after adding: " + groupMembers.size());
     }
 
     private void response(Void returnedNothing){

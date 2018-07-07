@@ -17,18 +17,10 @@ public class Group extends IdItemBase{
     private static Group singletonInstance;
 //    private int id;
     private String groupDescription;
-
-
-
-
     private List<Double> routeLatArray = new ArrayList<>();
     private List<Double> routeLngArray = new ArrayList<>();
-//    private double [] routeLatArray = new double[2];
-//    private  double [] routeLngArray = new double[2];
-
-
     private User leader;
-    private List<User> memberUsers;
+    private List<User> memberUsers = new ArrayList<>();
 
     public Group() { }
 
@@ -50,53 +42,32 @@ public class Group extends IdItemBase{
 //return id; }
 
 
-    // =============================================================================
-//    public double[] getRouteLngArray() {
-//        return routeLngArray;
-//    }
-//
-//    public double[] getRouteLatArray() {
-//        return routeLatArray;
-//    }
-//    public void setRouteLngArray(int index,double value) {
-//        this.routeLngArray[index] = value;
-//    }
-//    public void setRouteLatArray(int index,double value) {
-//        this.routeLatArray[index] = value;
-//
-//    }
-
-
-    // =================================================================================
 
     public void setGroupDescription(String groupDescription){
         this.groupDescription = groupDescription;
     }
     public String getGroupDescription() {
         return groupDescription; }
-//    @JsonIgnore
-//    public double getStartLat() {
-//
-//        return routeLatArray.get(0);
-//    }
-//
-//    @JsonIgnore
-//    public void setStartLat(double lat){
-//
-//        this.routeLatArray.add(lat);
-//    }
-//    @JsonIgnore
-//    public double getStartLng() {
-//
-//        return routeLngArray.get(0);
-//    }
-//
-//    @JsonIgnore
-//    public void setStartLng(double lng){
-//
-//        this.routeLngArray.add(lng);
-//    }
-//
+    @JsonIgnore
+    public double getStartLat() {
+
+        return routeLatArray.get(0);
+    }
+
+    @JsonIgnore
+    public void setStartLat(double lat){
+
+        this.routeLatArray.add(lat);
+    }
+    @JsonIgnore
+    public double getStartLng() {
+
+        return routeLngArray.get(0);
+    }
+    @JsonIgnore
+    public void setStartLng(double lng){
+        this.routeLngArray.add(lng);
+    }
 
     // =======================================================
     public void addLatCoordinate(int index,double lat){
@@ -130,7 +101,7 @@ public class Group extends IdItemBase{
 
         return leader;
     }
-    @JsonIgnore
+    //@JsonIgnore
     public List<User> getMemberUsers()
     {
         return memberUsers;
@@ -141,40 +112,58 @@ public class Group extends IdItemBase{
         this.memberUsers = memberUsers;
     }
 
+    //@JsonIgnore
     public List<Double> getRouteLatArray() {
 
         return routeLatArray;
     }
-
+    //@JsonIgnore
     public List<Double> getRouteLngArray() {
 
         return routeLngArray;
     }
-    // ==============================================================
-//
-//    public void setRouteLatArray(List<Double> routeLatArray)
-//    {
-//        this.routeLatArray = routeLatArray;
-//    }
-//
-//    public void setRouteLngArray(List<Double> routeLngArray) {
-//
-//        this.routeLngArray = routeLngArray;
-//    }
+
+    public void setRouteLatArray(List<Double> routeLatArray)
+    {
+        this.routeLatArray = routeLatArray;
+    }
+
+    public void setRouteLngArray(List<Double> routeLngArray) {
+
+        this.routeLngArray = routeLngArray;
+    }
     @JsonIgnore
     public int getGroupSize(){
         return memberUsers.size();}
     @JsonIgnore
     public String[] getGroupMembersNames(){
-        String[] names = new String[getGroupSize()];
 
-        for (int i = 0; i < getGroupSize(); i++){
-            User member = memberUsers.get(i);
-            names[i] = member.getName();
+        String[] names;
+        if (memberUsers.size() > 0) {
+            names = new String[getGroupSize()];
+
+            for (int i = 0; i < getGroupSize(); i++) {
+                User member = memberUsers.get(i);
+                names[i] = member.getName();
+            }
+        } else {
+            names = new String[0];
         }
-
         return names;
     }
+
+    @JsonIgnore
+    public List<User> removeGroupMember(Long userId){
+        for (int i = 0; i < memberUsers.size(); i++){
+            if (userId == memberUsers.get(i).getId()){
+                memberUsers.remove(i);
+                break;
+            }
+        }
+
+        return memberUsers;
+    }
+
     @JsonIgnore
     public long[] getGroupMembersIds(){
         long[] Ids = new long[getGroupSize()];

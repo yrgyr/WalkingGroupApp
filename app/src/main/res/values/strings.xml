@@ -32,7 +32,7 @@
     <string name="menu_leave_group">Leave this group</string>
     <string name="menu_go_back">Go back</string>
     <string name="MonitorListBtn">check WHO I MONITOR</string>
-    <string name="AddUserBtnText">Add Users</string>
+    <string name="AddUserBtnText">Add Monitors</string>
     <string name="AllUserBtnText">All USERS</string>
     <string name="MonitorByBtnList">Check who monitor me</string>
     <string name="responseAddMonitortext">people you are monitoring :</string>
@@ -47,4 +47,21 @@
     <string name="btn_create_new_group">Create Group</string>
     <string name="btn_cancel_create_group">Cancel</string>
     <string name="btn_view_groups">View Groups</string>
+    <string name="name">Name</string>
+    <string name="password">Password</string>
+    <string name="log_in">Log in</string>
+    <string name="register">Register</string>
+    <string name="emailAddress">Email address</string>
+    <string name="email_address">Email address</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="errorOfLogin">Can\'t log in, please check email address and password.</string>
+    <string name="registerSucceed">Register succeed!</string>
+    <string name="welcome">welcome,</string>
+    <string name="invalidEmail">Not a valid email address!</string>
+    <string name="invalidPassword">Password can\'t empty!</string>
+    <string name="invalidName">Invalid name!</string>
+    <string name="returned">Success returned:</string>
+    <string name="haveReg">Can\'t register, the email address have been used in register.</string>
+    <string name="NotEmail">Doesn\'t exist this Email!</string>
+    <string name="AlreadyMon">Can\'t add, this user is already monitoring to you or monitored by you!</string>
 </resources>
