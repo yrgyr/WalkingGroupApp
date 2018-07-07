@@ -41,10 +41,10 @@ public class Join_Group extends AppCompatActivity {
     String leaderName = groupSelected.getLeader().getName();
 
 
-    String[] members = groupSelected.getGroupMembersNames();  // Todo: replace with groupMembers
+    String[] members = groupSelected.getGroupMembersNames();
 
     //long[] membersIds = group.getGroupMembersIds();
-    private List<User> monitorsUsers = new ArrayList<>(); // Todo: get the array of monitors users by calling getMonitorsUsers
+    private List<User> monitorsUsers = new ArrayList<>();
 
 
     @Override
@@ -75,7 +75,6 @@ public class Join_Group extends AppCompatActivity {
         switch(item.getItemId()){
             case R.id.menu_join_group:
                 Toast.makeText(Join_Group.this, "You have joined group " + grpDesc + "!", Toast.LENGTH_SHORT).show();
-                // Todo: call addUserToGroup with current user's ID
                 addUserToGroup(grpId, currentUser);
                 finish();
                 break;
@@ -83,26 +82,10 @@ public class Join_Group extends AppCompatActivity {
                 addRemotesUsers(currentUser.getId());
                 break;
             case R.id.menu_remove_user:
-//                boolean isLeader = checkIfUserIsLeader();
-//                if(members.length>0) {
-//                    showRemoveMembersDialog(isLeader);
-//                } else {
-//                    Toast.makeText(Join_Group.this, "This group is currently empty!", Toast.LENGTH_SHORT).show();
-//                }
                 removeRemoteUsers(currentUser.getId());
+                Toast.makeText(Join_Group.this, "User(s) successfully removed!", Toast.LENGTH_LONG).show();
                 break;
             case R.id.menu_leave_group:
-                // Todo: implement error message to show up when I'm not in the group
-                //boolean isInGroup = checkIfIAmInGroup();
-
-//                if (isInGroup){
-//                    removeUserFromGroup(grpId, currentUser.getId());
-//                    Toast.makeText(this, "You have left group " + grpDesc, Toast.LENGTH_SHORT).show();
-//                    break;
-//                } else{
-//                    Toast.makeText(this, "You're not currently in group " + grpDesc, Toast.LENGTH_SHORT).show();
-//                    break;
-//                }
                 Long currentUserId = currentUser.getId();
                 removeUserFromGroup(grpId, currentUserId);
                 Toast.makeText(Join_Group.this, "You have left this group!", Toast.LENGTH_SHORT).show();
@@ -132,20 +115,7 @@ public class Join_Group extends AppCompatActivity {
     }
 
     private void populateGroupMembersListView() {
-        // Todo: for testing
-        //List<User> membersTest = groupSelected.getMemberUsers();
-//        List<User> membersTest = groupMembers;
-//        User testUser = membersTest.get(0);
-//        Log.e("Join_Group", "First member ID: " + testUser.getId());
-//        Log.e("Join_Group", "First member name: " + testUser.getName());
         members = groupSelected.getGroupMembersNames();
-        //Log.e("Join_Group", "Group size: " + groupSelected.getGroupSize());
-        //Log.e("Join_Group", "UserId: " + )
-        //Log.e("Join_Group", "members[0]: " + members[0]);
-
-//        if (members == null){
-//            members = new String[0];
-//        }
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.group_member, members);
         ListView membersList = findViewById(R.id.join_grp_members_listview);
@@ -164,14 +134,30 @@ public class Join_Group extends AppCompatActivity {
         if (isLeader){
             membersList = members;
         } else {
+            List<User> groupMembers = groupSelected.getMemberUsers();
+            // get String[] of monitorsUsers who are in group members
 
-            membersList = new String[monitorsUsers.size()];
+            if (groupMembers.size() > 0) {
+                List<String> monitorsInMembersList = new ArrayList<>();
+                for (int i = 0; i < monitorsUsers.size(); i++) {
+                    User user = monitorsUsers.get(i);
+                    Long monitorUserId = user.getId();
 
-            for (int i = 0; i < monitorsUsers.size(); i++){
-                User user = monitorsUsers.get(i);
-                membersList[i] = user.getName();
+                    // Check if the monitors user is one of the group members
+                    for (int j = 0; j < groupMembers.size(); j++) {
+                        Long groupUserId = groupMembers.get(j).getId();
+                        if (monitorUserId == groupUserId) {
+                            String userName = groupMembers.get(j).getName();
+                            monitorsInMembersList.add(userName);
+                        }
+                    }
+
+                }
+                membersList = monitorsInMembersList.toArray(new String[monitorsInMembersList.size()]);
+            } else {
+                membersList = new String[0];
             }
-            //membersList = (String[]) monitorsUsers.toArray();  // need to convert to array format for setMultiChoiceItems
+
         }
 
         boolean[] checkedMembers = new boolean[membersList.length];
@@ -193,7 +179,6 @@ public class Join_Group extends AppCompatActivity {
         });
 
         alertBuilder.setCancelable(true);
-        //boolean cancelAlertDialog = false;
 
         alertBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
@@ -204,11 +189,11 @@ public class Join_Group extends AppCompatActivity {
                         int j = membersToRemove.get(i);
                         User user = originalMembers.get(j);
                         Long userId = user.getId();
-                        //deleteLocalGroupMembersById(userId);  // Todo: replace with removeFromMonitorsUsers server call
                         removeUserFromGroup(grpId, userId);
                     }
                     populateGroupMembersListView();
                 }
+                finish();
 
             }
         });
@@ -226,13 +211,10 @@ public class Join_Group extends AppCompatActivity {
     }
 
     private void showAddMembersDialogue(){
-        //createLostMonitorsUser(); // todo: delete this later
         String[] monitorsUsersArr = new String[monitorsUsers.size()];
         boolean[] checkedMembers = new boolean[monitorsUsers.size()];
         List<Integer> membersToAdd = new ArrayList<>();
 
-        // Todo: add check to see if any monitorsUsers is already in group?
-        // Create monitorsUsersArr (names of monitorsUsers) from monitorsUsers List
         for (int i = 0; i < monitorsUsers.size(); i++){
             monitorsUsersArr[i] = monitorsUsers.get(i).getName();
         }
@@ -263,14 +245,11 @@ public class Join_Group extends AppCompatActivity {
                     for (int i = 0; i < membersToAdd.size(); i++) {
                         Integer j = membersToAdd.get(i);
                         User user = monitorsUsers.get(j);
-                        //addLocalUserToGroup(user);  //
-                        //Toast.makeText(Join_Group.this, "You're adding user: " + user.getName(), Toast.LENGTH_LONG).show();
                         addUserToGroup(grpId, user);
                     }
                     populateGroupMembersListView();
                 }
 
-                finish();
 
             }
         });
@@ -287,7 +266,6 @@ public class Join_Group extends AppCompatActivity {
     }
 
     private boolean checkIfUserIsLeader(){
-        // Todo: check with server if the current user is the group leader
         if (currentUser.getId() == groupSelected.getGroupId()){
             return true;
         } else {
@@ -309,46 +287,6 @@ public class Join_Group extends AppCompatActivity {
 
     }
 
-    // Todo: delete this testing method later
-    private void addLocalUserToGroup(User user){
-        List<User> updatedMembers = groupSelected.getMemberUsers();
-        updatedMembers.add(user);
-        groupSelected.setMemberUsers(updatedMembers);
-    }
-
-    // Todo: delete this later
-    private void deleteLocalGroupMembersById(long userId){
-        List<User> originalMembers = groupSelected.getMemberUsers();
-        List<User> updatedMembers = new ArrayList<>();
-
-        for (int i = 0; i < originalMembers.size(); i++){
-            User user = originalMembers.get(i);
-            if (user.getId() != userId){
-                updatedMembers.add(user);
-            }
-        }
-
-        groupSelected.setMemberUsers(updatedMembers);
-    }
-
-    // Todo: delete this later
-    private void createLostMonitorsUser(){
-        for (int i = 0; i < 2; i++) {
-            User user = new User();
-            user.setName("Monitor " + i);
-            monitorsUsers.add(user);
-        }
-    }
-
-    private long[] createMonitorsUserIds(){
-        long[] Ids = new long[monitorsUsers.size()];
-        for(int i = 0; i < monitorsUsers.size(); i++){
-            User user = monitorsUsers.get(i);
-            Ids[i] = user.getId();
-        }
-
-        return Ids;
-    }
 
     private void getRemoteMonitorsUsers(Long userId){
         Call<List<User>> caller = proxy.getMonitorsUsers(userId);
@@ -397,7 +335,6 @@ public class Join_Group extends AppCompatActivity {
 
     private void returnGroupMembers(List<User> returnedMembers){
         groupMembers = returnedMembers;
-        //List<User> = groupMembers.
     }
 
     private void removeUserFromGroup(Long groupId, Long userId){
@@ -408,6 +345,8 @@ public class Join_Group extends AppCompatActivity {
 
     private void returnedMembers(List<User> users){
         groupMembers = users;
+        Toast.makeText(Join_Group.this, "User(s) successfully added!", Toast.LENGTH_LONG).show();
+        finish();
         Log.e("Join_Group", "User list length after adding: " + groupMembers.size());
     }
 
