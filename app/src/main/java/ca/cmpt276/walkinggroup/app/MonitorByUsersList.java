@@ -2,10 +2,13 @@ package ca.cmpt276.walkinggroup.app;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.TypedValue;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -23,10 +26,13 @@ public class MonitorByUsersList extends AppCompatActivity {
     private WGServerProxy proxy;
     private Long userID;
     private List<User> usersList;
-
     private CurrentUserData userSingleton = CurrentUserData.getSingletonInstance();
 
 
+    /* =======================================================================================
+       ============== This Activity displays all users who monitor the logged in user =========
+        ====================================================================================
+    */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,8 +41,6 @@ public class MonitorByUsersList extends AppCompatActivity {
         proxy = userSingleton.getCurrentProxy();
         User user = userSingleton.getCurrentUser();
         userID = user.getId();
-
-
         setupListView();
         listViewOnclick();
 
@@ -84,13 +88,14 @@ public class MonitorByUsersList extends AppCompatActivity {
                 Call<Void> caller = proxy.removeFromMonitoredByUsers(userID,deleteID);
                 ProxyBuilder.callProxy(MonitorByUsersList.this, caller, nothing -> responseVoid(nothing));
 
-                // ------------UPDATE LIST VIEW ----------------
-                Call<List<User>> caller2 = proxy.getMonitoredByUsers(userID);
-                ProxyBuilder.callProxy(MonitorByUsersList.this, caller2, returnedUsers -> response(returnedUsers));
+
+
             }
         });
     }
     private void responseVoid(Void nothing){
         Toast.makeText(this,"Server replied to delete request.",Toast.LENGTH_LONG).show();
+        Call<List<User>> caller2 = proxy.getMonitoredByUsers(userID);
+        ProxyBuilder.callProxy(MonitorByUsersList.this, caller2, returnedUsers -> response(returnedUsers));
     }
 }

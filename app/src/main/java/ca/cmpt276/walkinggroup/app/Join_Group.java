@@ -133,27 +133,33 @@ public class Join_Group extends AppCompatActivity {
     private void showRemoveMembersDialog(boolean isLeader){
         String[] membersList;
         if (isLeader){
-            membersList = members;
+            //membersList = members;
+            membersList = groupSelected.getGroupMembersNames();
         } else {
             List<User> groupMembers = groupSelected.getMemberUsers();
 
+            String test = "";
             if (groupMembers.size() > 0) {
                 List<String> monitorsInMembersList = new ArrayList<>();
                 for (int i = 0; i < monitorsUsers.size(); i++) {
+
                     User user = monitorsUsers.get(i);
                     Long monitorUserId = user.getId();
 
                     // Check if the monitors user is one of the group members
                     for (int j = 0; j < groupMembers.size(); j++) {
-                        Long groupUserId = groupMembers.get(j).getId();
-                        if (monitorUserId == groupUserId) {
-                            String userName = groupMembers.get(j).getName();
+                        User testUser = groupMembers.get(j);
+                        Long groupUserId = testUser.getId();
+                        if (monitorUserId.equals(groupUserId)) {
+                            String userName = testUser.getName();
                             monitorsInMembersList.add(userName);
+
                         }
                     }
 
                 }
-                membersList = monitorsInMembersList.toArray(new String[monitorsInMembersList.size()]);
+                membersList = monitorsInMembersList.toArray(new String[monitorsInMembersList.size() ]);
+
             } else {
                 membersList = new String[0];
             }

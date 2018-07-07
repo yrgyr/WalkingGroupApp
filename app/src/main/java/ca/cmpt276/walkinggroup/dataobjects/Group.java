@@ -19,6 +19,7 @@ public class Group extends IdItemBase{
     private String groupDescription;
     private List<Double> routeLatArray = new ArrayList<>();
     private List<Double> routeLngArray = new ArrayList<>();
+
     private User leader;
     private List<User> memberUsers = new ArrayList<>();
 
@@ -39,7 +40,9 @@ public class Group extends IdItemBase{
         this.id = id;
     }
     public int getGroupId() {
-        return id; }
+        return id;
+    }
+
 
 
     public void setGroupDescription(String groupDescription){
@@ -63,19 +66,31 @@ public class Group extends IdItemBase{
 
         return routeLngArray.get(0);
     }
-
     @JsonIgnore
     public void setStartLng(double lng){
-
         this.routeLngArray.add(lng);
     }
 
-    public void addLatCoordinate(double lat){
-        routeLatArray.add(lat);
+    public void addLatCoordinate(int index,double lat){
+
+        if (routeLatArray.size() < 2){
+            routeLatArray.add(lat);
+
+        }
+        else{
+            routeLatArray.set(index,lat);
+        }
+
     }
 
-    public void addLngCoordinate(double lng){
-        routeLngArray.add(lng);
+    public void addLngCoordinate(int index,double lng){
+
+        if (routeLngArray.size() < 2){
+            routeLngArray.add(lng);
+        }
+        else{
+            routeLngArray.set(index,lng);
+        }
     }
 
     public void setLeader(User leader) {
@@ -163,7 +178,7 @@ public class Group extends IdItemBase{
     }
     @JsonIgnore
     public void setToGroup2Params(Group group2){
-        this.id = group2.getGroupId();
+//        this.id = group2.getGroupId();
         this.groupDescription = group2.getGroupDescription();
         this.routeLatArray = group2.getRouteLatArray();
         this.routeLngArray = group2.getRouteLngArray();
@@ -175,7 +190,7 @@ public class Group extends IdItemBase{
     @Override
     public String toString() {
         return "Group{" +
-                "id :" + id +
+                "id=:" + getId() +
                 ", groupDescription : '" + groupDescription+ '\'' +
                 ", routeLatArray : '" + routeLatArray + '\'' +
                 ", routeLngArray : '" + routeLngArray + '\'' +

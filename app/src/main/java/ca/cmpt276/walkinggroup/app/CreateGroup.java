@@ -1,5 +1,6 @@
 package ca.cmpt276.walkinggroup.app;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -22,7 +23,13 @@ import retrofit2.Call;
 public class CreateGroup extends AppCompatActivity {
     private WGServerProxy proxy;  // Todo: get proxy and user from singleton class
     private CurrentUserData userSingleton = CurrentUserData.getSingletonInstance();
+    private Group newGroup = Group.getGroupSingletonInstance();
 
+
+    /* =======================================================================================
+        This Activity is the UI for creating a new group
+        ====================================================================================
+    */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,12 +39,10 @@ public class CreateGroup extends AppCompatActivity {
 
         proxy = userSingleton.getCurrentProxy();
 
-        // Todo: setup new method to get user input from editText for group description
 
         setupMeetingPlaceButton();
         setupDestinationButton();
         setupCreateGroupButton();
-        setupCancelButton();
 
     }
 
@@ -47,10 +52,11 @@ public class CreateGroup extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(CreateGroup.this, CreateGroupMap.class);
-                startActivity(intent);
+                startActivityForResult(intent,666);
             }
         });
     }
+
 
     private void setupDestinationButton(){
         Button btn = findViewById(R.id.btn_set_destination);
@@ -58,9 +64,33 @@ public class CreateGroup extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(CreateGroup.this, CreateGroupMap.class);
-                startActivity(intent);
+                startActivityForResult(intent,888);
             }
         });
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+            if(requestCode == 666){
+                if(resultCode == Activity.RESULT_OK) {
+                    double meetingLat = data.getDoubleExtra("latValue", 0);
+                    double meetingLng = data.getDoubleExtra("lngValue", 0);
+
+                    newGroup.addLatCoordinate(0,meetingLat);
+                    newGroup.addLngCoordinate(0,meetingLng);
+                }
+            }
+
+            if(requestCode == 888) {
+                if (resultCode == Activity.RESULT_OK) {
+                    double meetingLat = data.getDoubleExtra("latValue", 0);
+                    double meetingLng = data.getDoubleExtra("lngValue", 0);
+
+                    newGroup.addLatCoordinate(1,meetingLat);
+                    newGroup.addLngCoordinate(1,meetingLng);
+                }
+            }
 
     }
 
@@ -77,63 +107,35 @@ public class CreateGroup extends AppCompatActivity {
 
     }
 
-    private void setupCancelButton(){
-        Button btn = findViewById(R.id.btn_cancel_create_group);
-        btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
-    }
-
     private void createNewGroup(){
 
         EditText ed = (EditText) findViewById(R.id.groupNameEd);
-        String groupName = ed.getText()+"";
+        String groupName = ed.getText().toString();
 
-        User currentUser = userSingleton.getCurrentUser();
-//        Group newGroup = Group.getGroupSingletonInstance();
-        Group newGroup = new Group();
+        if(groupName.isEmpty()){
+            Toast.makeText(this, R.string.empt_group_name_toast_msg,Toast.LENGTH_LONG).show();
+        }
+        else{
+            User currentUser = userSingleton.getCurrentUser();
+            newGroup.setGroupDescription(groupName);
+            newGroup.setLeader(currentUser);
+            Call<Group> caller = proxy.createGroup(newGroup);
+            ProxyBuilder.callProxy(CreateGroup.this, caller, returnedGroup->response(returnedGroup));
+        }
 
-        newGroup.setGroupDescription(groupName);
-        newGroup.setLeader(currentUser);
-
-        newGroup.setStartLat(123.445);
-        newGroup.setStartLng(123.445);
-
-
-//        List<Double> lats = newGroup.getRouteLatArray();
-//        List<Double> lngs = newGroup.getRouteLngArray();
-//
-//        double lat1 = lats.get(0);
-//        double lat2 = lats.get(1);
-//
-//        double lng1 = lngs.get(0);
-//        double lng2 = lngs.get(1);
-
-
-
-//        TextView tv = (TextView) findViewById(R.id.myTextView);
-//        tv.setText(lat1+" , " + lng1 + "second: " + lat2+ "," + lng2);
-
-
-        Call<Group> caller = proxy.createGroup(newGroup);
-        ProxyBuilder.callProxy(CreateGroup.this, caller, returnedGroup->response(returnedGroup));
     }
 
 
-    private void response(Group group){
-//        Toast.makeText(CreateGroup.this, "Server replied with group: " + group.getGroupDescription(), Toast.LENGTH_LONG).show();
+    private void response(Group returnedGroup){
 
-//        User leader = group.getLeader();
-//        String email = leader.getEmail();
-//
-//        TextView tv = (TextView) findViewById(R.id.myTextView);
-//        tv.setText(email);
+        Long groupID = returnedGroup.getId();
+        Toast.makeText(CreateGroup.this, getString(R.string.create_group_success_toast_msg) + groupID, Toast.LENGTH_LONG).show();
 
+        Call<List<Group>> caller = proxy.getGroups();
+        ProxyBuilder.callProxy(CreateGroup.this, caller, returnedGroups -> returnGroups(returnedGroups));
+    }
 
-
-
+    private void returnGroups(List<Group> returnedGroups){
+        MainActivity.groupsList = returnedGroups;
     }
 }
