@@ -35,7 +35,6 @@ public class Join_Group extends AppCompatActivity {
     private User currentUser = userSingleton.getCurrentUser();
     private List<User> groupMembers = groupSelected.getMemberUsers();
 
-    //private Group group = groupSelected;
     Long grpId = groupSelected.getId();
     String grpDesc = groupSelected.getGroupDescription();
     String leaderName = groupSelected.getLeader().getName();
@@ -43,7 +42,6 @@ public class Join_Group extends AppCompatActivity {
     Long currentUserId = currentUser.getId();
     String[] members = groupSelected.getGroupMembersNames();
 
-    //long[] membersIds = group.getGroupMembersIds();
     private List<User> monitorsUsers = new ArrayList<>();
 
 
@@ -73,7 +71,6 @@ public class Join_Group extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()){
             case R.id.menu_join_group:
-                //Toast.makeText(Join_Group.this, "You have joined group " + grpDesc + "!", Toast.LENGTH_SHORT).show();
                 addUserToGroup(grpId, currentUser);
                 finish();
                 break;
@@ -84,12 +81,11 @@ public class Join_Group extends AppCompatActivity {
                 removeRemoteUsers(currentUser.getId());
                 break;
             case R.id.menu_leave_group:
-//                Long currentUserId = currentUser.getId();
                 User leader = groupSelected.getLeader();
                 Long leaderId = leader.getId();
 
                 if (currentUserId == leaderId){
-                    Toast.makeText(Join_Group.this, "You're the leader of this group; can't leave this group", Toast.LENGTH_LONG).show();
+                    Toast.makeText(Join_Group.this, R.string.remove_leader_error_toast, Toast.LENGTH_LONG).show();
                 } else {
                     leaveGroup(grpId, currentUserId);
                     finish();
@@ -139,7 +135,6 @@ public class Join_Group extends AppCompatActivity {
             membersList = members;
         } else {
             List<User> groupMembers = groupSelected.getMemberUsers();
-            // get String[] of monitorsUsers who are in group members
 
             if (groupMembers.size() > 0) {
                 List<String> monitorsInMembersList = new ArrayList<>();
@@ -231,7 +226,6 @@ public class Join_Group extends AppCompatActivity {
                 if(isChecked){
                     if(!membersToAdd.contains(Integer.valueOf(position))){
                         membersToAdd.add(Integer.valueOf(position));
-                        //Toast.makeText(Join_Group.this, "You have selected pos: " + position, Toast.LENGTH_LONG).show();
                     }
                 } else if(membersToAdd.contains(Integer.valueOf(position))){
                     membersToAdd.remove(Integer.valueOf(position));
@@ -269,33 +263,6 @@ public class Join_Group extends AppCompatActivity {
         aDialog.show();
     }
 
-    private boolean checkIfUserIsLeader(){
-        if (currentUser.getId() == groupSelected.getGroupId()){
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    private boolean checkIfIAmInGroup() {
-        getRemoteGroupMembers(grpId);
-
-        for (int i = 0; i < groupMembers.size(); i++){
-            User user = groupMembers.get(i);
-            if (currentUser.getId() == user.getId()){
-                return true;
-            }
-        }
-
-        return false;
-
-    }
-
-
-    private void getRemoteMonitorsUsers(Long userId){
-        Call<List<User>> caller = proxy.getMonitorsUsers(userId);
-        ProxyBuilder.callProxy(Join_Group.this, caller, returnedUsers -> returnedMonitorsUser(returnedUsers));
-    }
 
     private void returnedMonitorsUser(List<User> users){
         monitorsUsers = users;
@@ -332,14 +299,6 @@ public class Join_Group extends AppCompatActivity {
         ProxyBuilder.callProxyForAddUserToGroup(Join_Group.this, caller, returnedUsers -> responseAddUsers(returnedUsers));
     }
 
-    private void getRemoteGroupMembers(Long groupId){
-        Call<List<User>> caller = proxy.getGroupMembers(groupId);
-        ProxyBuilder.callProxy(Join_Group.this, caller, returnedMembers -> returnGroupMembers(returnedMembers));
-    }
-
-    private void returnGroupMembers(List<User> returnedMembers){
-        groupMembers = returnedMembers;
-    }
 
     private void removeUserFromGroup(Long groupId, Long userId){
         Call<Void> caller = proxy.removeGroupMember(groupId, userId);

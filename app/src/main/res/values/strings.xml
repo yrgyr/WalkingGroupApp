@@ -67,4 +67,10 @@
     <string name="Toast_user_added">User(s) successfully added!</string>
     <string name="Toast_user_removed">User(s) successfully removed!</string>
     <string name="Toast_left_group">You have left this group</string>
+    <string name="getDeviceLocation_exception">getDeviceLocation: SecurityException:</string>
+    <string name="tag_on_info_window">Group -</string>
+    <string name="group_info_window_snippet">Click here to manage group</string>
+    <string name="group_size_zero">Groups size is 0</string>
+    <string name="group_list_null">Groups list is null!</string>
+    <string name="remove_leader_error_toast">You\'re the leader of this group; can\'t leave this group</string>
 </resources>
