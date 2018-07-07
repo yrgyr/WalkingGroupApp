@@ -21,10 +21,10 @@ public class Group extends IdItemBase{
 
 
 
-    //    private List<Double> routeLatArray = new ArrayList<>();
-//    private List<Double> routeLngArray = new ArrayList<>();
-    private double [] routeLatArray = new double[2];
-    private  double [] routeLngArray = new double[2];
+    private List<Double> routeLatArray = new ArrayList<>();
+    private List<Double> routeLngArray = new ArrayList<>();
+//    private double [] routeLatArray = new double[2];
+//    private  double [] routeLngArray = new double[2];
 
 
     private User leader;
@@ -47,23 +47,27 @@ public class Group extends IdItemBase{
 //        this.id = id;
 //    }
 //    public int getGroupId() {
-//        return id; }
-    public double[] getRouteLngArray() {
-        return routeLngArray;
-    }
-
-    public double[] getRouteLatArray() {
-        return routeLatArray;
-    }
-    public void setRouteLngArray(int index,double value) {
-        this.routeLngArray[index] = value;
-    }
-    public void setRouteLatArray(int index,double value) {
-        this.routeLatArray[index] = value;
-
-    }
+//return id; }
 
 
+    // =============================================================================
+//    public double[] getRouteLngArray() {
+//        return routeLngArray;
+//    }
+//
+//    public double[] getRouteLatArray() {
+//        return routeLatArray;
+//    }
+//    public void setRouteLngArray(int index,double value) {
+//        this.routeLngArray[index] = value;
+//    }
+//    public void setRouteLatArray(int index,double value) {
+//        this.routeLatArray[index] = value;
+//
+//    }
+
+
+    // =================================================================================
 
     public void setGroupDescription(String groupDescription){
         this.groupDescription = groupDescription;
@@ -93,15 +97,29 @@ public class Group extends IdItemBase{
 //        this.routeLngArray.add(lng);
 //    }
 //
-//    @JsonIgnore
-//    public void addLatCoordinate(double lat){
-//        routeLatArray.add(lat);
-//    }
-//
-//    @JsonIgnore
-//    public void addLngCoordinate(double lng){
-//        routeLngArray.add(lng);
-//    }
+
+    // =======================================================
+    public void addLatCoordinate(int index,double lat){
+//        routeLatArray.set(index,lat);
+        if (routeLatArray.size() < 2){
+            routeLatArray.add(lat);
+
+        }
+        else{
+            routeLatArray.set(index,lat);
+        }
+
+    }
+
+    public void addLngCoordinate(int index,double lng){
+//        routeLngArray.set(index,lng);
+        if (routeLngArray.size() < 2){
+            routeLngArray.add(lng);
+        }
+        else{
+            routeLngArray.set(index,lng);
+        }
+    }
 
     public void setLeader(User leader) {
 
@@ -122,16 +140,17 @@ public class Group extends IdItemBase{
     {
         this.memberUsers = memberUsers;
     }
-//    @JsonIgnore
-//    public List<Double> getRouteLatArray() {
-//
-//        return routeLatArray;
-//    }
-//    @JsonIgnore
-//    public List<Double> getRouteLngArray() {
-//
-//        return routeLngArray;
-//    }
+
+    public List<Double> getRouteLatArray() {
+
+        return routeLatArray;
+    }
+
+    public List<Double> getRouteLngArray() {
+
+        return routeLngArray;
+    }
+    // ==============================================================
 //
 //    public void setRouteLatArray(List<Double> routeLatArray)
 //    {

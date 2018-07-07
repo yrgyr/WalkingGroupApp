@@ -88,24 +88,26 @@ public class CreateGroup extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (requestCode){
-            case 666:
+            if(requestCode == 666){
                 if(resultCode == Activity.RESULT_OK) {
                     double meetingLat = data.getDoubleExtra("latValue", 0);
                     double meetingLng = data.getDoubleExtra("lngValue", 0);
 
-                    newGroup.setRouteLatArray(0, meetingLat);
-                    newGroup.setRouteLngArray(0, meetingLng);
+                    newGroup.addLatCoordinate(0,meetingLat);
+                    newGroup.addLngCoordinate(0,meetingLng);
                 }
-            case 888:
-                if (resultCode == Activity.RESULT_OK){
+            }
+
+            if(requestCode == 888) {
+                if (resultCode == Activity.RESULT_OK) {
                     double meetingLat = data.getDoubleExtra("latValue", 0);
                     double meetingLng = data.getDoubleExtra("lngValue", 0);
 
-                    newGroup.setRouteLatArray(1, meetingLat);
-                    newGroup.setRouteLngArray(1, meetingLng);
+                    newGroup.addLatCoordinate(1,meetingLat);
+                    newGroup.addLngCoordinate(1,meetingLng);
                 }
-        }
+            }
+
     }
 
     private void setupCreateGroupButton(){

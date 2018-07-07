@@ -32,8 +32,8 @@ public class MainActivity extends AppCompatActivity {
 
     private WGServerProxy proxy;
 
-    public static String userEmail = "james@sfu.ca";
-    private String userPassword = "lin090628";
+    public static String userEmail = "shuai@sfu.ca";
+    private String userPassword = "lin";
 
     private CurrentUserData userSingleton = CurrentUserData.getSingletonInstance();
 

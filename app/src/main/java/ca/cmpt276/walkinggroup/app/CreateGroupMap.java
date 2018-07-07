@@ -168,7 +168,7 @@ public class CreateGroupMap extends FragmentActivity implements OnMapReadyCallba
 
 //                        newGroup.addLatCoordinate(lat);
 //                        newGroup.addLngCoordinate(lng);
-//
+////
 //                        Toast.makeText(CreateGroupMap.this, "Added lat: " + newGroup.getStartLat() + " lng: " + newGroup.getStartLng(), Toast.LENGTH_LONG).show();
 
                         finish();
