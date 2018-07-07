@@ -27,6 +27,11 @@ public class MonitorUsersList extends AppCompatActivity {
     private CurrentUserData userSingleton = CurrentUserData.getSingletonInstance();
 
 
+    /* =======================================================================================
+       ============== This Activity displays all users that  the logged in user
+       =============== is monitoring                                               =========
+        ====================================================================================
+    */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

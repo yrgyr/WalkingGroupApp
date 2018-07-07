@@ -42,6 +42,10 @@ public class CreateGroupMap extends FragmentActivity implements OnMapReadyCallba
     private FusedLocationProviderClient mFusedLocationProviderClient;
 
 
+    /* =======================================================================================
+        This Activity is the google map for creating new groups
+        ====================================================================================
+    */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -158,21 +162,12 @@ public class CreateGroupMap extends FragmentActivity implements OnMapReadyCallba
                         double lng = markerLocation.longitude;
                         Toast.makeText(CreateGroupMap.this, "You have selected this location", Toast.LENGTH_LONG).show();
 
-                        // Todo: add lat and lng to newGroup singleton class, and close this activity to go back to CreateGroup
-//                        Group newGroup = Group.getGroupSingletonInstance();
-
                         Intent intent = new Intent();
                         intent.putExtra("latValue",lat);
                         intent.putExtra("lngValue",lng);
                         setResult(Activity.RESULT_OK,intent);
 
-//                        newGroup.addLatCoordinate(lat);
-//                        newGroup.addLngCoordinate(lng);
-////
-//                        Toast.makeText(CreateGroupMap.this, "Added lat: " + newGroup.getStartLat() + " lng: " + newGroup.getStartLng(), Toast.LENGTH_LONG).show();
-
                         finish();
-
                         return false;
                     }
                 });

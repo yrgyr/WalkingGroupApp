@@ -27,6 +27,10 @@ public class login extends AppCompatActivity {
     public static String tokenOfLoggingUser;
     public static String email;
 
+    /* =======================================================================================
+        This Activity is the UI for Logging in to the app
+        ====================================================================================
+    */
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

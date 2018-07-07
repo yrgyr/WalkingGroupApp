@@ -15,6 +15,12 @@ import retrofit2.Call;
 
 public class register extends AppCompatActivity {
     private WGServerProxy proxy;
+
+
+    /* =======================================================================================
+        This Activity is the UI for registering a new user
+        ====================================================================================
+    */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

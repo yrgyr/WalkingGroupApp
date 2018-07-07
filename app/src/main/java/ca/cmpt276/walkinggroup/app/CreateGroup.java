@@ -26,6 +26,10 @@ public class CreateGroup extends AppCompatActivity {
     private Group newGroup = Group.getGroupSingletonInstance();
 
 
+    /* =======================================================================================
+        This Activity is the UI for creating a new group
+        ====================================================================================
+    */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,7 +43,6 @@ public class CreateGroup extends AppCompatActivity {
         setupMeetingPlaceButton();
         setupDestinationButton();
         setupCreateGroupButton();
-        setupCancelButton();
 
     }
 
@@ -50,16 +53,6 @@ public class CreateGroup extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(CreateGroup.this, CreateGroupMap.class);
                 startActivityForResult(intent,666);
-
-//                Intent intentForValues = getIntent();
-//
-//                double meetingLat = intentForValues.getDoubleExtra("latValue",0);
-//                double meetingLng = intentForValues.getDoubleExtra("lngValue",0);
-//
-//                newGroup.setRouteLatArray(0,meetingLat);
-//                newGroup.setRouteLngArray(0,meetingLng);
-
-
             }
         });
     }
@@ -72,15 +65,6 @@ public class CreateGroup extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(CreateGroup.this, CreateGroupMap.class);
                 startActivityForResult(intent,888);
-
-
-//                Intent intentForValues = getIntent();
-//
-//                double meetingLat = intentForValues.getDoubleExtra("latValue",0);
-//                double meetingLng = intentForValues.getDoubleExtra("lngValue",0);
-//
-//                newGroup.setRouteLatArray(0,meetingLat);
-//                newGroup.setRouteLngArray(0,meetingLng);
             }
         });
 
@@ -123,73 +107,28 @@ public class CreateGroup extends AppCompatActivity {
 
     }
 
-    private void setupCancelButton(){
-        Button btn = findViewById(R.id.btn_cancel_create_group);
-        btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
-    }
-
     private void createNewGroup(){
 
         EditText ed = (EditText) findViewById(R.id.groupNameEd);
-        String groupName = ed.getText()+"";
+        String groupName = ed.getText().toString();
 
-        User currentUser = userSingleton.getCurrentUser();
-//        Group newGroup = new Group();
+        if(groupName.isEmpty()){
+            Toast.makeText(this, R.string.empt_group_name_toast_msg,Toast.LENGTH_LONG).show();
+        }
+        else{
+            User currentUser = userSingleton.getCurrentUser();
+            newGroup.setGroupDescription(groupName);
+            newGroup.setLeader(currentUser);
+            Call<Group> caller = proxy.createGroup(newGroup);
+            ProxyBuilder.callProxy(CreateGroup.this, caller, returnedGroup->response(returnedGroup));
+        }
 
-        newGroup.setGroupDescription(groupName);
-        newGroup.setLeader(currentUser);
-
-//        double[] a1 = new double[2];
-//        double[] a2 = new double[2];
-//
-//        a1[0] = 121.11;
-//        a1[1] = 122.22;
-//
-//        a2[0] = 111.55;
-//        a2[1] = 111.66;
-//        newGroup.setRouteLatArray(a1);
-//        newGroup.setRouteLngArray(a2);
-
-
-//        List<Double> lats = newGroup.getRouteLatArray();
-//        List<Double> lngs = newGroup.getRouteLngArray();
-//
-//        double lat1 = lats.get(0);
-//        double lat2 = lats.get(1);
-//
-//        double lng1 = lngs.get(0);
-//        double lng2 = lngs.get(1);
-//
-//
-//
-//        TextView tv = (TextView) findViewById(R.id.myTextView);
-//        tv.setText(lat1+" , " + lng1 + "second: " + lat2+ "," + lng2);
-
-
-        Call<Group> caller = proxy.createGroup(newGroup);
-        ProxyBuilder.callProxy(CreateGroup.this, caller, returnedGroup->response(returnedGroup));
     }
 
 
     private void response(Group returnedGroup){
 
         Long groupID = returnedGroup.getId();
-//        User leader = group.getLeader();
-//        String email = leader.getEmail();
-        Toast.makeText(CreateGroup.this, "Server replied with group: " + groupID, Toast.LENGTH_LONG).show();
-
-
-
-//        TextView tv = (TextView) findViewById(R.id.myTextView);
-//        tv.setText(email);
-
-
-
-
+        Toast.makeText(CreateGroup.this, getString(R.string.create_group_success_toast_msg) + groupID, Toast.LENGTH_LONG).show();
     }
 }

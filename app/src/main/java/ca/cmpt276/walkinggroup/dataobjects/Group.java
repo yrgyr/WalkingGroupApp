@@ -15,10 +15,11 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Group extends IdItemBase{
     private static Group singletonInstance;
-//    private int id;
+    private int id;
     private String groupDescription;
     private List<Double> routeLatArray = new ArrayList<>();
     private List<Double> routeLngArray = new ArrayList<>();
+
     private User leader;
     private List<User> memberUsers = new ArrayList<>();
 
@@ -35,11 +36,12 @@ public class Group extends IdItemBase{
 
     // Basic group data getters and setters
 
-//    public void setGroupId(int id){
-//        this.id = id;
-//    }
-//    public int getGroupId() {
-//return id; }
+    public void setGroupId(int id){
+        this.id = id;
+    }
+    public int getGroupId() {
+        return id;
+    }
 
 
 
@@ -69,9 +71,8 @@ public class Group extends IdItemBase{
         this.routeLngArray.add(lng);
     }
 
-    // =======================================================
     public void addLatCoordinate(int index,double lat){
-//        routeLatArray.set(index,lat);
+
         if (routeLatArray.size() < 2){
             routeLatArray.add(lat);
 
@@ -83,7 +84,7 @@ public class Group extends IdItemBase{
     }
 
     public void addLngCoordinate(int index,double lng){
-//        routeLngArray.set(index,lng);
+
         if (routeLngArray.size() < 2){
             routeLngArray.add(lng);
         }

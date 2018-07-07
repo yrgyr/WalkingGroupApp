@@ -39,6 +39,10 @@ public class MainActivity extends AppCompatActivity {
     private CurrentUserData userSingleton = CurrentUserData.getSingletonInstance();
 
 
+    /* =======================================================================================
+        This Activity is the app's main menu
+        ====================================================================================
+    */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,8 +59,9 @@ public class MainActivity extends AppCompatActivity {
         userSingleton.setCurrentProxy(proxy);
 
         setUpName();
-        setUpLogOut();
+//        setUpLogOut();
 
+        setupLogOutBtn();
         getRemoteGroups();
 
 
@@ -88,20 +93,35 @@ public class MainActivity extends AppCompatActivity {
         updateUI();
 
     }
-    private void setUpLogOut() {
-        TextView logOut = findViewById(R.id.LogOutText);
-        logOut.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);
-        logOut.setTextColor(Color.BLUE);
+//    private void setUpLogOut() {
+//        TextView logOut = findViewById(R.id.LogOutText);
+//        logOut.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);
+//        logOut.setTextColor(Color.BLUE);
+//
+//        logOut.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                isLogOut = true;
+//                Intent i = new Intent(MainActivity.this,login.class);
+//                startActivity(i);
+//                finish();
+//            }
+//        });
+//    }
 
-        logOut.setOnClickListener(new View.OnClickListener() {
+    private void setupLogOutBtn(){
+
+        Button btn = (Button) findViewById(R.id.logOutBtn);
+        btn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(View v) {
                 isLogOut = true;
                 Intent i = new Intent(MainActivity.this,login.class);
                 startActivity(i);
                 finish();
             }
         });
+
     }
 
 

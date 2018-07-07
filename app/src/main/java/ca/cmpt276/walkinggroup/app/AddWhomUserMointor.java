@@ -28,6 +28,11 @@ public class AddWhomUserMointor extends AppCompatActivity {
     private Long loggedInUserID;
     private CurrentUserData userSingleton = CurrentUserData.getSingletonInstance();
 
+    /* =======================================================================================
+        This Activity is the UI for adding a new monitor user, either you want to monitor this user
+        or let this user monitor you.
+        ====================================================================================
+    */
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

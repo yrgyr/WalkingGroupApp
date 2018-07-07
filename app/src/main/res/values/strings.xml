@@ -31,10 +31,10 @@
     <string name="menu_remove_user">Remove someone from this group</string>
     <string name="menu_leave_group">Leave this group</string>
     <string name="menu_go_back">Go back</string>
-    <string name="MonitorListBtn">check WHO I MONITOR</string>
+    <string name="MonitorListBtn">WHO I MONITOR</string>
     <string name="AddUserBtnText">Add Monitors</string>
     <string name="AllUserBtnText">All USERS</string>
-    <string name="MonitorByBtnList">Check who monitor me</string>
+    <string name="MonitorByBtnList">Who Monitor Me</string>
     <string name="responseAddMonitortext">people you are monitoring :</string>
     <string name="responseAddMonitorByText">people monitoring you :</string>
     <string name="loginuserText">user %1$s has already logged In</string>>
@@ -64,4 +64,10 @@
     <string name="haveReg">Can\'t register, the email address have been used in register.</string>
     <string name="NotEmail">Doesn\'t exist this Email!</string>
     <string name="AlreadyMon">Can\'t add, this user is already monitoring to you or monitored by you!</string>
+    <string name="log_out_btn_txt">Log Out</string>
+    <string name="add_screen_txt">Add Who you want to monitor/monitor by</string>
+    <string name="monitor_this_user_btn_txt">Monitor This User</string>
+    <string name="add_monitor_by_this_user_btn_txt">Monitor By this user</string>
+    <string name="empt_group_name_toast_msg">Group name can not be empty</string>
+    <string name="create_group_success_toast_msg">Create group successfully ,Server replied with group ID:</string>
 </resources>
