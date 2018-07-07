@@ -120,7 +120,7 @@ public class Join_Group extends AppCompatActivity {
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.group_member, members);
         ListView membersList = findViewById(R.id.join_grp_members_listview);
         membersList.setAdapter(adapter);
-
+//
 
     }
 
