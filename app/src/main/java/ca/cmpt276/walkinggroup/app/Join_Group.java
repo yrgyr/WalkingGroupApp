@@ -40,7 +40,7 @@ public class Join_Group extends AppCompatActivity {
     String grpDesc = groupSelected.getGroupDescription();
     String leaderName = groupSelected.getLeader().getName();
 
-
+    Long currentUserId = currentUser.getId();
     String[] members = groupSelected.getGroupMembersNames();
 
     //long[] membersIds = group.getGroupMembersIds();
@@ -52,7 +52,6 @@ public class Join_Group extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_join__group);
 
-        Log.e("grpID in join group:", "" + grpDesc);
 
 
         populateGroupID();
@@ -74,7 +73,7 @@ public class Join_Group extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()){
             case R.id.menu_join_group:
-                Toast.makeText(Join_Group.this, "You have joined group " + grpDesc + "!", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(Join_Group.this, "You have joined group " + grpDesc + "!", Toast.LENGTH_SHORT).show();
                 addUserToGroup(grpId, currentUser);
                 finish();
                 break;
@@ -83,13 +82,18 @@ public class Join_Group extends AppCompatActivity {
                 break;
             case R.id.menu_remove_user:
                 removeRemoteUsers(currentUser.getId());
-                Toast.makeText(Join_Group.this, "User(s) successfully removed!", Toast.LENGTH_LONG).show();
                 break;
             case R.id.menu_leave_group:
-                Long currentUserId = currentUser.getId();
-                removeUserFromGroup(grpId, currentUserId);
-                Toast.makeText(Join_Group.this, "You have left this group!", Toast.LENGTH_SHORT).show();
-                finish();
+//                Long currentUserId = currentUser.getId();
+                User leader = groupSelected.getLeader();
+                Long leaderId = leader.getId();
+
+                if (currentUserId == leaderId){
+                    Toast.makeText(Join_Group.this, "You're the leader of this group; can't leave this group", Toast.LENGTH_LONG).show();
+                } else {
+                    leaveGroup(grpId, currentUserId);
+                    finish();
+                }
                 break;
             case R.id.menu_go_back:
                 finish();
@@ -164,7 +168,7 @@ public class Join_Group extends AppCompatActivity {
         List<Integer> membersToRemove = new ArrayList<>();
 
         AlertDialog.Builder alertBuilder = new AlertDialog.Builder(Join_Group.this);
-        alertBuilder.setTitle("Select group members to remove:");
+        alertBuilder.setTitle(R.string.remove_dialogue_text);
         alertBuilder.setMultiChoiceItems(membersList, checkedMembers, new DialogInterface.OnMultiChoiceClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int position, boolean isChecked) {
@@ -180,7 +184,7 @@ public class Join_Group extends AppCompatActivity {
 
         alertBuilder.setCancelable(true);
 
-        alertBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+        alertBuilder.setPositiveButton(R.string.dialogue_OK, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 if (membersToRemove.size()> 0) {
@@ -198,7 +202,7 @@ public class Join_Group extends AppCompatActivity {
             }
         });
 
-        alertBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        alertBuilder.setNegativeButton(R.string.dialogue_cancel, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
@@ -220,7 +224,7 @@ public class Join_Group extends AppCompatActivity {
         }
 
         AlertDialog.Builder alertBuilder = new AlertDialog.Builder(Join_Group.this);
-        alertBuilder.setTitle("Select group members to add:");
+        alertBuilder.setTitle(R.string.alert_add_members);
         alertBuilder.setMultiChoiceItems(monitorsUsersArr, checkedMembers, new DialogInterface.OnMultiChoiceClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int position, boolean isChecked) {
@@ -237,7 +241,7 @@ public class Join_Group extends AppCompatActivity {
 
         alertBuilder.setCancelable(true);
 
-        alertBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+        alertBuilder.setPositiveButton(R.string.dialogue_OK, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 if (membersToAdd.size()> 0) {
@@ -254,7 +258,7 @@ public class Join_Group extends AppCompatActivity {
             }
         });
 
-        alertBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        alertBuilder.setNegativeButton(R.string.dialogue_cancel, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
@@ -325,7 +329,7 @@ public class Join_Group extends AppCompatActivity {
 
     private void addUserToGroup(Long groupId, User user){
         Call<List<User>> caller = proxy.addGroupMember(groupId, user);
-        ProxyBuilder.callProxyForAddUserToGroup(Join_Group.this, caller, returnedUsers -> returnedMembers(returnedUsers));
+        ProxyBuilder.callProxyForAddUserToGroup(Join_Group.this, caller, returnedUsers -> responseAddUsers(returnedUsers));
     }
 
     private void getRemoteGroupMembers(Long groupId){
@@ -339,18 +343,31 @@ public class Join_Group extends AppCompatActivity {
 
     private void removeUserFromGroup(Long groupId, Long userId){
         Call<Void> caller = proxy.removeGroupMember(groupId, userId);
-        ProxyBuilder.callProxy(Join_Group.this, caller, returnedNothing -> response(returnedNothing));
+        ProxyBuilder.callProxy(Join_Group.this, caller, returnedNothing -> responseRemoveUsers(returnedNothing));
 
     }
 
-    private void returnedMembers(List<User> users){
+
+    private void responseAddUsers(List<User> users){
         groupMembers = users;
-        Toast.makeText(Join_Group.this, "User(s) successfully added!", Toast.LENGTH_LONG).show();
+        Toast.makeText(Join_Group.this, R.string.Toast_user_added, Toast.LENGTH_LONG).show();
         finish();
-        Log.e("Join_Group", "User list length after adding: " + groupMembers.size());
     }
 
-    private void response(Void returnedNothing){
+    private void responseRemoveUsers(Void returnedNothing){
+        Toast.makeText(Join_Group.this, R.string.Toast_user_removed, Toast.LENGTH_LONG).show();
+        finish();
+    }
+
+    private void leaveGroup(Long groupId, Long userId){
+        Call<Void> caller = proxy.removeGroupMember(groupId, userId);
+        ProxyBuilder.callProxyForLeavingGroup(Join_Group.this, caller, returnedNothing -> responseLeaveGroup(returnedNothing));
 
     }
+
+    private void responseLeaveGroup(Void returnedNothing){
+        Toast.makeText(Join_Group.this, R.string.Toast_left_group, Toast.LENGTH_LONG).show();
+        finish();
+    }
+
 }

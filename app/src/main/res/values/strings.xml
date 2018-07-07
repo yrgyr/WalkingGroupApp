@@ -60,4 +60,11 @@
     <string name="invalidEmail">Not a valid email address!</string>
     <string name="invalidPassword">Password can\'t empty!</string>
     <string name="invalidName">Invalid name!</string>
+    <string name="remove_dialogue_text">Select group members to remove:</string>
+    <string name="dialogue_OK">OK</string>
+    <string name="dialogue_cancel">Cancel</string>
+    <string name="alert_add_members">Select group members to add:</string>
+    <string name="Toast_user_added">User(s) successfully added!</string>
+    <string name="Toast_user_removed">User(s) successfully removed!</string>
+    <string name="Toast_left_group">You have left this group</string>
 </resources>

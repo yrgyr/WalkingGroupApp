@@ -40,7 +40,6 @@ import static ca.cmpt276.walkinggroup.app.MainActivity.groupsList;
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private CurrentUserData userSingleton = CurrentUserData.getSingletonInstance();
-    //WGServerProxy proxy;
     private WGServerProxy proxy = userSingleton.getCurrentProxy();
 
     private GoogleMap mMap;
