@@ -1,20 +1,14 @@
 package ca.cmpt276.walkinggroup.proxy;
 
-import android.webkit.PermissionRequest;
-
-import java.util.List;
-
 import ca.cmpt276.walkinggroup.dataobjects.GpsLocation;
 import ca.cmpt276.walkinggroup.dataobjects.Group;
+import ca.cmpt276.walkinggroup.dataobjects.Message;
+import ca.cmpt276.walkinggroup.dataobjects.PermissionRequest;
 import ca.cmpt276.walkinggroup.dataobjects.User;
 import retrofit2.Call;
-import retrofit2.http.Body;
-import retrofit2.http.DELETE;
-import retrofit2.http.GET;
-import retrofit2.http.POST;
-import retrofit2.http.Path;
-import retrofit2.http.Query;
+import retrofit2.http.*;
 
+import java.util.List;
 
 /**
  * The ProxyBuilder class will handle the apiKey and token being injected as a header to all calls
@@ -106,7 +100,38 @@ public interface WGServerProxy {
     // -----------------------------
     // Messages
     // -----------------------------
-    // TODO: Implement
+    @POST("/messages/togroup/{groupId}")
+    Call<List<Message>> newMessageToGroup(@Path("groupId") Long groupId, @Body Message message);
+
+    @POST("/messages/toparentsof/{userId}")
+    Call<List<Message>> newMessageToParentsOf(@Path("userId") Long userId, @Body Message message);
+
+    @GET("/messages")
+    Call<List<Message>> getMessages();
+    @GET("/messages")
+    Call<List<Message>> getMessages(@Query("touser") Long toUserId);
+    @GET("/messages")
+    Call<List<Message>> getMessages(@Query("touser") Long toUserId, @Query("is-emergency") Boolean isEmergency);
+    @GET("/messages?status=unread")
+    Call<List<Message>> getUnreadMessages(
+            @Query("touser") Long toUserId,
+            @Query("is-emergency") Boolean isEmergency);    // null for not filtering
+    @GET("/messages?status=read")
+    Call<List<Message>> getReadMessages(
+            @Query("touser") Long toUserId,
+            @Query("is-emergency") Boolean isEmergency);    // null for not filtering
+
+    @GET("/messages/{id}")
+    Call<Message> getOneMessage(@Path("id") Long id);
+
+    // if markAsRead is false, then marks it as unread.
+    @POST("/messages/{id}/mark-read-or-unread")
+    Call<Message> markMessageAsRead(@Path("id") Long id, @Body Boolean markAsRead);
+
+    @DELETE("/messages/{id}")
+    Call<Void> deleteMessage(@Path("id") Long id);
+
+
 
     // -----------------------------
     // Permissions
@@ -123,16 +148,16 @@ public interface WGServerProxy {
             @Path("id") long permissionId,
             @Body PermissionStatus status
     );
-
-    // -- Internal --
-    @GET("/permissions/actions")
-    Call<List<ActionInfo>> getPermissionActionInfo();
-    //  -- Internal --
-    @POST("/permissions/{id}/magicOverrideDoNotUse")
-    Call<PermissionRequest> magicOverridePermissionById(
-            @Path("id") long permissionId,
-            @Body PermissionRequest request
-    );
+//
+//    // -- Internal --
+//    @GET("/permissions/actions")
+//    Call<List<ActionInfo>> getPermissionActionInfo();
+//    //  -- Internal --
+//    @POST("/permissions/{id}/magicOverrideDoNotUse")
+//    Call<PermissionRequest> magicOverridePermissionById(
+//            @Path("id") long permissionId,
+//            @Body PermissionRequest request
+//    );
 
 
     // -----------------------------
