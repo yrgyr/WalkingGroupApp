@@ -58,4 +58,14 @@ public class EarnedRewards {
     public void setTitleColor(int titleColor) {
         this.titleColor = titleColor;
     }
+
+    @Override
+    public String toString() {
+        return "EarnedRewards{" +
+                "title='" + title + '\'' +
+                ", possibleBackgroundFiles=" + possibleBackgroundFiles +
+                ", selectedBackground=" + selectedBackground +
+                ", titleColor=" + titleColor +
+                '}';
+    }
 }
