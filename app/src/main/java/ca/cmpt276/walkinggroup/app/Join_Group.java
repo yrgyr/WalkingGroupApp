@@ -41,16 +41,15 @@ public class Join_Group extends AppCompatActivity {
 
     Long currentUserId = currentUser.getId();
     String[] members = groupSelected.getGroupMembersNames();
-
     private List<User> monitorsUsers = new ArrayList<>();
+
+    private boolean uploadingLocation = false;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_join__group);
-
-
 
         populateGroupID();
         populateGroupDesc();
@@ -64,7 +63,20 @@ public class Join_Group extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.join_group_menu, menu);
+
         return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        if (uploadingLocation){
+            menu.findItem(R.id.menu_start_uploading).setVisible(false);
+            menu.findItem(R.id.menu_stop_uploading).setVisible(true);
+        } else {
+            menu.findItem(R.id.menu_start_uploading).setVisible(true);
+            menu.findItem(R.id.menu_stop_uploading).setVisible(false);
+        }
+        return super.onPrepareOptionsMenu(menu);
     }
 
     @Override
@@ -93,6 +105,12 @@ public class Join_Group extends AppCompatActivity {
                 break;
             case R.id.menu_go_back:
                 finish();
+                break;
+            case R.id.menu_stop_uploading:
+                uploadingLocation = false;
+                break;
+            case R.id.menu_start_uploading:
+                uploadingLocation = true;
                 break;
         }
         return super.onOptionsItemSelected(item);
