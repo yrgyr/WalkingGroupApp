@@ -59,15 +59,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public double longitude;
 
     private ClusterManager<MyItem> mClusterManager;
-    private LocationManager lm;
+    private LocationManager lm = userSingleton.getLocationManager();
 
     private List<Group> groupsOnServer = new ArrayList<>();
     public static Group groupSelected;
 
     private boolean uploadingLocation = userSingleton.getUploadingLocation();
-    private final int GPS_UPLOAD_INTERVAL = 10000;
+    private final int GPS_UPLOAD_INTERVAL = 8000;
     private final int GPS_UPLOAD_MIN_DIST = 0;
     private GpsLocation currentGpsLocation = new GpsLocation();
+
+    private LocationListener locationListener = userSingleton.getLocationListener();
 
 
     @Override
@@ -158,7 +160,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             if (mLocationPermissionsGranted){
                 // Code obtained from StacksOverflow https://stackoverflow.com/questions/2227292/how-to-get-latitude-and-longitude-of-the-mobile-device-in-android
                 //LocationManager lm = (LocationManager)this.getSystemService(Context.LOCATION_SERVICE);
-                lm = (LocationManager)this.getSystemService(Context.LOCATION_SERVICE);
+                if (lm == null){
+                    lm = (LocationManager)this.getSystemService(Context.LOCATION_SERVICE);
+                    userSingleton.setLocationManager(lm);
+                }
+
                 Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 
                 if (location == null){
@@ -235,7 +241,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Button btn = findViewById(R.id.btn_upload_location);
         setUploadButtonText();
         //btn.setText(R.string.btn_start_uploading);
-        Toast.makeText(MapsActivity.this, "uploadingLocation: " + uploadingLocation, Toast.LENGTH_LONG).show();
+        //Toast.makeText(MapsActivity.this, "uploadingLocation: " + uploadingLocation, Toast.LENGTH_LONG).show();
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -244,7 +250,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     userSingleton.setUploadingLocation(false);
                     uploadingLocation = userSingleton.getUploadingLocation();
                     setUploadButtonText();
-                    Toast.makeText(MapsActivity.this, "Turning off location listener", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(MapsActivity.this, "Turning off location listener", Toast.LENGTH_SHORT).show();
                     lm.removeUpdates(locationListener);
                 } else {
                     //btn.setText(R.string.btn_stop_uploading);
@@ -270,46 +276,51 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private void setupLocationListener(){
         try{
             if (mLocationPermissionsGranted){
+                if (locationListener == null) {
+                    locationListener = new LocationListener() {
+                        @Override
+                        public void onLocationChanged(Location location) {
+                            longitude = location.getLongitude();
+                            latitude = location.getLatitude();
+
+                            String currentTime = MapsFunctions.getCurrentTimeStamp();
+                            Toast.makeText(MapsActivity.this, currentTime + ", lat: " + latitude + " , long: " + longitude, Toast.LENGTH_LONG).show();
+
+                            currentGpsLocation.setLat(latitude);
+                            currentGpsLocation.setLng(longitude);
+                            currentGpsLocation.setTimestamp(currentTime);
+
+                            Long currentUserId = currentUser.getId();
+                            uploadCurrentLocation(currentUserId, currentGpsLocation);
+                        }
+
+                        @Override
+                        public void onStatusChanged(String provider, int status, Bundle extras) {
+
+                        }
+
+                        @Override
+                        public void onProviderEnabled(String provider) {
+
+                        }
+
+                        @Override
+                        public void onProviderDisabled(String provider) {
+
+                        }
+                    };
+
+                    userSingleton.setLocationListener(locationListener);
+                }
+
                 lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, GPS_UPLOAD_INTERVAL, GPS_UPLOAD_MIN_DIST, locationListener);
+
             }
         }catch (SecurityException e){
             Log.e(TAG, getString(R.string.getDeviceLocation_exception) + e.getMessage() );
 
         }
     }
-
-    private final LocationListener locationListener = new LocationListener() {
-        @Override
-        public void onLocationChanged(Location location) {
-            longitude = location.getLongitude();
-            latitude = location.getLatitude();
-
-            String currentTime = MapsFunctions.getCurrentTimeStamp();
-            Toast.makeText(MapsActivity.this, currentTime + ", lat: " + latitude + " , long: " + longitude, Toast.LENGTH_LONG).show();
-
-            currentGpsLocation.setLat(latitude);
-            currentGpsLocation.setLng(longitude);
-            currentGpsLocation.setTimestamp(currentTime);
-
-            Long currentUserId = currentUser.getId();
-            uploadCurrentLocation(currentUserId, currentGpsLocation);
-        }
-
-        @Override
-        public void onStatusChanged(String provider, int status, Bundle extras) {
-
-        }
-
-        @Override
-        public void onProviderEnabled(String provider) {
-
-        }
-
-        @Override
-        public void onProviderDisabled(String provider) {
-
-        }
-    };
 
 
     private void getRemoteGroupById(Long id){
