@@ -156,6 +156,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     latitude = 37.422;
                 }
 
+                lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 0, locationListener);
+
                 LatLng currentLatLng = new LatLng(latitude, longitude);
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, DEFAULT_ZOOM));
 
@@ -169,6 +171,32 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         return null;
     }
+
+    private final LocationListener locationListener = new LocationListener() {
+        @Override
+        public void onLocationChanged(Location location) {
+            longitude = location.getLongitude();
+            latitude = location.getLatitude();
+
+            Toast.makeText(MapsActivity.this, "Current lat: " + latitude + " , long: " + longitude, Toast.LENGTH_LONG).show();
+
+        }
+
+        @Override
+        public void onStatusChanged(String provider, int status, Bundle extras) {
+
+        }
+
+        @Override
+        public void onProviderEnabled(String provider) {
+
+        }
+
+        @Override
+        public void onProviderDisabled(String provider) {
+
+        }
+    };
 
 
     private void setUpLocalGroupCluster(List<Group> groups){
