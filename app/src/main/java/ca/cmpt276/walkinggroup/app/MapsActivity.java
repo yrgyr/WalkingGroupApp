@@ -30,7 +30,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ca.cmpt276.walkinggroup.dataobjects.CurrentUserData;
+import ca.cmpt276.walkinggroup.dataobjects.GpsLocation;
 import ca.cmpt276.walkinggroup.dataobjects.Group;
+import ca.cmpt276.walkinggroup.dataobjects.MapsFunctions;
 import ca.cmpt276.walkinggroup.dataobjects.MyItem;
 import ca.cmpt276.walkinggroup.dataobjects.User;
 import ca.cmpt276.walkinggroup.proxy.ProxyBuilder;
@@ -43,6 +45,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private CurrentUserData userSingleton = CurrentUserData.getSingletonInstance();
     private WGServerProxy proxy = userSingleton.getCurrentProxy();
+    private User currentUser = userSingleton.getCurrentUser();
 
     private GoogleMap mMap;
     private static final String TAG = "MapsActivity";
@@ -61,8 +64,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private List<Group> groupsOnServer = new ArrayList<>();
     public static Group groupSelected;
 
-    private boolean uploadingLocation = false;
-
+    private boolean uploadingLocation = userSingleton.getUploadingLocation();
+    private final int GPS_UPLOAD_INTERVAL = 10000;
+    private final int GPS_UPLOAD_MIN_DIST = 0;
+    private GpsLocation currentGpsLocation = new GpsLocation();
 
 
     @Override
@@ -71,7 +76,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         setContentView(R.layout.activity_maps);
         getLocationPermission();
         setupUploadButton();
-
     }
 
 
@@ -229,17 +233,24 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private void setupUploadButton(){
         Button btn = findViewById(R.id.btn_upload_location);
-        btn.setText(R.string.btn_start_uploading);
+        setUploadButtonText();
+        //btn.setText(R.string.btn_start_uploading);
+        Toast.makeText(MapsActivity.this, "uploadingLocation: " + uploadingLocation, Toast.LENGTH_LONG).show();
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (uploadingLocation){
-                    btn.setText(R.string.btn_start_uploading);
-                    uploadingLocation = false;
+                    //btn.setText(R.string.btn_start_uploading);
+                    userSingleton.setUploadingLocation(false);
+                    uploadingLocation = userSingleton.getUploadingLocation();
+                    setUploadButtonText();
+                    Toast.makeText(MapsActivity.this, "Turning off location listener", Toast.LENGTH_SHORT).show();
                     lm.removeUpdates(locationListener);
                 } else {
-                    btn.setText(R.string.btn_stop_uploading);
-                    uploadingLocation = true;
+                    //btn.setText(R.string.btn_stop_uploading);
+                    userSingleton.setUploadingLocation(true);
+                    uploadingLocation = userSingleton.getUploadingLocation();
+                    setUploadButtonText();
                     setupLocationListener();
                 }
             }
@@ -247,10 +258,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     }
 
+    private void setUploadButtonText(){
+        Button btn = findViewById(R.id.btn_upload_location);
+        if (uploadingLocation){
+            btn.setText(R.string.btn_stop_uploading);
+        } else {
+            btn.setText(R.string.btn_start_uploading);
+        }
+    }
+
     private void setupLocationListener(){
         try{
             if (mLocationPermissionsGranted){
-                lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 8000, 0, locationListener);
+                lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, GPS_UPLOAD_INTERVAL, GPS_UPLOAD_MIN_DIST, locationListener);
             }
         }catch (SecurityException e){
             Log.e(TAG, getString(R.string.getDeviceLocation_exception) + e.getMessage() );
@@ -264,7 +284,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             longitude = location.getLongitude();
             latitude = location.getLatitude();
 
-            Toast.makeText(MapsActivity.this, "Current lat: " + latitude + " , long: " + longitude, Toast.LENGTH_LONG).show();
+            String currentTime = MapsFunctions.getCurrentTimeStamp();
+            Toast.makeText(MapsActivity.this, currentTime + ", lat: " + latitude + " , long: " + longitude, Toast.LENGTH_LONG).show();
+
+            currentGpsLocation.setLat(latitude);
+            currentGpsLocation.setLng(longitude);
+            currentGpsLocation.setTimestamp(currentTime);
+
+            Long currentUserId = currentUser.getId();
+            uploadCurrentLocation(currentUserId, currentGpsLocation);
         }
 
         @Override
@@ -293,7 +321,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         groupSelected = group;
         Intent intent = new Intent(MapsActivity.this, Join_Group.class);
         startActivity(intent);
+    }
 
+    private void uploadCurrentLocation(Long userId, GpsLocation location){
+        Call<GpsLocation> caller = proxy.setLastGpsLocation(userId, location);
+        ProxyBuilder.callProxy(MapsActivity.this, caller, returnedGpsLocation -> responseUploadGps(returnedGpsLocation));
+    }
+
+    private void responseUploadGps(GpsLocation location){
+        String receivedTime = location.getTimestamp();
+        double lat = location.getLat();
+        double lng = location.getLng();
+        Toast.makeText(MapsActivity.this, "lat: " + lat + " lng: " + lng + " received at: " + receivedTime, Toast.LENGTH_LONG).show();
     }
 
 

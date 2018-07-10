@@ -2,6 +2,9 @@ package ca.cmpt276.walkinggroup.dataobjects;
 
 // Used for maps related functions
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class MapsFunctions {
 
     // code obtained from https://stackoverflow.com/questions/365826/calculate-distance-between-2-gps-coordinates
@@ -26,6 +29,20 @@ public class MapsFunctions {
         double distanceInKm = earthRadiusKm * c;
         return distanceInKm * 1000;
 
+    }
+
+    // From: https://stackoverflow.com/questions/8077530/android-get-current-timestamp
+    public static String getCurrentTimeStamp(){
+        String currentDateTime = "";
+        try {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            currentDateTime = dateFormat.format(new Date()); // Find todays date
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return currentDateTime;
     }
 
 }

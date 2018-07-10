@@ -8,6 +8,7 @@ public class CurrentUserData {
     private static CurrentUserData singletonInstance;
     private WGServerProxy currentProxy;
     private User currentUser;
+    private boolean uploadingLocation = false;
     private String token;
     private Long ID;
 
@@ -35,6 +36,10 @@ public class CurrentUserData {
     public void setCurrentUser(User currentUser) {
         this.currentUser = currentUser;
     }
+
+    public void setUploadingLocation(boolean bool) {this.uploadingLocation = bool;}
+
+    public boolean getUploadingLocation() {return uploadingLocation;}
 
 }
 
