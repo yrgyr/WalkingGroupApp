@@ -47,7 +47,8 @@
 
         <activity
             android:name=".MapsActivity"
-            android:label="@string/title_activity_maps" />
+            android:label="@string/title_activity_maps"
+            android:screenOrientation="portrait"/>
         <activity android:name=".Join_Group" />
         <activity android:name=".AddWhomUserMointor" />
         <activity android:name=".MonitorUsersList" />

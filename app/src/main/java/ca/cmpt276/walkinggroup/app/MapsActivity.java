@@ -13,6 +13,8 @@ import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -54,9 +56,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public double longitude;
 
     private ClusterManager<MyItem> mClusterManager;
+    private LocationManager lm;
 
     private List<Group> groupsOnServer = new ArrayList<>();
     public static Group groupSelected;
+
+    private boolean uploadingLocation = false;
 
 
 
@@ -65,6 +70,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         getLocationPermission();
+        setupUploadButton();
 
     }
 
@@ -147,7 +153,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         try{
             if (mLocationPermissionsGranted){
                 // Code obtained from StacksOverflow https://stackoverflow.com/questions/2227292/how-to-get-latitude-and-longitude-of-the-mobile-device-in-android
-                LocationManager lm = (LocationManager)this.getSystemService(Context.LOCATION_SERVICE);
+                //LocationManager lm = (LocationManager)this.getSystemService(Context.LOCATION_SERVICE);
+                lm = (LocationManager)this.getSystemService(Context.LOCATION_SERVICE);
                 Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 
                 if (location == null){
@@ -156,7 +163,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     latitude = 37.422;
                 }
 
-                lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 0, locationListener);
+                //lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 0, locationListener);
 
                 LatLng currentLatLng = new LatLng(latitude, longitude);
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, DEFAULT_ZOOM));
@@ -171,32 +178,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         return null;
     }
-
-    private final LocationListener locationListener = new LocationListener() {
-        @Override
-        public void onLocationChanged(Location location) {
-            longitude = location.getLongitude();
-            latitude = location.getLatitude();
-
-            Toast.makeText(MapsActivity.this, "Current lat: " + latitude + " , long: " + longitude, Toast.LENGTH_LONG).show();
-
-        }
-
-        @Override
-        public void onStatusChanged(String provider, int status, Bundle extras) {
-
-        }
-
-        @Override
-        public void onProviderEnabled(String provider) {
-
-        }
-
-        @Override
-        public void onProviderDisabled(String provider) {
-
-        }
-    };
 
 
     private void setUpLocalGroupCluster(List<Group> groups){
@@ -246,6 +227,62 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
+    private void setupUploadButton(){
+        Button btn = findViewById(R.id.btn_upload_location);
+        btn.setText(R.string.btn_start_uploading);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (uploadingLocation){
+                    btn.setText(R.string.btn_start_uploading);
+                    uploadingLocation = false;
+                    lm.removeUpdates(locationListener);
+                } else {
+                    btn.setText(R.string.btn_stop_uploading);
+                    uploadingLocation = true;
+                    setupLocationListener();
+                }
+            }
+        });
+
+    }
+
+    private void setupLocationListener(){
+        try{
+            if (mLocationPermissionsGranted){
+                lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 8000, 0, locationListener);
+            }
+        }catch (SecurityException e){
+            Log.e(TAG, getString(R.string.getDeviceLocation_exception) + e.getMessage() );
+
+        }
+    }
+
+    private final LocationListener locationListener = new LocationListener() {
+        @Override
+        public void onLocationChanged(Location location) {
+            longitude = location.getLongitude();
+            latitude = location.getLatitude();
+
+            Toast.makeText(MapsActivity.this, "Current lat: " + latitude + " , long: " + longitude, Toast.LENGTH_LONG).show();
+        }
+
+        @Override
+        public void onStatusChanged(String provider, int status, Bundle extras) {
+
+        }
+
+        @Override
+        public void onProviderEnabled(String provider) {
+
+        }
+
+        @Override
+        public void onProviderDisabled(String provider) {
+
+        }
+    };
+
 
     private void getRemoteGroupById(Long id){
         Call<Group> caller = proxy.getGroupById(id);
@@ -258,5 +295,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         startActivity(intent);
 
     }
+
 
 }
