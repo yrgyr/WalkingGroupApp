@@ -84,4 +84,5 @@
     <string name="empt_group_name_toast_msg">Group name can not be empty</string>
     <string name="create_group_success_toast_msg">Create group successfully ,Server replied with group ID:</string>
     <string name="title_activity_parents_dashboard">Map</string>
+    <string name="click_to_check_parent_s_infomation">Click to check parent\'s infomation</string>
 </resources>
