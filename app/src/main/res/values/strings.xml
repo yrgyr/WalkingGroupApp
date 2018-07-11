@@ -104,4 +104,6 @@
     <string name="phone_number">phone number</string>
     <string name="your_grade">your grade</string>
     <string name="emergency_contact_person">emergency contact person</string>
+    <string name="edit_info">EDIT INFO</string>
+    <string name="name_of_teacher">name of teacher</string>
 </resources>

@@ -313,7 +313,7 @@
         android:layout_marginEnd="60dp"
         android:layout_marginTop="384dp"
         android:ems="10"
-        android:hint="name of teacher"
+        android:hint="@string/name_of_teacher"
         android:inputType="textPersonName"
         android:textSize="10sp"
         app:layout_constraintEnd_toEndOf="parent"
