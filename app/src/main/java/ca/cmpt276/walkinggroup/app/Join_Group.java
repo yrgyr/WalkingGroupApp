@@ -29,12 +29,14 @@ import ca.cmpt276.walkinggroup.proxy.ProxyBuilder;
 import ca.cmpt276.walkinggroup.proxy.WGServerProxy;
 import retrofit2.Call;
 
-import static ca.cmpt276.walkinggroup.app.MapsActivity.groupSelected;
+//import static ca.cmpt276.walkinggroup.app.MapsActivity.groupSelected;
 
 public class Join_Group extends AppCompatActivity {
     private CurrentUserData userSingleton = CurrentUserData.getSingletonInstance();
     private WGServerProxy proxy = userSingleton.getCurrentProxy();
     private User currentUser = userSingleton.getCurrentUser();
+    // Todo: extract groupSelected from Singleton instead of using static field
+    private Group groupSelected = userSingleton.getGroupSelected();
     private List<User> groupMembers = groupSelected.getMemberUsers();
 
     Long grpId = groupSelected.getId();
@@ -124,12 +126,15 @@ public class Join_Group extends AppCompatActivity {
                 if (!IAmInThisGroup){
                     Toast.makeText(Join_Group.this, "Please join this group first!", Toast.LENGTH_LONG).show();
                 } else {
-                    double destLat = groupSelected.getDestLat();
-                    double destLng = groupSelected.getDestLng();
+
+                    // Todo: store dest coordinates in singleton class
+                    userSingleton.setWalkingGroup(groupSelected);
+//                    double destLat = groupSelected.getDestLat();
+//                    double destLng = groupSelected.getDestLng();
 
                     Intent intent = new Intent();
-                    intent.putExtra("destLat",destLat);
-                    intent.putExtra("destLng",destLng);
+//                    intent.putExtra("destLat",destLat);
+//                    intent.putExtra("destLng",destLng);
                     setResult(Activity.RESULT_OK,intent);
                     finish();
                 }

@@ -14,6 +14,8 @@ public class CurrentUserData {
     private boolean uploadingLocation = false;
     private LocationManager locationManager = null;
     private LocationListener locationListener = null;
+    private Group groupSelected;
+    private Group walkingGroup;  // the group the user is currently walking with
     private String token;
     private Long ID;
 
@@ -53,6 +55,14 @@ public class CurrentUserData {
     public void setLocationListener(LocationListener listener) {this.locationListener = listener;}
 
     public LocationListener getLocationListener(){return locationListener;}
+
+    public void setGroupSelected(Group group) {this.groupSelected = group;}
+
+    public Group getGroupSelected(){return groupSelected;}
+
+    public void setWalkingGroup(Group group){this.walkingGroup = group;}
+
+    public Group getWalkingGroup(){return walkingGroup;}
 
 }
 

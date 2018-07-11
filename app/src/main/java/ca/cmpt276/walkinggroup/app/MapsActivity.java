@@ -67,7 +67,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private LocationManager lm = userSingleton.getLocationManager();
 
     private List<Group> groupsOnServer = new ArrayList<>();
-    public static Group groupSelected;
+    //public static Group groupSelected;  // Todo: store this in Singleton instead
+    private Group groupSelected = userSingleton.getGroupSelected();
+
 
     private boolean uploadingLocation = userSingleton.getUploadingLocation();
     private final int GPS_UPLOAD_INTERVAL = 8000;
@@ -81,6 +83,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+        checkIfDestSet();
         getLocationPermission();
         setupUploadButton();
     }
@@ -121,8 +124,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == 888){
             if (resultCode == Activity.RESULT_OK){
-                destLat = data.getDoubleExtra("destLat", 0);
-                destLng = data.getDoubleExtra("destLng", 0);
+                // Todo: get destLat and destLng from singleton
+                Group walkingGroup = userSingleton.getWalkingGroup();
+                destLat = walkingGroup.getDestLat();
+                destLng = walkingGroup.getDestLng();
+
+//                destLat = data.getDoubleExtra("destLat", 0);
+//                destLng = data.getDoubleExtra("destLng", 0);
                 destSet = true;
 
                 Toast.makeText(MapsActivity.this, "Destination lat: " + destLat + ", lng: " + destLng, Toast.LENGTH_LONG).show();
@@ -344,6 +352,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
+    private void checkIfDestSet(){
+        Group walkingGroup = userSingleton.getWalkingGroup();
+        if (walkingGroup == null){
+            destSet = false;
+        } else {
+            destSet = true;
+            destLat = walkingGroup.getDestLat();
+            destLng = walkingGroup.getDestLng();
+        }
+    }
+
 
     private void getRemoteGroupById(Long id){
         Call<Group> caller = proxy.getGroupById(id);
@@ -352,6 +371,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private void returnedGroupById(Group group){
         groupSelected = group;
+        userSingleton.setGroupSelected(group);
         Intent intent = new Intent(MapsActivity.this, Join_Group.class);
         //startActivity(intent);
         startActivityForResult(intent, 888);
