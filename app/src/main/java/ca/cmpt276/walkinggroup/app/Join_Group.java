@@ -36,7 +36,9 @@ public class Join_Group extends AppCompatActivity {
     private WGServerProxy proxy = userSingleton.getCurrentProxy();
     private User currentUser = userSingleton.getCurrentUser();
     private List<User> groupMembers = groupSelected.getMemberUsers();
-    private List<Long> validUser;
+
+    private List<Long> validUser = new ArrayList<Long>();
+    private boolean isValid = false;
 
     Long grpId = groupSelected.getId();
     String grpDesc = groupSelected.getGroupDescription();
@@ -55,7 +57,8 @@ public class Join_Group extends AppCompatActivity {
 
 
 
-        //setUpValidUserCanCheckInfo();
+        setUpValidUserCanCheckInfo();
+
         populateGroupID();
         populateGroupDesc();
         populateGroupLeader();
@@ -64,30 +67,42 @@ public class Join_Group extends AppCompatActivity {
         setupActionBar();
     }
 
-//    private void setUpValidUserCanCheckInfo() {
-//        User leader = groupSelected.getLeader();
-//        Long leaderId = leader.getId();
-//        validUser.add(leaderId);
-//        for(int i = 0; i < groupMembers.size(); i++)
-//        {
-//            User memberUser = groupMembers.get(i);
-//            Long memberId = memberUser.getId();
-//            validUser.add(memberId);
-//            Call<List<User>> caller = proxy.getMonitoredByUsers(memberId);
-//            ProxyBuilder.callProxy(this, caller, returnedUsers -> response(returnedUsers));
-//        }
-//
-//    }
-//
-//    private void response(List<User> returnedUsers) {
-//        for(int i =0; i < returnedUsers.size();i++){
-//            User memberUser = groupMembers.get(i);
-//            Long memberId = memberUser.getId();
-//            validUser.add(memberId);
-//        }
-//        Toast.makeText(Join_Group.this,"" + validUser.size(), Toast.LENGTH_LONG).show();
-//
-//    }
+    private void setUpValidUserCanCheckInfo() {
+        User leader = groupSelected.getLeader();
+        Long leaderId = leader.getId();
+        if(currentUser.getId().equals(leaderId)){
+            isValid = true;
+        }
+        validUser.add(leaderId);
+        for(int i = 0; i < groupMembers.size(); i++)
+        {
+            User memberUser = groupMembers.get(i);
+            Long memberId = memberUser.getId();
+            validUser.add(memberId);
+            if(currentUser.getId().equals(memberId)){
+                isValid = true;
+            }
+            Call<List<User>> caller = proxy.getMonitoredByUsers(memberId);
+
+            ProxyBuilder.callProxy(this, caller, returnedUsers -> response(returnedUsers));
+
+
+        }
+
+    }
+
+    private void response(List<User> returnedUsers) {
+        for(int i =0; i < returnedUsers.size();i++){
+            User memberUser = returnedUsers.get(i);
+            Long memberId = memberUser.getId();
+            validUser.add(memberId);
+            if(currentUser.getId().equals(memberId)){
+                isValid = true;
+            }
+        }
+
+
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -149,13 +164,23 @@ public class Join_Group extends AppCompatActivity {
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.group_member, members);
         ListView membersList = findViewById(R.id.join_grp_members_listview);
         membersList.setAdapter(adapter);
+
+
         membersList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = ParentInfo.makeIntent(Join_Group.this, groupMembers.get(position));
-                startActivity(intent);
+                if(isValid == true) {
+                    Intent intent = ParentInfo.makeIntent(Join_Group.this, groupMembers.get(position));
+                    startActivity(intent);
+                }
+                else{
+                    Toast.makeText(Join_Group.this, getString(R.string.cantAccess),Toast.LENGTH_LONG).show();
+                }
             }
         });
+
+
+
 
     }
 

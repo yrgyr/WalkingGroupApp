@@ -55,7 +55,7 @@ public class ParentInfo extends AppCompatActivity {
         ProxyBuilder.callProxy(this, caller, returnedUsers -> response(returnedUsers));
     }
     private void response(List<User> returnedUsers) {
-        
+
         ArrayList<String> ALL_USERS = new ArrayList<String>();
         for(int i =0; i < returnedUsers.size();i++){
 
