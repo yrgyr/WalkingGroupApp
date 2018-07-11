@@ -21,6 +21,7 @@ public class CurrentUserData {
     }
 
     public WGServerProxy getCurrentProxy() {
+
         return currentProxy;
     }
 
