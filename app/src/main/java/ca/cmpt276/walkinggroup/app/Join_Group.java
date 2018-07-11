@@ -36,6 +36,7 @@ public class Join_Group extends AppCompatActivity {
     private WGServerProxy proxy = userSingleton.getCurrentProxy();
     private User currentUser = userSingleton.getCurrentUser();
     private List<User> groupMembers = groupSelected.getMemberUsers();
+    private List<Long> validUser;
 
     Long grpId = groupSelected.getId();
     String grpDesc = groupSelected.getGroupDescription();
@@ -54,6 +55,7 @@ public class Join_Group extends AppCompatActivity {
 
 
 
+        //setUpValidUserCanCheckInfo();
         populateGroupID();
         populateGroupDesc();
         populateGroupLeader();
@@ -61,6 +63,31 @@ public class Join_Group extends AppCompatActivity {
         populateGroupMembersListView();
         setupActionBar();
     }
+
+//    private void setUpValidUserCanCheckInfo() {
+//        User leader = groupSelected.getLeader();
+//        Long leaderId = leader.getId();
+//        validUser.add(leaderId);
+//        for(int i = 0; i < groupMembers.size(); i++)
+//        {
+//            User memberUser = groupMembers.get(i);
+//            Long memberId = memberUser.getId();
+//            validUser.add(memberId);
+//            Call<List<User>> caller = proxy.getMonitoredByUsers(memberId);
+//            ProxyBuilder.callProxy(this, caller, returnedUsers -> response(returnedUsers));
+//        }
+//
+//    }
+//
+//    private void response(List<User> returnedUsers) {
+//        for(int i =0; i < returnedUsers.size();i++){
+//            User memberUser = groupMembers.get(i);
+//            Long memberId = memberUser.getId();
+//            validUser.add(memberId);
+//        }
+//        Toast.makeText(Join_Group.this,"" + validUser.size(), Toast.LENGTH_LONG).show();
+//
+//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

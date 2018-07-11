@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -20,6 +22,7 @@ import retrofit2.Call;
 import static ca.cmpt276.walkinggroup.app.login.email;
 
 public class ParentInfo extends AppCompatActivity {
+
     private User user;
     private Long id;
     private WGServerProxy proxy;
@@ -33,7 +36,10 @@ public class ParentInfo extends AppCompatActivity {
         proxy = userSingleton.getCurrentProxy();
 
         extraDataFromIntent();
+        setCheckParentInfoClick();
     }
+
+
     private void extraDataFromIntent() {
         Intent intent = getIntent();
         id = intent.getLongExtra("ID",-1);
@@ -44,14 +50,12 @@ public class ParentInfo extends AppCompatActivity {
     }
     private void response(User returnedUser) {
         user = returnedUser;
-        String name = returnedUser.getName();
-        Toast.makeText(this, getString(R.string.welcome) + " " + name, Toast.LENGTH_LONG).show();
+
         Call<List<User>> caller = proxy.getMonitoredByUsers(id);
         ProxyBuilder.callProxy(this, caller, returnedUsers -> response(returnedUsers));
     }
     private void response(List<User> returnedUsers) {
-
-
+        
         ArrayList<String> ALL_USERS = new ArrayList<String>();
         for(int i =0; i < returnedUsers.size();i++){
 
@@ -61,7 +65,7 @@ public class ParentInfo extends AppCompatActivity {
             Long ID = THIS_USER.getId();
             String name = THIS_USER.getName();
 
-            String DISPLAY_THIS_USER = "Name: " + name + " , ID: "+ ID + " , email: " + email;
+            String DISPLAY_THIS_USER = getString(R.string.name) + ": " + name;
             ALL_USERS.add(DISPLAY_THIS_USER);
         }
 
@@ -70,6 +74,19 @@ public class ParentInfo extends AppCompatActivity {
         users_list.setAdapter(adapter);
 
     }
+    private void setCheckParentInfoClick() {
+        ListView listView = findViewById(R.id.parentList);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = parentInfoList.makeIntent(ParentInfo.this, usersList.get(position));
+                startActivity(intent);
+            }
+        });
+
+
+    }
+
     public static Intent makeIntent(Context context, User user){
         Intent intent = new Intent(context,ParentInfo.class);
         intent.putExtra("ID",user.getId());

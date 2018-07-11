@@ -85,4 +85,10 @@
     <string name="create_group_success_toast_msg">Create group successfully ,Server replied with group ID:</string>
     <string name="title_activity_parents_dashboard">Map</string>
     <string name="click_to_check_parent_s_infomation">Click to check parent\'s infomation</string>
+    <string name="nameToShow">Name</string>
+    <string name="birthday">BirthDay</string>
+    <string name="home_phone">Home phone</string>
+    <string name="address">Address</string>
+    <string name="cell_phone">Cell phone</string>
+    <string name="email">Email</string>
 </resources>
