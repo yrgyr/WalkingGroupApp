@@ -2,6 +2,7 @@ package ca.cmpt276.walkinggroup.app;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -10,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -35,6 +37,9 @@ public class Join_Group extends AppCompatActivity {
     private User currentUser = userSingleton.getCurrentUser();
     private List<User> groupMembers = groupSelected.getMemberUsers();
 
+    private List<Long> validUser = new ArrayList<Long>();
+    private boolean isValid = false;
+
     Long grpId = groupSelected.getId();
     String grpDesc = groupSelected.getGroupDescription();
     String leaderName = groupSelected.getLeader().getName();
@@ -52,12 +57,51 @@ public class Join_Group extends AppCompatActivity {
 
 
 
+        setUpValidUserCanCheckInfo();
+
         populateGroupID();
         populateGroupDesc();
         populateGroupLeader();
 
         populateGroupMembersListView();
         setupActionBar();
+    }
+
+    private void setUpValidUserCanCheckInfo() {
+        User leader = groupSelected.getLeader();
+        Long leaderId = leader.getId();
+        if(currentUser.getId().equals(leaderId)){
+            isValid = true;
+        }
+        validUser.add(leaderId);
+        for(int i = 0; i < groupMembers.size(); i++)
+        {
+            User memberUser = groupMembers.get(i);
+            Long memberId = memberUser.getId();
+            validUser.add(memberId);
+            if(currentUser.getId().equals(memberId)){
+                isValid = true;
+            }
+            Call<List<User>> caller = proxy.getMonitoredByUsers(memberId);
+
+            ProxyBuilder.callProxy(this, caller, returnedUsers -> response(returnedUsers));
+
+
+        }
+
+    }
+
+    private void response(List<User> returnedUsers) {
+        for(int i =0; i < returnedUsers.size();i++){
+            User memberUser = returnedUsers.get(i);
+            Long memberId = memberUser.getId();
+            validUser.add(memberId);
+            if(currentUser.getId().equals(memberId)){
+                isValid = true;
+            }
+        }
+
+
     }
 
     @Override
@@ -120,7 +164,23 @@ public class Join_Group extends AppCompatActivity {
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.group_member, members);
         ListView membersList = findViewById(R.id.join_grp_members_listview);
         membersList.setAdapter(adapter);
-//
+
+
+        membersList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if(isValid == true) {
+                    Intent intent = ParentInfo.makeIntent(Join_Group.this, groupMembers.get(position));
+                    startActivity(intent);
+                }
+                else{
+                    Toast.makeText(Join_Group.this, getString(R.string.cantAccess),Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+
+
+
 
     }
 

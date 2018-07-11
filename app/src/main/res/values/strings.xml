@@ -106,4 +106,12 @@
     <string name="emergency_contact_person">emergency contact person</string>
     <string name="edit_info">EDIT INFO</string>
     <string name="name_of_teacher">name of teacher</string>
+    <string name="click_to_check_parent_s_infomation">Click to check parent\'s infomation</string>
+    <string name="nameToShow">Name</string>
+    <string name="birthday">BirthDay</string>
+    <string name="home_phone">Home phone</string>
+    <string name="address">Address</string>
+    <string name="cell_phone">Cell phone</string>
+    <string name="email">Email</string>
+    <string name="cantAccess">Sorry, you can not access the parents\' information of this group.</string>
 </resources>

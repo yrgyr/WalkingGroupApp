@@ -150,7 +150,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 LocationManager lm = (LocationManager)this.getSystemService(Context.LOCATION_SERVICE);
                 Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 
-                if (location != null){
+                if (location == null){
                     // default location in emulator
                     longitude = -122.084;
                     latitude = 37.422;
