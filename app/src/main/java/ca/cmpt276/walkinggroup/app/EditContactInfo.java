@@ -92,11 +92,17 @@ public class EditContactInfo extends AppCompatActivity {
         updateEmergency=findViewById(R.id.updateEmergencyContact);
         updateEmergency.setText(user.getEmergencyContactInfo());
 
-        /*updateBirthYear=findViewById(R.id.updateYear);
-        updateBirthYear.setText(user.getBirthYear());
+        updateBirthYear=findViewById(R.id.updateYear);
+        //updateBirthYear.setText(""+user.getBirthYear());
+        //if(user.getBirthYear() == null)
+       // {
+           // user.setBirthYear(0);
+        //}else{
+        updateBirthYear.setText(""+user.getBirthYear());
+        //}
 
         updateBirthMonth=findViewById(R.id.updateMonth);
-        updateBirthMonth.setText(user.getBirthMonth());*/
+        updateBirthMonth.setText(""+user.getBirthMonth());
 
 
 
@@ -129,13 +135,20 @@ public class EditContactInfo extends AppCompatActivity {
         String newEmergency=updateEmergency.getText().toString();
         user.setEmergencyContactInfo(newEmergency);
 
-        /*String month=updateBirthMonth.getText().toString();
-        int newMonth=Integer.parseInt(month);
-        user.setBirthMonth(newMonth);
+        String month=updateBirthMonth.getText().toString();
+        try {
+            int newMonth = Integer.parseInt(month);
+            user.setBirthMonth(newMonth);
+        }
+        catch (NumberFormatException e){}
+
 
         String year=updateBirthYear.getText().toString();
+        try{
         int newYear=Integer.parseInt(year);
-        user.setBirthYear(newYear);*/
+        user.setBirthYear(newYear);
+        }
+        catch (NumberFormatException e){}
 
 
 
