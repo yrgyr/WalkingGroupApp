@@ -1,6 +1,7 @@
 package ca.cmpt276.walkinggroup.app;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -55,8 +56,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1234;
     private static final float DEFAULT_ZOOM = 15f;
 
+    // Todo: try chaning these 2 to private
     public double latitude;
     public double longitude;
+    private double destLat;
+    private double destLng;
+    private boolean destSet = false;
 
     private ClusterManager<MyItem> mClusterManager;
     private LocationManager lm = userSingleton.getLocationManager();
@@ -112,6 +117,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 888){
+            if (resultCode == Activity.RESULT_OK){
+                destLat = data.getDoubleExtra("destLat", 0);
+                destLng = data.getDoubleExtra("destLng", 0);
+                destSet = true;
+
+                Toast.makeText(MapsActivity.this, "Destination lat: " + destLat + ", lng: " + destLng, Toast.LENGTH_LONG).show();
+            }
+        }
+    }
 
     private void initializeMap(){
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -245,19 +262,24 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (uploadingLocation){
+                if (uploadingLocation) {
                     //btn.setText(R.string.btn_start_uploading);
                     userSingleton.setUploadingLocation(false);
                     uploadingLocation = userSingleton.getUploadingLocation();
                     setUploadButtonText();
-                    //Toast.makeText(MapsActivity.this, "Turning off location listener", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(MapsActivity.this, "Turning off location listener", Toast.LENGTH_SHORT).show();
                     lm.removeUpdates(locationListener);
                 } else {
                     //btn.setText(R.string.btn_stop_uploading);
-                    userSingleton.setUploadingLocation(true);
-                    uploadingLocation = userSingleton.getUploadingLocation();
-                    setUploadButtonText();
-                    setupLocationListener();
+                    // Todo: add ability to remember destination coordinates passed back from Join_Group activity
+                    if (!destSet) {
+                        Toast.makeText(MapsActivity.this, "Please select a group to walk with first!", Toast.LENGTH_LONG).show();
+                    } else {
+                        userSingleton.setUploadingLocation(true);
+                        uploadingLocation = userSingleton.getUploadingLocation();
+                        setUploadButtonText();
+                        setupLocationListener();
+                    }
                 }
             }
         });
@@ -331,7 +353,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private void returnedGroupById(Group group){
         groupSelected = group;
         Intent intent = new Intent(MapsActivity.this, Join_Group.class);
-        startActivity(intent);
+        //startActivity(intent);
+        startActivityForResult(intent, 888);
     }
 
     private void uploadCurrentLocation(Long userId, GpsLocation location){
@@ -345,6 +368,4 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         double lng = location.getLng();
         Toast.makeText(MapsActivity.this, "lat: " + lat + " lng: " + lng + " received at: " + receivedTime, Toast.LENGTH_LONG).show();
     }
-
-
 }

@@ -1,7 +1,9 @@
 package ca.cmpt276.walkinggroup.app;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -38,10 +40,14 @@ public class Join_Group extends AppCompatActivity {
     Long grpId = groupSelected.getId();
     String grpDesc = groupSelected.getGroupDescription();
     String leaderName = groupSelected.getLeader().getName();
+    Long leaderId = groupSelected.getLeader().getId();
 
     Long currentUserId = currentUser.getId();
     String[] members = groupSelected.getGroupMembersNames();
+    long[] membersId = groupSelected.getGroupMembersIds();
     private List<User> monitorsUsers = new ArrayList<>();
+
+    private boolean IAmInThisGroup = false;
 
     private boolean uploadingLocation = false;
 
@@ -51,6 +57,7 @@ public class Join_Group extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_join__group);
 
+        checkIfIAmInGroup();
         populateGroupID();
         populateGroupDesc();
         populateGroupLeader();
@@ -67,6 +74,7 @@ public class Join_Group extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
+    //Todo: remove start/stop uploading in this activity later?
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         if (uploadingLocation){
@@ -112,6 +120,20 @@ public class Join_Group extends AppCompatActivity {
             case R.id.menu_start_uploading:
                 uploadingLocation = true;
                 break;
+            case R.id.menu_start_walking:
+                if (!IAmInThisGroup){
+                    Toast.makeText(Join_Group.this, "Please join this group first!", Toast.LENGTH_LONG).show();
+                } else {
+                    double destLat = groupSelected.getDestLat();
+                    double destLng = groupSelected.getDestLng();
+
+                    Intent intent = new Intent();
+                    intent.putExtra("destLat",destLat);
+                    intent.putExtra("destLng",destLng);
+                    setResult(Activity.RESULT_OK,intent);
+                    finish();
+                }
+
         }
         return super.onOptionsItemSelected(item);
     }
@@ -287,6 +309,21 @@ public class Join_Group extends AppCompatActivity {
 
         AlertDialog aDialog = alertBuilder.create();
         aDialog.show();
+    }
+
+    private void checkIfIAmInGroup(){
+        //Toast.makeText(Join_Group.this, "currentUserId: " + currentUserId, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(Join_Group.this, "LeaderId: " + leaderId, Toast.LENGTH_SHORT).show();
+        if (currentUserId.equals(leaderId)){
+            IAmInThisGroup = true;
+        } else {
+            for (int i = 0; i < membersId.length; i++){
+                if (currentUserId == membersId[i]){
+                    IAmInThisGroup = true;
+                    break;
+                }
+            }
+        }
     }
 
 
