@@ -70,7 +70,22 @@ public class MainActivity extends AppCompatActivity {
         setupMapBtn();
         setupGetMonitorByBtn();
         setupCreateGroupButton();
+        editInfoButton();
+
+
     }
+
+    private void editInfoButton() {
+        Button editInfoBtn=(Button) findViewById(R.id.editInfoBtn);
+        editInfoBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent=new Intent(MainActivity.this,EditContactInfo.class);
+                startActivity(intent);
+            }
+        });
+    }
+
 
     private void setUpName() {
         String email = login.getEmail(MainActivity.this);
