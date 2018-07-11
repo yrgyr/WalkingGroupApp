@@ -84,4 +84,24 @@
     <string name="empt_group_name_toast_msg">Group name can not be empty</string>
     <string name="create_group_success_toast_msg">Create group successfully ,Server replied with group ID:</string>
     <string name="title_activity_parents_dashboard">Map</string>
+    <string name="new_name">New Name</string>
+    <string name="your_name">your name</string>
+    <string name="email">Email</string>
+    <string name="new_email">new email</string>
+    <string name="validate">VALIDATE</string>
+    <string name="birth_year">BIRTH YEAR</string>
+    <string name="birth_month">BIRTH MONTH</string>
+    <string name="cellphone">CELLPHONE</string>
+    <string name="home_phone">HOME PHONE</string>
+    <string name="address">ADDRESS</string>
+    <string name="grade">GRADE</string>
+    <string name="teacher_name">TEACHER NAME</string>
+    <string name="emergency_contact">EMERGENCY CONTACT</string>
+    <string name="year_of_birth">year of birth</string>
+    <string name="month_of_birth">month of birth</string>
+    <string name="house_address">house address</string>
+    <string name="contact_number">contact number</string>
+    <string name="phone_number">phone number</string>
+    <string name="your_grade">your grade</string>
+    <string name="emergency_contact_person">emergency contact person</string>
 </resources>
