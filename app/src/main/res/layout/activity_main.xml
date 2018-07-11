@@ -9,8 +9,8 @@
 
     <Button
         android:id="@+id/mapBtn"
-        android:layout_width="220dp"
-        android:layout_height="wrap_content"
+        android:layout_width="175dp"
+        android:layout_height="46dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
@@ -18,7 +18,7 @@
         android:background="@drawable/button_style"
         android:fontFamily="casual"
         android:text="@string/btn_view_groups"
-        android:textSize="18sp"
+        android:textSize="12sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -29,8 +29,8 @@
 
     <Button
         android:id="@+id/getUsersBtn"
-        android:layout_width="220dp"
-        android:layout_height="wrap_content"
+        android:layout_width="176dp"
+        android:layout_height="43dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
@@ -38,7 +38,7 @@
         android:background="@drawable/button_style"
         android:fontFamily="casual"
         android:text="@string/MonitorListBtn"
-        android:textSize="18sp"
+        android:textSize="12sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -49,8 +49,8 @@
 
     <Button
         android:id="@+id/addUsers"
-        android:layout_width="220dp"
-        android:layout_height="wrap_content"
+        android:layout_width="171dp"
+        android:layout_height="44dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
@@ -58,7 +58,7 @@
         android:background="@drawable/button_style"
         android:fontFamily="casual"
         android:text="@string/AddUserBtnText"
-        android:textSize="18sp"
+        android:textSize="12sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -69,8 +69,8 @@
 
     <Button
         android:id="@+id/getMonitorByBtn"
-        android:layout_width="220dp"
-        android:layout_height="wrap_content"
+        android:layout_width="176dp"
+        android:layout_height="48dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
@@ -78,19 +78,19 @@
         android:background="@drawable/button_style"
         android:fontFamily="casual"
         android:text="@string/MonitorByBtnList"
-        android:textSize="18sp"
+        android:textSize="12sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.064"
+        app:layout_constraintHorizontal_bias="0.049"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.602" />
 
     <Button
         android:id="@+id/btn_create_group"
-        android:layout_width="220dp"
-        android:layout_height="wrap_content"
+        android:layout_width="169dp"
+        android:layout_height="49dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
@@ -98,7 +98,7 @@
         android:background="@drawable/button_style"
         android:fontFamily="casual"
         android:text="@string/btn_create_new_group"
-        android:textSize="18sp"
+        android:textSize="12sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -129,8 +129,8 @@
 
     <Button
         android:id="@+id/logOutBtn"
-        android:layout_width="220dp"
-        android:layout_height="wrap_content"
+        android:layout_width="148dp"
+        android:layout_height="46dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
@@ -138,7 +138,7 @@
         android:background="@drawable/button_style"
         android:fontFamily="casual"
         android:text="@string/log_out_btn_txt"
-        android:textSize="18sp"
+        android:textSize="12sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -146,21 +146,25 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.944" />
+
     <Button
         android:id="@+id/editInfoBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="117dp"
+        android:layout_height="45dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:text="edit_info"
+        android:background="@drawable/button_style"
+        android:fontFamily="casual"
+        android:text="@string/edit_user"
+        android:textSize="12sp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.867"
+        app:layout_constraintHorizontal_bias="0.9"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.12" />
-
+        app:layout_constraintVertical_bias="0.108" />
 
 </android.support.constraint.ConstraintLayout>
