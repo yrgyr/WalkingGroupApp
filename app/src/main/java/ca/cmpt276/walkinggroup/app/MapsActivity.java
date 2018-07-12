@@ -268,7 +268,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private void setupUploadButton(){
         Button btn = findViewById(R.id.btn_upload_location);
-        setUploadButtonText();
+        setUploadButtonText(btn);
         //btn.setText(R.string.btn_start_uploading);
         //Toast.makeText(MapsActivity.this, "uploadingLocation: " + uploadingLocation, Toast.LENGTH_LONG).show();
         btn.setOnClickListener(new View.OnClickListener() {
@@ -278,7 +278,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     //btn.setText(R.string.btn_start_uploading);
                     userSingleton.setUploadingLocation(false);
                     uploadingLocation = userSingleton.getUploadingLocation();
-                    setUploadButtonText();
+                    setUploadButtonText(btn);
                         //Toast.makeText(MapsActivity.this, "Turning off location listener", Toast.LENGTH_SHORT).show();
                     lm.removeUpdates(locationListener);
                     if (DestReachedCountDownRunning){
@@ -291,7 +291,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     } else {
                         userSingleton.setUploadingLocation(true);
                         uploadingLocation = userSingleton.getUploadingLocation();
-                        setUploadButtonText();
+                        setUploadButtonText(btn);
                         setupLocationListener();
                     }
                 }
@@ -300,15 +300,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     }
 
-    private void setUploadButtonText(){
+    private void setUploadButtonText(Button btn){
         //Toast.makeText(MapsActivity.this, "uploadingLocation: " + uploadingLocation, Toast.LENGTH_LONG).show();
-        Button btn = findViewById(R.id.btn_upload_location);
+        //Button btn = findViewById(R.id.btn_upload_location);
         if (uploadingLocation){
-            Toast.makeText(MapsActivity.this, "Set text to stop here", Toast.LENGTH_LONG).show();
             btn.setText(R.string.btn_stop_uploading);
+            Toast.makeText(MapsActivity.this, "Set button text to stop", Toast.LENGTH_LONG).show();
         } else {
-            Toast.makeText(MapsActivity.this, "Set text to start here", Toast.LENGTH_LONG).show();
             btn.setText(R.string.btn_start_uploading);
+            Toast.makeText(MapsActivity.this, "Set button text to start", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -329,9 +329,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         if (distanceToDest <= SCHOOL_RADIUS_IN_METERS){
                             if (!DestReachedCountDownRunning){
                                 startDestReachedCountDown();
-                                userSingleton.setDestReachedCountDown(DestReachedCountDown);
-                                DestReachedCountDownRunning = true;
-                                userSingleton.setDestReachedCountDownRunning(DestReachedCountDownRunning);
                             }
                         } else {
                             if (DestReachedCountDownRunning){
@@ -404,14 +401,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 userSingleton.setDestReachedCountDownRunning(DestReachedCountDownRunning);
                 uploadingLocation = false;
                 userSingleton.setUploadingLocation(uploadingLocation);
-                setUploadButtonText();
-                //setupUploadButton();
+
+                // Seemed to work using either method call
+                //setUploadButtonText();
+                setupUploadButton();
 
                 // Tried the 2 lines of code below won't even change the text of the button
                 //Button btn = findViewById(R.id.btn_upload_location);
-                //btn.setText(R.string.btn_start_uploading);
+                //btn.setText("Timer stops");
             }
         }.start();
+
+        userSingleton.setDestReachedCountDown(DestReachedCountDown);
+        DestReachedCountDownRunning = true;
+        userSingleton.setDestReachedCountDownRunning(DestReachedCountDownRunning);
     }
 
     private void resetDestReachedCountDown(){
