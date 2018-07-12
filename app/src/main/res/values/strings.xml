@@ -84,10 +84,10 @@
     <string name="empt_group_name_toast_msg">Group name can not be empty</string>
     <string name="create_group_success_toast_msg">Create group successfully ,Server replied with group ID:</string>
     <string name="title_activity_parents_dashboard">Map</string>
-    <string name="new_name">new_name</string>
+    <string name="new_name">Name</string>
     <string name="your_name">your_name</string>
-    <string name="email">email</string>
-    <string name="new_email">new_email</string>
+    <string name="email">Email</string>
+    <string name="new_email">Email</string>
     <string name="validate">validate</string>
     <string name="birth_year">birth_year</string>
     <string name="birth_month">birth_month</string>
@@ -107,4 +107,6 @@
     <string name="emergency_contact_person">emergency_contact_person</string>
     <string name="edit_info">edit_info</string>
     <string name="edit_user">EDIT USER</string>
+    <string name="users_you_are_monitoring_long_click_to_delete_single_click_to_edit">Users you are monitoring (*long click to delete *single click to edit)</string>
+    <string name="edit_this_user_info">Edit this user info</string>
 </resources>

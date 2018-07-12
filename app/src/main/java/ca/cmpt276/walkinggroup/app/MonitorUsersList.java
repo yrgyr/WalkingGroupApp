@@ -1,7 +1,11 @@
 package ca.cmpt276.walkinggroup.app;
 
+import android.app.AlertDialog;
+import android.app.FragmentManager;
+import android.content.DialogInterface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -45,8 +49,11 @@ public class MonitorUsersList extends AppCompatActivity {
 
         setupListView();
         listViewOnclick();
+        longClick();
 
     }
+
+
 
 
     // ====================== POPULATE ListVIEW =============================================
@@ -88,18 +95,42 @@ public class MonitorUsersList extends AppCompatActivity {
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                User litterUser = usersList.get(position);
-
-                Long deleteID = litterUser.getId();
 
 
 
-                Call<Void> caller = proxy.removeFromMonitorsUsers(userID,deleteID);
-                ProxyBuilder.callProxy(MonitorUsersList.this, caller, nothing -> responseVoid(nothing));
+
+                android.support.v4.app.FragmentManager manager=getSupportFragmentManager();
+                MessageFragment dialog=new MessageFragment();
+                dialog.show(manager,"MessageDialog");
+
 
             }
         });
     }
+
+
+    private void longClick() {
+        ListView lv = (ListView) findViewById(R.id.monitorUsersList);
+        lv.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+
+                User litterUser = usersList.get(position);
+                Long deleteID = litterUser.getId();
+                Call<Void> caller = proxy.removeFromMonitorsUsers(userID,deleteID);
+                ProxyBuilder.callProxy(MonitorUsersList.this, caller, nothing -> responseVoid(nothing));
+
+            return true;
+
+            }
+
+
+        });
+
+
+    }
+
+
     private void responseVoid(Void nothing){
         Toast.makeText(this,"Server replied to delete request.",Toast.LENGTH_LONG).show();
         Call<List<User>> caller2 = proxy.getMonitorsUsers(userID);

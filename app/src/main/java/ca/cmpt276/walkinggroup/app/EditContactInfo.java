@@ -50,10 +50,6 @@ public class EditContactInfo extends AppCompatActivity {
 
 
 
-
-
-
-
     }
 
     //Get the new info from the fields

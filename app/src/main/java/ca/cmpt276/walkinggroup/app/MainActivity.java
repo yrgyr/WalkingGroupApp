@@ -107,21 +107,7 @@ public class MainActivity extends AppCompatActivity {
         updateUI();
 
     }
-//    private void setUpLogOut() {
-//        TextView logOut = findViewById(R.id.LogOutText);
-//        logOut.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);
-//        logOut.setTextColor(Color.BLUE);
-//
-//        logOut.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                isLogOut = true;
-//                Intent i = new Intent(MainActivity.this,login.class);
-//                startActivity(i);
-//                finish();
-//            }
-//        });
-//    }
+
 
     private void setupLogOutBtn(){
 
