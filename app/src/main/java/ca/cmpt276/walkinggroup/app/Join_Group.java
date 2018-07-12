@@ -76,18 +76,6 @@ public class Join_Group extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
-    //Todo: remove start/stop uploading in this activity later?
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        if (uploadingLocation){
-            menu.findItem(R.id.menu_start_uploading).setVisible(false);
-            menu.findItem(R.id.menu_stop_uploading).setVisible(true);
-        } else {
-            menu.findItem(R.id.menu_start_uploading).setVisible(true);
-            menu.findItem(R.id.menu_stop_uploading).setVisible(false);
-        }
-        return super.onPrepareOptionsMenu(menu);
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -115,12 +103,6 @@ public class Join_Group extends AppCompatActivity {
                 break;
             case R.id.menu_go_back:
                 finish();
-                break;
-            case R.id.menu_stop_uploading:
-                uploadingLocation = false;
-                break;
-            case R.id.menu_start_uploading:
-                uploadingLocation = true;
                 break;
             case R.id.menu_start_walking:
                 if (!IAmInThisGroup){
