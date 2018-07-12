@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
@@ -65,18 +66,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private ClusterManager<MyItem> mClusterManager;
     private LocationManager lm = userSingleton.getLocationManager();
+    private LocationListener locationListener = userSingleton.getLocationListener();
 
     private List<Group> groupsOnServer = new ArrayList<>();
-    //public static Group groupSelected;  // Todo: store this in Singleton instead
     private Group groupSelected = userSingleton.getGroupSelected();
 
 
     private boolean uploadingLocation = userSingleton.getUploadingLocation();
-    private final int GPS_UPLOAD_INTERVAL = 8000;
-    private final int GPS_UPLOAD_MIN_DIST = 0;
+    private final int GPS_UPLOAD_INTERVAL_IN_MILLISEC = 8000;
+    private final int GPS_UPLOAD_MIN_DIST_IN_METERS = 0;
     private GpsLocation currentGpsLocation = new GpsLocation();
 
-    private LocationListener locationListener = userSingleton.getLocationListener();
+    // Countdown timer when user reaches school
+    private final int GPS_COUNTDOWN_INTERVAL_IN_MILLISEC = 30000;
+    private final int SCHOOL_RADIUS_IN_METERS = 200;
+    private CountDownTimer DestReachedCountDown;
+    private boolean DestReachedCountDownRunning;
 
 
     @Override
@@ -124,7 +129,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == 888){
             if (resultCode == Activity.RESULT_OK){
-                // Todo: get destLat and destLng from singleton
                 Group walkingGroup = userSingleton.getWalkingGroup();
                 destLat = walkingGroup.getDestLat();
                 destLng = walkingGroup.getDestLng();
@@ -279,7 +283,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     lm.removeUpdates(locationListener);
                 } else {
                     //btn.setText(R.string.btn_stop_uploading);
-                    // Todo: add ability to remember destination coordinates passed back from Join_Group activity
                     if (!destSet) {
                         Toast.makeText(MapsActivity.this, "Please select a group to walk with first!", Toast.LENGTH_LONG).show();
                     } else {
@@ -343,7 +346,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     userSingleton.setLocationListener(locationListener);
                 }
 
-                lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, GPS_UPLOAD_INTERVAL, GPS_UPLOAD_MIN_DIST, locationListener);
+                lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, GPS_UPLOAD_INTERVAL_IN_MILLISEC, GPS_UPLOAD_MIN_DIST_IN_METERS, locationListener);
 
             }
         }catch (SecurityException e){
@@ -356,13 +359,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Group walkingGroup = userSingleton.getWalkingGroup();
         if (walkingGroup == null){
             destSet = false;
+            //Toast.makeText(MapsActivity.this, "Dest not set yet", Toast.LENGTH_SHORT).show();
         } else {
             destSet = true;
             destLat = walkingGroup.getDestLat();
             destLng = walkingGroup.getDestLng();
+            //Toast.makeText(MapsActivity.this, "Previously stored destLat: " + destLat + " , destLng: " + destLng, Toast.LENGTH_LONG).show();
         }
     }
 
+    private void startDestReachedCountDown(){
+
+    }
+
+    private void resetDestReachedCountDown(){
+
+    }
 
     private void getRemoteGroupById(Long id){
         Call<Group> caller = proxy.getGroupById(id);
