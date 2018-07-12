@@ -325,6 +325,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                             Long currentUserId = currentUser.getId();
                             uploadCurrentLocation(currentUserId, currentGpsLocation);
+
+
                         }
 
                         @Override
@@ -399,5 +401,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         double lat = location.getLat();
         double lng = location.getLng();
         Toast.makeText(MapsActivity.this, "lat: " + lat + " lng: " + lng + " received at: " + receivedTime, Toast.LENGTH_LONG).show();
+
+        //Todo: calculate distance to dest, start timer if it's within radius
     }
 }
