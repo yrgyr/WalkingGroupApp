@@ -80,8 +80,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     // Countdown timer when user reaches school
     private final int GPS_COUNTDOWN_INTERVAL_IN_MILLISEC = 30000;
     private final int SCHOOL_RADIUS_IN_METERS = 200;
-    private CountDownTimer DestReachedCountDown;
-    private boolean DestReachedCountDownRunning;
+    private CountDownTimer DestReachedCountDown = userSingleton.getDestReachedCountDown();
+    private boolean DestReachedCountDownRunning = userSingleton.isDestReachedCountDownRunning();
 
 
     @Override
@@ -298,10 +298,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     private void setUploadButtonText(){
+        //Toast.makeText(MapsActivity.this, "uploadingLocation: " + uploadingLocation, Toast.LENGTH_LONG).show();
         Button btn = findViewById(R.id.btn_upload_location);
         if (uploadingLocation){
+            Toast.makeText(MapsActivity.this, "Set text to stop here", Toast.LENGTH_LONG).show();
             btn.setText(R.string.btn_stop_uploading);
         } else {
+            Toast.makeText(MapsActivity.this, "Set text to start here", Toast.LENGTH_LONG).show();
             btn.setText(R.string.btn_start_uploading);
         }
     }
@@ -309,47 +312,59 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private void setupLocationListener(){
         try{
             if (mLocationPermissionsGranted){
-                if (locationListener == null) {
-                    locationListener = new LocationListener() {
-                        @Override
-                        public void onLocationChanged(Location location) {
-                            longitude = location.getLongitude();
-                            latitude = location.getLatitude();
+                locationListener = new LocationListener() {
+                    @Override
+                    public void onLocationChanged(Location location) {
+                        longitude = location.getLongitude();
+                        latitude = location.getLatitude();
 
-                            String currentTime = MapsFunctions.getCurrentTimeStamp();
-                            Toast.makeText(MapsActivity.this, currentTime + ", lat: " + latitude + " , long: " + longitude, Toast.LENGTH_LONG).show();
+                        String currentTime = MapsFunctions.getCurrentTimeStamp();
+                        Toast.makeText(MapsActivity.this, currentTime + ", lat: " + latitude + " , long: " + longitude, Toast.LENGTH_LONG).show();
 
-                            currentGpsLocation.setLat(latitude);
-                            currentGpsLocation.setLng(longitude);
-                            currentGpsLocation.setTimestamp(currentTime);
-
-                            Long currentUserId = currentUser.getId();
-                            uploadCurrentLocation(currentUserId, currentGpsLocation);
-
-
+                        // Calculate distance to destination and start count down timer if one has not been started
+                        double distanceToDest = MapsFunctions.distanceInMBetweenTwoCoordinates(latitude, longitude, destLat, destLng);
+                        if (distanceToDest <= SCHOOL_RADIUS_IN_METERS){
+                            if (!DestReachedCountDownRunning){
+                                startDestReachedCountDown();
+                                userSingleton.setDestReachedCountDown(DestReachedCountDown);
+                                DestReachedCountDownRunning = true;
+                                userSingleton.setDestReachedCountDownRunning(DestReachedCountDownRunning);
+                            }
+                        } else {
+                            if (DestReachedCountDownRunning){
+                                resetDestReachedCountDown();
+                            }
                         }
 
-                        @Override
-                        public void onStatusChanged(String provider, int status, Bundle extras) {
+                        // Send the coordinates to the server
+                        currentGpsLocation.setLat(latitude);
+                        currentGpsLocation.setLng(longitude);
+                        currentGpsLocation.setTimestamp(currentTime);
 
-                        }
+                        Long currentUserId = currentUser.getId();
+                        uploadCurrentLocation(currentUserId, currentGpsLocation);
 
-                        @Override
-                        public void onProviderEnabled(String provider) {
 
-                        }
+                    }
 
-                        @Override
-                        public void onProviderDisabled(String provider) {
+                    @Override
+                    public void onStatusChanged(String provider, int status, Bundle extras) {
 
-                        }
-                    };
+                    }
 
-                    userSingleton.setLocationListener(locationListener);
-                }
+                    @Override
+                    public void onProviderEnabled(String provider) {
 
+                    }
+
+                    @Override
+                    public void onProviderDisabled(String provider) {
+
+                    }
+                };
+
+                userSingleton.setLocationListener(locationListener);
                 lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, GPS_UPLOAD_INTERVAL_IN_MILLISEC, GPS_UPLOAD_MIN_DIST_IN_METERS, locationListener);
-
             }
         }catch (SecurityException e){
             Log.e(TAG, getString(R.string.getDeviceLocation_exception) + e.getMessage() );
@@ -371,11 +386,35 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     private void startDestReachedCountDown(){
+        DestReachedCountDown = new CountDownTimer(GPS_COUNTDOWN_INTERVAL_IN_MILLISEC, 5000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                long seconds = millisUntilFinished/1000;
+                Toast.makeText(MapsActivity.this, seconds + " seconds of uploading left", Toast.LENGTH_SHORT).show();
+            }
 
+            @Override
+            public void onFinish() {
+                Toast.makeText(MapsActivity.this, "Uploading location stops", Toast.LENGTH_SHORT).show();
+                lm.removeUpdates(locationListener);
+                DestReachedCountDownRunning = false;
+                userSingleton.setDestReachedCountDownRunning(DestReachedCountDownRunning);
+                uploadingLocation = false;
+                userSingleton.setUploadingLocation(uploadingLocation);
+                setUploadButtonText();
+                //setupUploadButton();
+
+                // Tried the 2 lines of code below won't even change the text of the button
+                //Button btn = findViewById(R.id.btn_upload_location);
+                //btn.setText(R.string.btn_start_uploading);
+            }
+        }.start();
     }
 
     private void resetDestReachedCountDown(){
-
+        DestReachedCountDown.cancel();
+        DestReachedCountDownRunning = false;
+        userSingleton.setDestReachedCountDownRunning(DestReachedCountDownRunning);
     }
 
     private void getRemoteGroupById(Long id){
@@ -400,8 +439,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         String receivedTime = location.getTimestamp();
         double lat = location.getLat();
         double lng = location.getLng();
-        Toast.makeText(MapsActivity.this, "lat: " + lat + " lng: " + lng + " received at: " + receivedTime, Toast.LENGTH_LONG).show();
-
-        //Todo: calculate distance to dest, start timer if it's within radius
+        //Toast.makeText(MapsActivity.this, "lat: " + lat + " lng: " + lng + " received at: " + receivedTime, Toast.LENGTH_LONG).show();
     }
 }

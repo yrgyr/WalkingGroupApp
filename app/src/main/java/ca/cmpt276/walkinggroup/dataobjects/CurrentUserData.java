@@ -17,7 +17,7 @@ public class CurrentUserData {
     private LocationListener locationListener = null;
     private Group groupSelected;
     private Group walkingGroup;  // the group the user is currently walking with
-    private boolean destReachedCountDownRunning;
+    private boolean destReachedCountDownRunning = false;
     private CountDownTimer destReachedCountDown;
     private String token;
     private Long ID;
