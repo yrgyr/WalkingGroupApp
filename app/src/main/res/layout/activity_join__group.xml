@@ -97,4 +97,15 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="66dp" />
+
+    <Button
+        android:id="@+id/messageBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/join_grp_members_listview"
+        android:layout_below="@+id/join_grp_members_listview"
+        android:layout_marginTop="-66dp"
+        android:text="@string/send_message"
+        android:textSize="24sp"
+        android:textStyle="bold" />
 </RelativeLayout>

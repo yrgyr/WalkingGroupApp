@@ -65,7 +65,11 @@ public class Join_Group extends AppCompatActivity {
 
         populateGroupMembersListView();
         setupActionBar();
+
+        setUpSendMessage();
     }
+
+
 
     private void setUpValidUserCanCheckInfo() {
         User leader = groupSelected.getLeader();
@@ -395,6 +399,19 @@ public class Join_Group extends AppCompatActivity {
     private void responseLeaveGroup(Void returnedNothing){
         Toast.makeText(Join_Group.this, R.string.Toast_left_group, Toast.LENGTH_LONG).show();
         finish();
+    }
+
+
+    private void setUpSendMessage() {
+        Button btn = findViewById(R.id.messageBtn);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = SendMessage.makeIntent(Join_Group.this, grpId);
+                startActivity(intent);
+            }
+        });
+
     }
 
 }
