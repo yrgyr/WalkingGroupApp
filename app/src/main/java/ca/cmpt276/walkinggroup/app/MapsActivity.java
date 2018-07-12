@@ -281,6 +281,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     setUploadButtonText();
                         //Toast.makeText(MapsActivity.this, "Turning off location listener", Toast.LENGTH_SHORT).show();
                     lm.removeUpdates(locationListener);
+                    if (DestReachedCountDownRunning){
+                        resetDestReachedCountDown();
+                    }
                 } else {
                     //btn.setText(R.string.btn_stop_uploading);
                     if (!destSet) {
