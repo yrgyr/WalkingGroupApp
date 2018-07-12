@@ -4,6 +4,7 @@ package ca.cmpt276.walkinggroup.dataobjects;
 
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.CountDownTimer;
 
 import ca.cmpt276.walkinggroup.proxy.WGServerProxy;
 
@@ -16,6 +17,8 @@ public class CurrentUserData {
     private LocationListener locationListener = null;
     private Group groupSelected;
     private Group walkingGroup;  // the group the user is currently walking with
+    private boolean destReachedCountDownRunning;
+    private CountDownTimer destReachedCountDown;
     private String token;
     private Long ID;
 
@@ -64,5 +67,20 @@ public class CurrentUserData {
 
     public Group getWalkingGroup(){return walkingGroup;}
 
+    public boolean isDestReachedCountDownRunning() {
+        return destReachedCountDownRunning;
+    }
+
+    public CountDownTimer getDestReachedCountDown() {
+        return destReachedCountDown;
+    }
+
+    public void setDestReachedCountDownRunning(boolean isTimerRunning) {
+        this.destReachedCountDownRunning = isTimerRunning;
+    }
+
+    public void setDestReachedCountDown(CountDownTimer timer) {
+        this.destReachedCountDown = timer;
+    }
 }
 
