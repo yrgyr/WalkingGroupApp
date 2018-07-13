@@ -78,8 +78,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private GpsLocation currentGpsLocation = new GpsLocation();
 
     // Countdown timer when user reaches school
+    // Todo: change these back to assignment parameters
     private final int GPS_COUNTDOWN_INTERVAL_IN_MILLISEC = 30000;
-    private final int SCHOOL_RADIUS_IN_METERS = 200;
+    private final int SCHOOL_RADIUS_IN_METERS = 20;
     private CountDownTimer DestReachedCountDown = userSingleton.getDestReachedCountDown();
     private boolean DestReachedCountDownRunning = userSingleton.isDestReachedCountDownRunning();
 
@@ -305,10 +306,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         //Button btn = findViewById(R.id.btn_upload_location);
         if (uploadingLocation){
             btn.setText(R.string.btn_stop_uploading);
-            Toast.makeText(MapsActivity.this, "Set button text to stop", Toast.LENGTH_LONG).show();
+            //Toast.makeText(MapsActivity.this, "Set button text to stop", Toast.LENGTH_LONG).show();
         } else {
             btn.setText(R.string.btn_start_uploading);
-            Toast.makeText(MapsActivity.this, "Set button text to start", Toast.LENGTH_LONG).show();
+            //Toast.makeText(MapsActivity.this, "Set button text to start", Toast.LENGTH_LONG).show();
         }
     }
 
