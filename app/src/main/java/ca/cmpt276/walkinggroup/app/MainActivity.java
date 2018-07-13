@@ -24,6 +24,7 @@ import java.util.List;
 import ca.cmpt276.walkinggroup.dataobjects.CurrentUserData;
 import ca.cmpt276.walkinggroup.dataobjects.EarnedRewards;
 import ca.cmpt276.walkinggroup.dataobjects.Group;
+import ca.cmpt276.walkinggroup.dataobjects.Message;
 import ca.cmpt276.walkinggroup.dataobjects.User;
 import ca.cmpt276.walkinggroup.proxy.ProxyBuilder;
 import ca.cmpt276.walkinggroup.proxy.WGServerProxy;
@@ -34,9 +35,14 @@ public class MainActivity extends AppCompatActivity {
     private WGServerProxy proxy;
     public static boolean isLogOut = false;
     public static List<Group> groupsList = new ArrayList<>();
+    public static List<Message> messageList = new ArrayList<>();
+    private User currentUser;
+    private int unreadCount = 0;
+
     private String name = "default";
 
     private CurrentUserData userSingleton = CurrentUserData.getSingletonInstance();
+
 
 
     /* =======================================================================================
@@ -58,11 +64,13 @@ public class MainActivity extends AppCompatActivity {
         proxy = ProxyBuilder.getProxy(getString(R.string.apikey), login.getToken(this));
         userSingleton.setCurrentProxy(proxy);
 
+
         setUpName();
 //        setUpLogOut();
 
         setupLogOutBtn();
         getRemoteGroups();
+
 
 
         setupGetMonitorUsersBtn();
@@ -79,6 +87,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+
     private void setUpName() {
         String email = login.getEmail(MainActivity.this);
         if(email != null) {
@@ -87,17 +96,13 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
-    private void updateUI() {
-        TextView textView = findViewById(R.id.userName);
-        textView.setText(getString(R.string.welcome) + " " + name);
-    }
 
     private void response(User user) {
         name = user.getName();
         userSingleton.setCurrentUser(user);
-
+        currentUser = user;
+        getMessageList();
         Toast.makeText(this, getString(R.string.welcome) + " " + name, Toast.LENGTH_LONG).show();
-        updateUI();
 
     }
 //    private void setUpLogOut() {
@@ -208,5 +213,26 @@ public class MainActivity extends AppCompatActivity {
     }
     private void returnGroups(List<Group> returnedGroups){
         groupsList = returnedGroups;
+    }
+
+    private void getMessageList() {
+        if(login.getToken(MainActivity.this) != null) {
+            Call<List<Message>> caller = proxy.getMessages(currentUser.getId());
+            ProxyBuilder.callProxy(MainActivity.this,caller,messageReturn -> responseGetMessage(messageReturn));
+        }
+    }
+    private void responseGetMessage (List<Message> messageReturn) {
+        messageList = messageReturn;
+        for(int i = 0; i < messageReturn.size(); i++){
+            if(!messageReturn.get(i).isRead()){
+                unreadCount++;
+            }
+        }
+
+        TextView textView = findViewById(R.id.userName);
+        textView.setText(getString(R.string.welcome) + " " + name + ", " + getString(R.string.unreadCount,unreadCount));
+
+        //TextView textView = findViewById(R.id.unreadCount);
+        //textView.setText(getString(R.string.unreadCount,unreadCount));
     }
 }

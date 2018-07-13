@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import org.w3c.dom.Text;
 
+import java.util.Date;
 import java.util.List;
 
 import ca.cmpt276.walkinggroup.dataobjects.CurrentUserData;
@@ -68,6 +69,10 @@ public class SendMessage extends AppCompatActivity {
                 message = new Message();
                 TextView textView = findViewById(R.id.messageEdit);
                 String text = textView.getText().toString();
+
+                message.setIsRead(false);
+                message.setEmergency(false);
+                message.setFromUser(currentUser);
                 message.setText(""+text);
 
                 Call<List<Message>> caller = proxy.newMessageToGroup(groupId,message);
