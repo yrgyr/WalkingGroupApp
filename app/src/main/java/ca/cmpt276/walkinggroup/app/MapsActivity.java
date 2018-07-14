@@ -92,6 +92,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         checkIfDestSet();
         getLocationPermission();
         setupUploadButton();
+        setupDashBoardButton();
     }
 
 
@@ -265,6 +266,21 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         } else{
             Toast.makeText(MapsActivity.this, R.string.group_list_null, Toast.LENGTH_LONG).show();
         }
+    }
+
+    private void setupDashBoardButton(){
+        Button btn = findViewById(R.id.btn_open_dashboard);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MapsActivity.this, ParentsDashboard.class);
+                startActivity(intent);
+            }
+        });
+    }
+
+    private void setupPanicButton(){
+
     }
 
     private void setupUploadButton(){

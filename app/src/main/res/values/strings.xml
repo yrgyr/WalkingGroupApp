@@ -91,4 +91,6 @@
     <string name="btn_start_uploading"> Start uploading</string>
     <string name="btn_stop_uploading">Stop uploading</string>
     <string name="menu_start_walking">Start walking with this group</string>
+    <string name="btn_open_dashboard">Open dashboard</string>
+    <string name="btn_panic">PANIC</string>
 </resources>
