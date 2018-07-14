@@ -3,6 +3,7 @@ package ca.cmpt276.walkinggroup.app;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.location.LocationManager;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
@@ -45,12 +46,29 @@ public class ParentsDashboard extends FragmentActivity implements OnMapReadyCall
     private User currentUser = userSingleton.getCurrentUser();
     private List<User> monitorsUsers = currentUser.getMonitorsUsers();
 
+    private final int LOCATION_UPDATES_INTERVAL_IN_MILLISEC = 10000; // Todo: change to 30000 after testing
+
+
+    // Code for handler: https://guides.codepath.com/android/Repeating-Periodic-Tasks
+    private Handler handler = new Handler();
+    private Runnable runnableCode = new Runnable() {
+        @Override
+        public void run() {
+            mMap.clear();
+            populateLocationMarkers();
+            handler.postDelayed(this, LOCATION_UPDATES_INTERVAL_IN_MILLISEC);
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_parents_dashboard);
         getLocationPermission();
-        populateLocationMarkersOnStart();
+        populateLocationMarkers();
+
+        // start the routine to update location markers every 30 seconds
+        handler.post(runnableCode);
     }
 
 
@@ -120,7 +138,7 @@ public class ParentsDashboard extends FragmentActivity implements OnMapReadyCall
         }
     }
 
-    private void populateLocationMarkersOnStart(){
+    private void populateLocationMarkers(){
         for(int i = 0; i < monitorsUsers.size(); i++){
             long userId = monitorsUsers.get(i).getId();
             String userName = monitorsUsers.get(i).getName();
@@ -131,7 +149,6 @@ public class ParentsDashboard extends FragmentActivity implements OnMapReadyCall
     }
 
     private void addReturnedLocationMarker(GpsLocation gpsLocation, String userName){
-        //String userName = "";
         double lat = gpsLocation.getLat();
         double lng = gpsLocation.getLng();
         String time = gpsLocation.getTimestamp();
