@@ -15,6 +15,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -39,15 +40,16 @@ public class ParentsDashboard extends FragmentActivity implements OnMapReadyCall
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1234;
     private static final float DEFAULT_ZOOM = 15f;
     private LocationManager lm;
-
+    private final int LOCATION_UPDATES_INTERVAL_IN_MILLISEC = 10000; // Todo: change to 30000 after testing
 
     private CurrentUserData userSingleton = CurrentUserData.getSingletonInstance();
     private WGServerProxy proxy = userSingleton.getCurrentProxy();
     private User currentUser = userSingleton.getCurrentUser();
     private List<User> monitorsUsers = currentUser.getMonitorsUsers();
 
-    private final int LOCATION_UPDATES_INTERVAL_IN_MILLISEC = 10000; // Todo: change to 30000 after testing
-
+    // Map marker colours
+    private final float ACTIVE_MARKER_COLOUR = BitmapDescriptorFactory.HUE_GREEN;
+    private final float INACTIVE_MARKER_COLOUR = BitmapDescriptorFactory.HUE_ROSE;
 
     // Code for handler: https://guides.codepath.com/android/Repeating-Periodic-Tasks
     private Handler handler = new Handler();
@@ -149,12 +151,13 @@ public class ParentsDashboard extends FragmentActivity implements OnMapReadyCall
     }
 
     private void addReturnedLocationMarker(GpsLocation gpsLocation, String userName){
+        // Todo: display inactive markers with different colour
         double lat = gpsLocation.getLat();
         double lng = gpsLocation.getLng();
         String time = gpsLocation.getTimestamp();
 
         String infoWindow = userName + "- " + "last updated: " + time;
-        MapsFunctions.addMarkerToMap(mMap, lat, lng, infoWindow, true);
+        MapsFunctions.addMarkerToMap(mMap, lat, lng, infoWindow, true, ACTIVE_MARKER_COLOUR);
     }
 
 }

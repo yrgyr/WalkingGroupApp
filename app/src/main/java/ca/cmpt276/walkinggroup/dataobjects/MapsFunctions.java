@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -51,9 +52,9 @@ public class MapsFunctions {
         return lm;
     }
 
-    public static void addMarkerToMap(GoogleMap mMap, double lat, double lng, String infoWindowMsg, boolean showInfoWindow){
+    public static void addMarkerToMap(GoogleMap mMap, double lat, double lng, String infoWindowMsg, boolean showInfoWindow, float markerColour){
         LatLng latLng = new LatLng(lat, lng);
-        Marker marker = mMap.addMarker(new MarkerOptions().position(latLng).title(infoWindowMsg));
+        Marker marker = mMap.addMarker(new MarkerOptions().position(latLng).title(infoWindowMsg).icon(BitmapDescriptorFactory.defaultMarker(markerColour)));
         if (showInfoWindow) {
             marker.showInfoWindow();
         }
