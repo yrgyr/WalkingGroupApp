@@ -59,29 +59,6 @@ public class SendMessage extends AppCompatActivity {
 
     }
 
-//    private void displayMsgs() {
-//
-//        Call<List<Message>> caller = proxy.getMessages(currentUser.getId());
-//        ProxyBuilder.callProxy(this,caller,allMsgs -> responseAllMsg(allMsgs));
-//    }
-//
-//    private void responseAllMsg(List<Message> allMsgs) {
-//
-//        ArrayList<String> ALL_msgs = new ArrayList<String>();
-//        for(int i =0; i < allMsgs.size();i++){
-//
-//            Message THIS_MSG = allMsgs.get(i);
-//            String text = THIS_MSG.getText();
-//            String DISPLAY_THIS_MSG = THIS_MSG + "";
-//
-//            ALL_msgs.add(text);
-//        }
-//
-//        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,R.layout.users_list,ALL_msgs);
-//        ListView msg_list = (ListView) findViewById(R.id.msgList);
-//        msg_list.setAdapter(adapter);
-//    }
-
     private void responseGetMessage (List<Message> messageReturn) {
         TextView textView = findViewById(R.id.messageEdit);
         String text = messageReturn.get(1).getText();
