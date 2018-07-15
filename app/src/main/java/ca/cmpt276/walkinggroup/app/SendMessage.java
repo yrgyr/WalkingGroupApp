@@ -5,12 +5,15 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import org.w3c.dom.Text;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -22,6 +25,7 @@ import ca.cmpt276.walkinggroup.proxy.ProxyBuilder;
 import ca.cmpt276.walkinggroup.proxy.WGServerProxy;
 import retrofit2.Call;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 public class SendMessage extends AppCompatActivity {
 
@@ -46,11 +50,38 @@ public class SendMessage extends AppCompatActivity {
             }
         });
 
-
-
         setUpSendButton();
+
         extraDataFromIntent();
+
+
+
+
     }
+
+//    private void displayMsgs() {
+//
+//        Call<List<Message>> caller = proxy.getMessages(currentUser.getId());
+//        ProxyBuilder.callProxy(this,caller,allMsgs -> responseAllMsg(allMsgs));
+//    }
+//
+//    private void responseAllMsg(List<Message> allMsgs) {
+//
+//        ArrayList<String> ALL_msgs = new ArrayList<String>();
+//        for(int i =0; i < allMsgs.size();i++){
+//
+//            Message THIS_MSG = allMsgs.get(i);
+//            String text = THIS_MSG.getText();
+//            String DISPLAY_THIS_MSG = THIS_MSG + "";
+//
+//            ALL_msgs.add(text);
+//        }
+//
+//        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,R.layout.users_list,ALL_msgs);
+//        ListView msg_list = (ListView) findViewById(R.id.msgList);
+//        msg_list.setAdapter(adapter);
+//    }
+
     private void responseGetMessage (List<Message> messageReturn) {
         TextView textView = findViewById(R.id.messageEdit);
         String text = messageReturn.get(1).getText();
@@ -76,13 +107,17 @@ public class SendMessage extends AppCompatActivity {
                 message.setText(""+text);
 
                 Call<List<Message>> caller = proxy.newMessageToGroup(groupId,message);
-                ProxyBuilder.callProxy(SendMessage.this,caller,returnNothing -> response(returnNothing));
+                ProxyBuilder.callProxy(SendMessage.this,caller,returnedMsg -> response(returnedMsg));
             }
         });
     }
-    private void response(List<Message> returnNothing) {
-        Toast.makeText(this, ""+returnNothing.get(0).getId(), Toast.LENGTH_LONG).show();
-        finish();
+    private void response(List<Message> returnedMsg) {
+        Toast.makeText(this, ""+returnedMsg.get(0).getId(), Toast.LENGTH_LONG).show();
+//        finish();
+        // ================================================
+
+
+
     }
     public static Intent makeIntent(Context context, Long groupId){
         Intent intent = new Intent(context,SendMessage.class);

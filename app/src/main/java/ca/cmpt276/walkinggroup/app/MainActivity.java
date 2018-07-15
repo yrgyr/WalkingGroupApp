@@ -7,6 +7,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.media.Image;
+import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,6 +16,8 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -40,7 +44,6 @@ public class MainActivity extends AppCompatActivity {
     private int unreadCount = 0;
 
     private String name = "default";
-
     private CurrentUserData userSingleton = CurrentUserData.getSingletonInstance();
 
 
@@ -79,6 +82,8 @@ public class MainActivity extends AppCompatActivity {
         setupGetMonitorByBtn();
         setupCreateGroupButton();
 
+        setupImageBtn();
+
 
 
 
@@ -86,6 +91,17 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    private void setupImageBtn() {
+
+        ImageView myImg = (ImageView) findViewById(R.id.mailImage);
+        myImg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this,MsgToMe.class);
+                startActivity(intent);
+            }
+        });
+    }
 
 
     private void setUpName() {
