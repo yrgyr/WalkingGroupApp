@@ -24,6 +24,7 @@ import java.util.List;
 
 import ca.cmpt276.walkinggroup.dataobjects.CurrentUserData;
 import ca.cmpt276.walkinggroup.dataobjects.GpsLocation;
+import ca.cmpt276.walkinggroup.dataobjects.Group;
 import ca.cmpt276.walkinggroup.dataobjects.MapsFunctions;
 import ca.cmpt276.walkinggroup.dataobjects.User;
 import ca.cmpt276.walkinggroup.proxy.ProxyBuilder;
@@ -46,10 +47,13 @@ public class ParentsDashboard extends FragmentActivity implements OnMapReadyCall
     private WGServerProxy proxy = userSingleton.getCurrentProxy();
     private User currentUser = userSingleton.getCurrentUser();
     private List<User> monitorsUsers = currentUser.getMonitorsUsers();
+    private List<User> leaders = new ArrayList<>();  // leaders of groups in which my children are in
 
     // Map marker colours
-    private final float ACTIVE_MARKER_COLOUR = BitmapDescriptorFactory.HUE_GREEN;
-    private final float INACTIVE_MARKER_COLOUR = BitmapDescriptorFactory.HUE_ROSE;
+    private final float ACTIVE_CHILDREN_MARKER_COLOUR = BitmapDescriptorFactory.HUE_GREEN;
+    private final float ACTIVE_LEADERS_MARKER_COLOUR = BitmapDescriptorFactory.HUE_CYAN;
+    private final float INACTIVE_CHILDREN_MARKER_COLOUR = BitmapDescriptorFactory.HUE_RED;
+    private final float INACTIVE_LEADERS_MARKER_COLOUR = BitmapDescriptorFactory.HUE_ORANGE;
 
     // Code for handler: https://guides.codepath.com/android/Repeating-Periodic-Tasks
     private Handler handler = new Handler();
@@ -141,23 +145,52 @@ public class ParentsDashboard extends FragmentActivity implements OnMapReadyCall
     }
 
     private void populateLocationMarkers(){
+        // Populate children's markers
         for(int i = 0; i < monitorsUsers.size(); i++){
-            long userId = monitorsUsers.get(i).getId();
-            String userName = monitorsUsers.get(i).getName();
+            User user = monitorsUsers.get(i);
+            long userId = user.getId();
+            String userName = user.getName();
 
             Call<GpsLocation> caller = proxy.getLastGpsLocation(userId);
-            ProxyBuilder.callProxy(ParentsDashboard.this, caller, returnedGpsLocation -> addReturnedLocationMarker(returnedGpsLocation, userName));
+            ProxyBuilder.callProxy(ParentsDashboard.this, caller, returnedGpsLocation -> addReturnedLocationMarker(returnedGpsLocation, userName, true));
+
+            // get the group leaders of all the groups in which this user is a member of and add user to leaders list
+            List<Group> groups = user.getMemberOfGroups();
+
+            for(int j = 0; j < groups.size(); j++){
+                Group group = groups.get(j);
+                User leader = group.getLeader();
+
+                if (!leaders.contains(leader)){
+                    leaders.add(leader);
+                }
+            }
         }
+
+        // Populate group leaders' markers
+        for (int k = 0; k < leaders.size(); k++){
+            User leader = leaders.get(k);
+            long leaderId = leader.getId();
+            String leaderName = leader.getName();
+
+            Call<GpsLocation> caller = proxy.getLastGpsLocation(leaderId);
+            ProxyBuilder.callProxy(ParentsDashboard.this, caller, returnedGpsLocation -> addReturnedLocationMarker(returnedGpsLocation, leaderName, false));
+        }
+
     }
 
-    private void addReturnedLocationMarker(GpsLocation gpsLocation, String userName){
+    private void addReturnedLocationMarker(GpsLocation gpsLocation, String userName, boolean isChildren){
         // Todo: display inactive markers with different colour
         double lat = gpsLocation.getLat();
         double lng = gpsLocation.getLng();
         String time = gpsLocation.getTimestamp();
 
         String infoWindow = userName + "- " + "last updated: " + time;
-        MapsFunctions.addMarkerToMap(mMap, lat, lng, infoWindow, true, ACTIVE_MARKER_COLOUR);
+        if (isChildren) {
+            MapsFunctions.addMarkerToMap(mMap, lat, lng, infoWindow, true, ACTIVE_CHILDREN_MARKER_COLOUR);
+        } else {
+            MapsFunctions.addMarkerToMap(mMap, lat, lng, infoWindow, true, ACTIVE_LEADERS_MARKER_COLOUR);
+        }
     }
 
 }
