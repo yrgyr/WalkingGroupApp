@@ -1,5 +1,6 @@
 package ca.cmpt276.walkinggroup.app;
 
+import android.annotation.TargetApi;
 import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -13,6 +14,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -54,11 +58,19 @@ public class MsgToMe extends AppCompatActivity {
                 TextView tv = (TextView) view.findViewById(R.id.msg_item);
                 tv.setTypeface(Typeface.DEFAULT);
 
-//                Long msgID = all_Msgs.get(position).getId();
+                Long msgID = all_Msgs.get(position).getId();
+
+                Call<Message> caller = proxy.markMessageAsRead(msgID,true);
+                ProxyBuilder.callProxy(MsgToMe.this,caller, returnedMsg -> responseMarkedMsg(returnedMsg));
 
 
             }
         });
+
+    }
+
+    private void responseMarkedMsg(Message returnedMsg){
+
 
     }
     private void displayMsgs() {
@@ -71,6 +83,8 @@ public class MsgToMe extends AppCompatActivity {
 
         all_Msgs = returnedMsgs;
 
+
+        returnedMsgs.sort(Comparator.comparing(Message::getTimestamp).reversed());
         ListView msg_list = (ListView) findViewById(R.id.msgListView);
         ArrayAdapter<Message> adapter = new ArrayAdapter<Message>(this,R.layout.users_list,returnedMsgs){
 
@@ -86,11 +100,12 @@ public class MsgToMe extends AppCompatActivity {
 
                 Message currentMsg = returnedMsgs.get(position);
 
-
-
+                User from = currentMsg.getFromUser();
+                String fromName = from.getName();
 
                 Date timestamp = currentMsg.getTimestamp();
-                String display_msg = currentMsg.getText() + " \n" + timestamp ;
+
+                String display_msg = fromName + "\n" + currentMsg.getText() + " \n" + timestamp;
 
                 TextView tv = (TextView) itemView.findViewById(R.id.msg_item);
                 tv.setText(display_msg);
@@ -103,30 +118,5 @@ public class MsgToMe extends AppCompatActivity {
 
         };
         msg_list.setAdapter(adapter);
-
-
-//        for(int i =0; i < returnedMsgs.size();i++){
-//            Message THIS_MSG = returnedMsgs.get(i);
-//            if(THIS_MSG.isRead() == true){
-//                View v = msg_list.getChildAt(i - msg_list.getFirstVisiblePosition());
-//                if(v == null)
-//                    return;
-//                TextView tv = (TextView) v.findViewById(R.id.msg_item);
-//                tv.setTypeface(Typeface.DEFAULT);
-//
-//            }
-//
-//        }
-
-
     }
-//    private class Myadapter extends ArrayAdapter<String>{
-//
-//        public Myadapter(){
-//            super(MsgToMe.this,R.layout.users_list,messages);
-//
-//        }
-//
-
-//    }
 }

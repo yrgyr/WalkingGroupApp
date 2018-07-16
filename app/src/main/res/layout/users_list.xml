@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     android:textSize="22sp"
     android:textColor="@color/brown"
-    android:textStyle="bold">
+    android:textStyle="bold"
+    android:padding="10dp">
 
 </TextView>

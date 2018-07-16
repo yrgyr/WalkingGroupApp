@@ -86,9 +86,6 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-
-
-
     }
 
     private void setupImageBtn() {
@@ -117,25 +114,10 @@ public class MainActivity extends AppCompatActivity {
         name = user.getName();
         userSingleton.setCurrentUser(user);
         currentUser = user;
-        getMessageList();
+        getUnReadMessageList();
         Toast.makeText(this, getString(R.string.welcome) + " " + name, Toast.LENGTH_LONG).show();
 
     }
-//    private void setUpLogOut() {
-//        TextView logOut = findViewById(R.id.LogOutText);
-//        logOut.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);
-//        logOut.setTextColor(Color.BLUE);
-//
-//        logOut.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                isLogOut = true;
-//                Intent i = new Intent(MainActivity.this,login.class);
-//                startActivity(i);
-//                finish();
-//            }
-//        });
-//    }
 
     private void setupLogOutBtn(){
 
@@ -231,20 +213,15 @@ public class MainActivity extends AppCompatActivity {
         groupsList = returnedGroups;
     }
 
-    private void getMessageList() {
+    private void getUnReadMessageList() {
         if(login.getToken(MainActivity.this) != null) {
-            Call<List<Message>> caller = proxy.getMessages(currentUser.getId());
+            Call<List<Message>> caller = proxy.getUnreadMessages(currentUser.getId(),false);
             ProxyBuilder.callProxy(MainActivity.this,caller,messageReturn -> responseGetMessage(messageReturn));
         }
     }
     private void responseGetMessage (List<Message> messageReturn) {
-        messageList = messageReturn;
-        for(int i = 0; i < messageReturn.size(); i++){
-            if(!messageReturn.get(i).isRead()){
-                unreadCount++;
-            }
-        }
 
+        unreadCount = messageReturn.size();
         TextView textView = findViewById(R.id.userName);
         textView.setText(getString(R.string.welcome) + " " + name + ", " + getString(R.string.unreadCount,unreadCount));
 
