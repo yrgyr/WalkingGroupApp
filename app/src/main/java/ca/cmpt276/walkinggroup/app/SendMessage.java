@@ -53,10 +53,6 @@ public class SendMessage extends AppCompatActivity {
         setUpSendButton();
 
         extraDataFromIntent();
-
-
-
-
     }
 
     private void responseGetMessage (List<Message> messageReturn) {

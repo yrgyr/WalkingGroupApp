@@ -3,6 +3,7 @@ package ca.cmpt276.walkinggroup.app;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -15,6 +16,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -66,7 +68,7 @@ public class Join_Group extends AppCompatActivity {
         populateGroupMembersListView();
         setupActionBar();
 
-        setUpSendMessage();
+//        setUpSendMessage();
     }
 
 
@@ -76,6 +78,44 @@ public class Join_Group extends AppCompatActivity {
         Long leaderId = leader.getId();
         if(currentUser.getId().equals(leaderId)){
             isValid = true;
+            TableRow btnTR = (TableRow) findViewById(R.id.btnsTableRow);
+
+            // ================ first button ===========================
+            Button sendMsgToWholeGroupBtn = new Button(this);
+            sendMsgToWholeGroupBtn.setText("Send Message");
+            sendMsgToWholeGroupBtn.setTypeface(Typeface.DEFAULT_BOLD);
+//            sendMsgToWholeGroupBtn.setBackgroundResource(R.color.lightorange);
+
+            sendMsgToWholeGroupBtn.setTextSize(15);
+            sendMsgToWholeGroupBtn.setLayoutParams(new TableRow.LayoutParams(
+                    TableRow.LayoutParams.MATCH_PARENT,
+                    TableRow.LayoutParams.MATCH_PARENT,
+                    1.0f));
+            sendMsgToWholeGroupBtn.setPadding(0,0,0,0);
+
+            sendMsgToWholeGroupBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = SendMessage.makeIntent(Join_Group.this, grpId);
+                    startActivity(intent);
+                }
+            });
+
+            btnTR.addView(sendMsgToWholeGroupBtn);
+
+
+            // ================= second button ==========================
+            Button toParentBtn = new Button(this);
+            toParentBtn.setText("To Parent");
+            toParentBtn.setTypeface(Typeface.DEFAULT_BOLD);
+//            toParentBtn.setBackgroundResource(R.color.lightorange);
+            toParentBtn.setLayoutParams(new TableRow.LayoutParams(
+                    TableRow.LayoutParams.MATCH_PARENT,
+                    TableRow.LayoutParams.MATCH_PARENT,
+                    1.0f));
+            toParentBtn.setPadding(0,0,0,0);
+
+            btnTR.addView(toParentBtn);
         }
         validUser.add(leaderId);
         for(int i = 0; i < groupMembers.size(); i++)
@@ -402,16 +442,16 @@ public class Join_Group extends AppCompatActivity {
     }
 
 
-    private void setUpSendMessage() {
-        Button btn = findViewById(R.id.messageBtn);
-        btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = SendMessage.makeIntent(Join_Group.this, grpId);
-                startActivity(intent);
-            }
-        });
-
-    }
+//    private void setUpSendMessage() {
+//        Button btn = findViewById(R.id.messageBtn);
+//        btn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = SendMessage.makeIntent(Join_Group.this, grpId);
+//                startActivity(intent);
+//            }
+//        });
+//
+//    }
 
 }

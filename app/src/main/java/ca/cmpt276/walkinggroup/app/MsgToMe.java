@@ -86,7 +86,7 @@ public class MsgToMe extends AppCompatActivity {
 
         returnedMsgs.sort(Comparator.comparing(Message::getTimestamp).reversed());
         ListView msg_list = (ListView) findViewById(R.id.msgListView);
-        ArrayAdapter<Message> adapter = new ArrayAdapter<Message>(this,R.layout.users_list,returnedMsgs){
+        ArrayAdapter<Message> adapter = new ArrayAdapter<Message>(this,R.layout.msg_list,returnedMsgs){
 
 
             @NonNull
@@ -95,7 +95,7 @@ public class MsgToMe extends AppCompatActivity {
 
                 View itemView = convertView;
                 if(itemView == null){
-                    itemView = getLayoutInflater().inflate(R.layout.users_list,parent,false);
+                    itemView = getLayoutInflater().inflate(R.layout.msg_list,parent,false);
                 }
 
                 Message currentMsg = returnedMsgs.get(position);
