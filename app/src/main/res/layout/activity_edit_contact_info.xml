@@ -6,4 +6,7 @@
     android:layout_height="match_parent"
     tools:context="ca.cmpt276.walkinggroup.app.EditContactInfo">
 
+
+
+
 </android.support.constraint.ConstraintLayout>

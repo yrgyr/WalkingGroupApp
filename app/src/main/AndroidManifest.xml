@@ -61,7 +61,9 @@
         <activity
             android:name=".ParentsDashboard"
             android:label="@string/title_activity_parents_dashboard" />
-        <activity android:name=".SendMessage"></activity>
+        <activity android:name=".SendMessage" />
+        <activity android:name=".ParentInfo" />
+        <activity android:name=".parentInfoList"></activity>
     </application>
 
 </manifest>

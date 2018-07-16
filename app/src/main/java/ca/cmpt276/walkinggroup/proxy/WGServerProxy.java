@@ -27,6 +27,8 @@ public interface WGServerProxy {
     @POST("/login")
     Call<Void> login(@Body User userWithEmailAndPassword);
 
+
+
     @GET("/users")
     Call<List<User>> getUsers();
 

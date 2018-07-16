@@ -70,7 +70,14 @@ public class MainActivity extends AppCompatActivity {
         setupMapBtn();
         setupGetMonitorByBtn();
         setupCreateGroupButton();
+
+
+
+
+
+
     }
+
 
     private void setUpName() {
         String email = login.getEmail(MainActivity.this);
