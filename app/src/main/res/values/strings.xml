@@ -84,6 +84,15 @@
     <string name="empt_group_name_toast_msg">Group name can not be empty</string>
     <string name="create_group_success_toast_msg">Create group successfully ,Server replied with group ID:</string>
     <string name="title_activity_parents_dashboard">Map</string>
+    <string name="menu_start_uploading">Start uploading</string>
+    <string name="menu_stop_uploading">Stop uploading</string>
+
+    <!-- MapsActivity -->
+    <string name="btn_start_uploading"> Start uploading</string>
+    <string name="btn_stop_uploading">Stop uploading</string>
+    <string name="menu_start_walking">Start walking with this group</string>
+    <string name="btn_open_dashboard">Open dashboard</string>
+    <string name="btn_panic">PANIC</string>
     <string name="new_name">New Name</string>
     <string name="your_name">your name</string>
     <string name="email">Email</string>
