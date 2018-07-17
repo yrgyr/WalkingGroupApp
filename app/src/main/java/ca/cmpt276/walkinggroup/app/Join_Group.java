@@ -30,7 +30,6 @@ import ca.cmpt276.walkinggroup.proxy.ProxyBuilder;
 import ca.cmpt276.walkinggroup.proxy.WGServerProxy;
 import retrofit2.Call;
 
-import static ca.cmpt276.walkinggroup.app.MapsActivity.groupSelected;
 
 public class Join_Group extends AppCompatActivity {
     private CurrentUserData userSingleton = CurrentUserData.getSingletonInstance();
