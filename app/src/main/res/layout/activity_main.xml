@@ -59,7 +59,7 @@
     <Button
         android:id="@+id/getMonitorByBtn"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="58dp"
         android:layout_marginBottom="14dp"
         android:background="@drawable/button_style"
         android:fontFamily="casual"
@@ -88,8 +88,8 @@
 
     <TextView
         android:id="@+id/userName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="300dp"
+        android:layout_height="80dp"
         android:layout_marginBottom="3dp"
         android:fontFamily="casual"
         android:lineSpacingExtra="24sp"
@@ -98,7 +98,7 @@
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/addUsers"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.501"
+        app:layout_constraintHorizontal_bias="0.414"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_chainStyle="packed" />

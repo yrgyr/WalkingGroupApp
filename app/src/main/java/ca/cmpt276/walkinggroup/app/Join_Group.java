@@ -3,6 +3,7 @@ package ca.cmpt276.walkinggroup.app;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -76,15 +77,18 @@ public class Join_Group extends AppCompatActivity {
     private void setUpValidUserCanCheckInfo() {
         User leader = groupSelected.getLeader();
         Long leaderId = leader.getId();
+
+
+
         if(currentUser.getId().equals(leaderId)){
             isValid = true;
-            TableRow btnTR = (TableRow) findViewById(R.id.btnsTableRow);
+            TableRow tableRowBtns = (TableRow) findViewById(R.id.btnsTableRow);
 
             // ================ first button ===========================
             Button sendMsgToWholeGroupBtn = new Button(this);
-            sendMsgToWholeGroupBtn.setText("Send Message");
+            sendMsgToWholeGroupBtn.setText("Send Message To Group Members \n and their parents");
             sendMsgToWholeGroupBtn.setTypeface(Typeface.DEFAULT_BOLD);
-//            sendMsgToWholeGroupBtn.setBackgroundResource(R.color.lightorange);
+            sendMsgToWholeGroupBtn.setBackgroundResource(R.drawable.button_style);
 
             sendMsgToWholeGroupBtn.setTextSize(15);
             sendMsgToWholeGroupBtn.setLayoutParams(new TableRow.LayoutParams(
@@ -97,27 +101,25 @@ public class Join_Group extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     Intent intent = SendMessage.makeIntent(Join_Group.this, grpId);
+                    intent.putExtra("case1",888);
                     startActivity(intent);
                 }
             });
 
-            btnTR.addView(sendMsgToWholeGroupBtn);
+            tableRowBtns.addView(sendMsgToWholeGroupBtn);
 
-
-            // ================= second button ==========================
-            Button toParentBtn = new Button(this);
-            toParentBtn.setText("To Parent");
-            toParentBtn.setTypeface(Typeface.DEFAULT_BOLD);
-//            toParentBtn.setBackgroundResource(R.color.lightorange);
-            toParentBtn.setLayoutParams(new TableRow.LayoutParams(
-                    TableRow.LayoutParams.MATCH_PARENT,
-                    TableRow.LayoutParams.MATCH_PARENT,
-                    1.0f));
-            toParentBtn.setPadding(0,0,0,0);
-
-            btnTR.addView(toParentBtn);
         }
-        validUser.add(leaderId);
+
+
+        // ======================================
+//        validUser.add(leaderId);
+
+
+        //
+
+
+        // validUser is groupmember
+
         for(int i = 0; i < groupMembers.size(); i++)
         {
             User memberUser = groupMembers.get(i);
@@ -126,27 +128,75 @@ public class Join_Group extends AppCompatActivity {
             if(currentUser.getId().equals(memberId)){
                 isValid = true;
             }
-            Call<List<User>> caller = proxy.getMonitoredByUsers(memberId);
+//            Call<List<User>> caller = proxy.getMonitoredByUsers(memberId);
+//
+//            ProxyBuilder.callProxy(this, caller, returnedUsers -> response(returnedUsers));
 
-            ProxyBuilder.callProxy(this, caller, returnedUsers -> response(returnedUsers));
 
+        }
+
+        if(validUser.contains(currentUserId)){
+
+
+            TableRow btns = (TableRow) findViewById(R.id.btnsTableRow);
+
+            // ================= first button ==========================
+            Button toParentBtn = new Button(this);
+            toParentBtn.setText("Panic");
+            toParentBtn.setTypeface(Typeface.DEFAULT_BOLD);
+            toParentBtn.setLayoutParams(new TableRow.LayoutParams(
+                    TableRow.LayoutParams.MATCH_PARENT,
+                    TableRow.LayoutParams.MATCH_PARENT,
+                    1.0f));
+            toParentBtn.setPadding(0,0,0,0);
+
+            toParentBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = SendMessage.makeIntent(Join_Group.this,grpId);
+                    intent.putExtra("case2",666);
+                    startActivity(intent);
+                }
+            });
+            btns.addView(toParentBtn);
+
+//            // ===================== second button ================================
+//
+            Button NonEmergencyBtn = new Button(this);
+            NonEmergencyBtn.setText("Non Emergency msg \n To Parent");
+            NonEmergencyBtn.setTypeface(Typeface.DEFAULT_BOLD);
+            NonEmergencyBtn.setLayoutParams(new TableRow.LayoutParams(
+                    TableRow.LayoutParams.MATCH_PARENT,
+                    TableRow.LayoutParams.MATCH_PARENT,
+                    1.0f));
+            NonEmergencyBtn.setPadding(0,0,0,0);
+
+            NonEmergencyBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = SendMessage.makeIntent(Join_Group.this,grpId);
+                    intent.putExtra("case3",555);
+                    startActivity(intent);
+                }
+            });
+            btns.addView(NonEmergencyBtn);
 
         }
 
     }
 
-    private void response(List<User> returnedUsers) {
-        for(int i =0; i < returnedUsers.size();i++){
-            User memberUser = returnedUsers.get(i);
-            Long memberId = memberUser.getId();
-            validUser.add(memberId);
-            if(currentUser.getId().equals(memberId)){
-                isValid = true;
-            }
-        }
-
-
-    }
+//    private void response(List<User> returnedUsers) {
+//        for(int i =0; i < returnedUsers.size();i++){
+//            User memberUser = returnedUsers.get(i);
+//            Long memberId = memberUser.getId();
+//            validUser.add(memberId);
+//            if(currentUser.getId().equals(memberId)){
+//                isValid = true;
+//            }
+//        }
+//
+//
+//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

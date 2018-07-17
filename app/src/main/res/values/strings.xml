@@ -112,5 +112,5 @@
     <string name="cell_phone">CELL PHONE</string>
     <string name="cantAccess">Sorry, you can not access the parents\' information of this group.</string>
     <string name="send_message">Send Message</string>
-    <string name="unreadCount">You have %d unread messages</string>
+    <string name="unreadCount"> \n You have %d unread messages</string>
 </resources>

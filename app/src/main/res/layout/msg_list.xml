@@ -4,7 +4,7 @@
     android:layout_width="365dp"
     android:layout_height="100dp"
     android:padding="10dp"
-    android:textColor="@color/brown"
+    android:textColor="@color/colorPrimaryDark"
     android:textSize="22sp"
     android:textStyle="bold">
 
