@@ -146,35 +146,37 @@ public class ParentsDashboard extends FragmentActivity implements OnMapReadyCall
 
     private void populateLocationMarkers(){
         // Populate children's markers
-        for(int i = 0; i < monitorsUsers.size(); i++){
-            User user = monitorsUsers.get(i);
-            long userId = user.getId();
-            String userName = user.getName();
+        if (monitorsUsers.size() > 0) {
+            for (int i = 0; i < monitorsUsers.size(); i++) {
+                User user = monitorsUsers.get(i);
+                long userId = user.getId();
+                String userName = user.getName();
 
-            Call<GpsLocation> caller = proxy.getLastGpsLocation(userId);
-            ProxyBuilder.callProxy(ParentsDashboard.this, caller, returnedGpsLocation -> addReturnedLocationMarker(returnedGpsLocation, userName, true));
+                Call<GpsLocation> caller = proxy.getLastGpsLocation(userId);
+                ProxyBuilder.callProxy(ParentsDashboard.this, caller, returnedGpsLocation -> addReturnedLocationMarker(returnedGpsLocation, userName, true));
 
-            // get the group leaders of all the groups in which this user is a member of and add user to leaders list
-            List<Group> groups = user.getMemberOfGroups();
+                // get the group leaders of all the groups in which this user is a member of and add user to leaders list
+                List<Group> groups = user.getMemberOfGroups();
 
-            for(int j = 0; j < groups.size(); j++){
-                Group group = groups.get(j);
-                User leader = group.getLeader();
+                for (int j = 0; j < groups.size(); j++) {
+                    Group group = groups.get(j);
+                    User leader = group.getLeader();
 
-                if (!leaders.contains(leader)){
-                    leaders.add(leader);
+                    if (!leaders.contains(leader)) {
+                        leaders.add(leader);
+                    }
                 }
             }
-        }
 
-        // Populate group leaders' markers
-        for (int k = 0; k < leaders.size(); k++){
-            User leader = leaders.get(k);
-            long leaderId = leader.getId();
-            String leaderName = leader.getName();
+            // Populate group leaders' markers
+            for (int k = 0; k < leaders.size(); k++) {
+                User leader = leaders.get(k);
+                long leaderId = leader.getId();
+                String leaderName = leader.getName();
 
-            Call<GpsLocation> caller = proxy.getLastGpsLocation(leaderId);
-            ProxyBuilder.callProxy(ParentsDashboard.this, caller, returnedGpsLocation -> addReturnedLocationMarker(returnedGpsLocation, leaderName, false));
+                Call<GpsLocation> caller = proxy.getLastGpsLocation(leaderId);
+                ProxyBuilder.callProxy(ParentsDashboard.this, caller, returnedGpsLocation -> addReturnedLocationMarker(returnedGpsLocation, leaderName, false));
+            }
         }
 
     }
