@@ -87,12 +87,7 @@
     <string name="menu_start_uploading">Start uploading</string>
     <string name="menu_stop_uploading">Stop uploading</string>
 
-    <!-- MapsActivity -->
-    <string name="btn_start_uploading"> Start uploading</string>
-    <string name="btn_stop_uploading">Stop uploading</string>
-    <string name="menu_start_walking">Start walking with this group</string>
-    <string name="btn_open_dashboard">Open dashboard</string>
-    <string name="btn_panic">PANIC</string>
+    <!-- User contact infos -->
     <string name="new_name">New Name</string>
     <string name="your_name">your name</string>
     <string name="email">Email</string>
@@ -120,4 +115,11 @@
     <string name="birthday">BirthDay</string>
     <string name="cell_phone">CELL PHONE</string>
     <string name="cantAccess">Sorry, you can not access the parents\' information of this group.</string>
+
+    <!-- MapsActivity -->
+    <string name="btn_start_uploading"> Start uploading</string>
+    <string name="btn_stop_uploading">Stop uploading</string>
+    <string name="menu_start_walking">Start walking with this group</string>
+    <string name="btn_open_dashboard">Open dashboard</string>
+    <string name="btn_panic">PANIC</string>
 </resources>
