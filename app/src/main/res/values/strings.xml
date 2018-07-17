@@ -109,4 +109,5 @@
     <string name="edit_user">EDIT USER</string>
     <string name="users_you_are_monitoring_long_click_to_delete_single_click_to_edit">Users you are monitoring (*long click to delete *single click to edit)</string>
     <string name="edit_this_user_info">Edit this user info</string>
+    <string name="edit_user_detail">Edit User Detail</string>
 </resources>
