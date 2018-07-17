@@ -55,8 +55,7 @@ public class EditContactInfo extends AppCompatActivity {
     //Get the new info from the fields
 
     private void setUpdatedInfo() {
-        //if need to set the field = null then use this late....
-        //if(user.getName()!=null){user.setName("");}
+
         updateName=findViewById(R.id.updateName);
         updateName.setText(user.getName());
 

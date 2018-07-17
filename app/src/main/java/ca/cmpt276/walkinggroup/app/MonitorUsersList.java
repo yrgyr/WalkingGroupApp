@@ -3,6 +3,7 @@ package ca.cmpt276.walkinggroup.app;
 import android.app.AlertDialog;
 import android.app.FragmentManager;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -96,16 +97,15 @@ public class MonitorUsersList extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-
-
-
                 android.support.v4.app.FragmentManager manager=getSupportFragmentManager();
                 MessageFragment dialog=new MessageFragment();
                 dialog.show(manager,"MessageDialog");
 
 
+
             }
         });
+
     }
 
 
