@@ -2,8 +2,10 @@ package ca.cmpt276.walkinggroup.app;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.location.Location;
 import android.location.LocationManager;
 import android.os.Handler;
+import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
@@ -177,14 +179,14 @@ public class ParentsDashboard extends FragmentActivity implements OnMapReadyCall
             }
 
             // Populate group leaders' markers
-            for (int k = 0; k < leaders.size(); k++) {
-                User leader = leaders.get(k);
-                long leaderId = leader.getId();
-                String leaderName = leader.getName();
-
-                Call<GpsLocation> caller = proxy.getLastGpsLocation(leaderId);
-                ProxyBuilder.callProxy(ParentsDashboard.this, caller, returnedGpsLocation -> addReturnedLocationMarker(returnedGpsLocation, leaderName, false));
-            }
+//            for (int k = 0; k < leaders.size(); k++) {
+//                User leader = leaders.get(k);
+//                long leaderId = leader.getId();
+//                String leaderName = leader.getName();
+//
+//                Call<GpsLocation> caller = proxy.getLastGpsLocation(leaderId);
+//                ProxyBuilder.callProxy(ParentsDashboard.this, caller, returnedGpsLocation -> addReturnedLocationMarker(returnedGpsLocation, leaderName, false));
+//            }
         }
 
     }
@@ -196,58 +198,24 @@ public class ParentsDashboard extends FragmentActivity implements OnMapReadyCall
         double lat = gpsLocation.getLat();
         double lng = gpsLocation.getLng();
         String time = gpsLocation.getTimestamp();
-
-
+        long l;
 
         //finding time diff starts..
+        try {
+            l = Long.parseLong(time);
+        }catch (NumberFormatException e){}
 
-        SimpleDateFormat format=new SimpleDateFormat("yy/MM/dd HH:mm:ss");
+        //long sysTime=SystemClock.elapsedRealtimeNanos();
 
-        if(a==0){
-            if(b==0){
-                String time2=gpsLocation.getTimestamp();
-                Date d1 = null;
-                Date d2 = null;
-                try {
-                    d1 = format.parse(time);
-                    d2 = format.parse(time2);
-                } catch (ParseException e) {
-                }
-
-                long diff = d2.getTime() - d1.getTime();
-                //diff in seconds
-                long DiffSecond = diff / 1000;
-                timeGlobal=time2;
-                b++;
-                infoWindow = userName + "- " + "last updated: " + DiffSecond+"seconds ago";
-            }
-            if(b!=0){
-                time=timeGlobal;
-                String time2=gpsLocation.getTimestamp();
-                Date d1 = null;
-                Date d2 = null;
-                try {
-                    d1 = format.parse(time);
-                    d2 = format.parse(time2);
-                } catch (ParseException e) {
-                }
-
-                long diff = d2.getTime() - d1.getTime();
-                //diff in seconds
-                long DiffSecond = diff / 1000;
-                infoWindow = userName + "- " + "last updated: " + DiffSecond+"seconds ago";
-                timeGlobal=time2;
+        //long resTime=(sysTime-l)/ 1000000;
+        String infoWindow = userName + "- " + "last updated: " + l+"sec ago";
 
 
-            }
-        }
+
 
 
 
         //finding time diff ends..
-
-
-
 
 
         //String infoWindow = userName + "- " + "last updated: " + time;
