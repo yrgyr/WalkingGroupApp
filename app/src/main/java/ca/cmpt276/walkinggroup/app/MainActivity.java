@@ -84,6 +84,8 @@ public class MainActivity extends AppCompatActivity {
 
         setupImageBtn();
 
+        setupPanicBtn();
+
 
 
     }
@@ -227,5 +229,20 @@ public class MainActivity extends AppCompatActivity {
 
         //TextView textView = findViewById(R.id.unreadCount);
         //textView.setText(getString(R.string.unreadCount,unreadCount));
+    }
+
+
+
+    private void setupPanicBtn(){
+
+        Button btn = (Button) findViewById(R.id.panicBtn);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this,SendMessage.class);
+                intent.putExtra("case2",666);
+                startActivity(intent);
+            }
+        });
     }
 }

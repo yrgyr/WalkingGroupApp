@@ -14,6 +14,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import java.sql.DatabaseMetaData;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -102,8 +103,19 @@ public class MsgToMe extends AppCompatActivity {
 
         all_Msgs = returnedMsgs;
 
+        Collections.sort(returnedMsgs, new Comparator<Message>() {
+            @Override
+            public int compare(Message o1, Message o2) {
+                return o1.getTimestamp().compareTo(o2.getTimestamp());
+            }
+        });
 
-        returnedMsgs.sort(Comparator.comparing(Message::getTimestamp).reversed());
+
+        Collections.reverse(returnedMsgs);
+
+
+
+//        returnedMsgs.sort(Comparator.comparing(Message::getTimestamp).reversed());
 
         ListView msg_list = (ListView) findViewById(R.id.msgListView);
         ArrayAdapter<Message> adapter = new ArrayAdapter<Message>(this,R.layout.msg_list,returnedMsgs){
@@ -113,16 +125,12 @@ public class MsgToMe extends AppCompatActivity {
             @Override
             public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
 
-                View itemView = convertView;
-                if(itemView == null){
-                    itemView = getLayoutInflater().inflate(R.layout.msg_list,parent,false);
+//                View convertView = convertView;
+                if(convertView == null){
+                    convertView = getLayoutInflater().inflate(R.layout.msg_list,parent,false);
                 }
 
-
-
                 Message currentMsg = returnedMsgs.get(position);
-
-
 
                 User from = currentMsg.getFromUser();
 
@@ -135,13 +143,13 @@ public class MsgToMe extends AppCompatActivity {
 
                 String display_msg = fromName + "\n" + currentMsg.getText() + " \n" + time;
 
-                TextView fromWhomTv = (TextView) itemView.findViewById(R.id.fromWhom);
+                TextView fromWhomTv = (TextView) convertView.findViewById(R.id.fromWhom);
                 fromWhomTv.setText("From: "+fromName);
 
-                TextView timeTv = (TextView) itemView.findViewById(R.id.timeSent);
+                TextView timeTv = (TextView) convertView.findViewById(R.id.timeSent);
                 timeTv.setText(displayTime);
 
-                TextView contentTv = (TextView) itemView.findViewById(R.id.msgContent);
+                TextView contentTv = (TextView) convertView.findViewById(R.id.msgContent);
                 contentTv.setText(currentMsg.getText());
 
 
@@ -152,9 +160,20 @@ public class MsgToMe extends AppCompatActivity {
                 }
                 if(currentMsg.isEmergency()){
 
-                    itemView.setBackgroundResource(R.color.lightorange);
+                    convertView.setBackgroundResource(R.color.lightorange);
                 }
-                return itemView;
+                return convertView;
+            }
+            @Override
+            public int getViewTypeCount() {
+
+                return getCount();
+            }
+
+            @Override
+            public int getItemViewType(int position) {
+
+                return position;
             }
 
         };
