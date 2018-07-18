@@ -70,15 +70,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /* =======================================================================================
-                This Activity is the app's main menu
-                ====================================================================================
-            */
+        This Activity is the app's main menu
+        ====================================================================================
+    */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-
 
         if(login.getToken(this) == null) {
             Intent intent = new Intent(this, login.class);
@@ -93,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
         setUpName();
 //        setUpLogOut();
 
-        //setupLogOutBtn();
+        setupLogOutBtn();
         getRemoteGroups();
 
 
@@ -102,21 +100,7 @@ public class MainActivity extends AppCompatActivity {
         setupMapBtn();
         setupGetMonitorByBtn();
         setupCreateGroupButton();
-        //editInfoButton();
-
     }
-
-
-   /* private void editInfoButton() {
-        Button editInfoBtn=(Button) findViewById(R.id.editInfoBtn);
-        editInfoBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent=new Intent(MainActivity.this,EditContactInfo.class);
-                startActivity(intent);
-            }
-        });
-    }*/
 
     private void setUpName() {
         String email = login.getEmail(MainActivity.this);
@@ -139,9 +123,23 @@ public class MainActivity extends AppCompatActivity {
         updateUI();
 
     }
+//    private void setUpLogOut() {
+//        TextView logOut = findViewById(R.id.LogOutText);
+//        logOut.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);
+//        logOut.setTextColor(Color.BLUE);
+//
+//        logOut.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                isLogOut = true;
+//                Intent i = new Intent(MainActivity.this,login.class);
+//                startActivity(i);
+//                finish();
+//            }
+//        });
+//    }
 
-
-   /* private void setupLogOutBtn(){
+    private void setupLogOutBtn(){
 
         Button btn = (Button) findViewById(R.id.logOutBtn);
         btn.setOnClickListener(new View.OnClickListener() {
@@ -154,7 +152,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-    }*/
+    }
 
 
     private void setupGetMonitorByBtn() {
