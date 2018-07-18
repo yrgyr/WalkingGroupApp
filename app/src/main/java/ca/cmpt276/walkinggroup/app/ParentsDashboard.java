@@ -19,8 +19,12 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import ca.cmpt276.walkinggroup.dataobjects.CurrentUserData;
 import ca.cmpt276.walkinggroup.dataobjects.GpsLocation;
@@ -54,6 +58,10 @@ public class ParentsDashboard extends FragmentActivity implements OnMapReadyCall
     private final float ACTIVE_LEADERS_MARKER_COLOUR = BitmapDescriptorFactory.HUE_CYAN;
     private final float INACTIVE_CHILDREN_MARKER_COLOUR = BitmapDescriptorFactory.HUE_RED;
     private final float INACTIVE_LEADERS_MARKER_COLOUR = BitmapDescriptorFactory.HUE_ORANGE;
+    private String timeGlobal;
+    private String infoWindow;
+    private int a=0;
+    private int b=0;
 
     // Code for handler: https://guides.codepath.com/android/Repeating-Periodic-Tasks
     private Handler handler = new Handler();
@@ -183,11 +191,66 @@ public class ParentsDashboard extends FragmentActivity implements OnMapReadyCall
 
     private void addReturnedLocationMarker(GpsLocation gpsLocation, String userName, boolean isChildren){
         // Todo: display inactive markers with different colour
+
+
         double lat = gpsLocation.getLat();
         double lng = gpsLocation.getLng();
         String time = gpsLocation.getTimestamp();
 
-        String infoWindow = userName + "- " + "last updated: " + time;
+
+
+        //finding time diff starts..
+
+        SimpleDateFormat format=new SimpleDateFormat("yy/MM/dd HH:mm:ss");
+
+        if(a==0){
+            if(b==0){
+                String time2=gpsLocation.getTimestamp();
+                Date d1 = null;
+                Date d2 = null;
+                try {
+                    d1 = format.parse(time);
+                    d2 = format.parse(time2);
+                } catch (ParseException e) {
+                }
+
+                long diff = d2.getTime() - d1.getTime();
+                //diff in seconds
+                long DiffSecond = diff / 1000;
+                timeGlobal=time2;
+                b++;
+                infoWindow = userName + "- " + "last updated: " + DiffSecond+"seconds ago";
+            }
+            if(b!=0){
+                time=timeGlobal;
+                String time2=gpsLocation.getTimestamp();
+                Date d1 = null;
+                Date d2 = null;
+                try {
+                    d1 = format.parse(time);
+                    d2 = format.parse(time2);
+                } catch (ParseException e) {
+                }
+
+                long diff = d2.getTime() - d1.getTime();
+                //diff in seconds
+                long DiffSecond = diff / 1000;
+                infoWindow = userName + "- " + "last updated: " + DiffSecond+"seconds ago";
+                timeGlobal=time2;
+
+
+            }
+        }
+
+
+
+        //finding time diff ends..
+
+
+
+
+
+        //String infoWindow = userName + "- " + "last updated: " + time;
         if (isChildren) {
             MapsFunctions.addMarkerToMap(mMap, lat, lng, infoWindow, true, ACTIVE_CHILDREN_MARKER_COLOUR);
         } else {
