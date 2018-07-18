@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Paint;
 import android.graphics.Typeface;
+import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -16,7 +17,9 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -78,11 +81,17 @@ public class Join_Group extends AppCompatActivity {
         User leader = groupSelected.getLeader();
         Long leaderId = leader.getId();
 
+        TableRow btns = (TableRow) findViewById(R.id.btnsTableRow);
+        TableRow.LayoutParams params = new TableRow.LayoutParams(
+                TableRow.LayoutParams.MATCH_PARENT,
+                TableRow.LayoutParams.MATCH_PARENT,
+                1.0f);
+        params.setMargins(15,10,15,10);
 
 
         if(currentUser.getId().equals(leaderId)){
             isValid = true;
-            TableRow tableRowBtns = (TableRow) findViewById(R.id.btnsTableRow);
+
 
             // ================ first button ===========================
             Button sendMsgToWholeGroupBtn = new Button(this);
@@ -106,19 +115,9 @@ public class Join_Group extends AppCompatActivity {
                 }
             });
 
-            tableRowBtns.addView(sendMsgToWholeGroupBtn);
+            btns.addView(sendMsgToWholeGroupBtn);
 
         }
-
-
-        // ======================================
-//        validUser.add(leaderId);
-
-
-        //
-
-
-        // validUser is groupmember
 
         for(int i = 0; i < groupMembers.size(); i++)
         {
@@ -137,18 +136,16 @@ public class Join_Group extends AppCompatActivity {
 
         if(validUser.contains(currentUserId)){
 
-
-            TableRow btns = (TableRow) findViewById(R.id.btnsTableRow);
-
             // ================= first button ==========================
             Button toParentBtn = new Button(this);
             toParentBtn.setText("Panic");
             toParentBtn.setTypeface(Typeface.DEFAULT_BOLD);
-            toParentBtn.setLayoutParams(new TableRow.LayoutParams(
-                    TableRow.LayoutParams.MATCH_PARENT,
-                    TableRow.LayoutParams.MATCH_PARENT,
-                    1.0f));
+
+            toParentBtn.setLayoutParams(params);
             toParentBtn.setPadding(0,0,0,0);
+            toParentBtn.setBackgroundResource(R.drawable.button_style);
+
+
 
             toParentBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -165,11 +162,12 @@ public class Join_Group extends AppCompatActivity {
             Button NonEmergencyBtn = new Button(this);
             NonEmergencyBtn.setText("Non Emergency msg \n To Parent");
             NonEmergencyBtn.setTypeface(Typeface.DEFAULT_BOLD);
-            NonEmergencyBtn.setLayoutParams(new TableRow.LayoutParams(
-                    TableRow.LayoutParams.MATCH_PARENT,
-                    TableRow.LayoutParams.MATCH_PARENT,
-                    1.0f));
+
+
+            NonEmergencyBtn.setLayoutParams(params);
             NonEmergencyBtn.setPadding(0,0,0,0);
+            NonEmergencyBtn.setBackgroundResource(R.drawable.button_style);
+
 
             NonEmergencyBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
