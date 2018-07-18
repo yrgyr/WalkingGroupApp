@@ -1,6 +1,7 @@
 package ca.cmpt276.walkinggroup.app;
 
 import android.annotation.TargetApi;
+import android.app.AlertDialog;
 import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -55,10 +56,28 @@ public class MsgToMe extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                TextView tv = (TextView) view.findViewById(R.id.msg_item);
+                TextView tv = (TextView) view.findViewById(R.id.timeSent);
                 tv.setTypeface(Typeface.DEFAULT);
 
+                TextView tv2 = (TextView) view.findViewById(R.id.msgContent);
+                tv2.setTypeface(Typeface.DEFAULT);
+
+                TextView tv3 = (TextView) view.findViewById(R.id.fromWhom);
+                tv3.setTypeface(Typeface.DEFAULT);
+
+
                 Long msgID = all_Msgs.get(position).getId();
+                String content = all_Msgs.get(position).getText();
+
+                AlertDialog.Builder alertBuilder = new AlertDialog.Builder(MsgToMe.this);
+                alertBuilder.setTitle("message content");
+
+
+                alertBuilder.setMessage(content);
+                AlertDialog aDialog = alertBuilder.create();
+                aDialog.show();
+
+
 
                 Call<Message> caller = proxy.markMessageAsRead(msgID,true);
                 ProxyBuilder.callProxy(MsgToMe.this,caller, returnedMsg -> responseMarkedMsg(returnedMsg));
@@ -99,20 +118,41 @@ public class MsgToMe extends AppCompatActivity {
                     itemView = getLayoutInflater().inflate(R.layout.msg_list,parent,false);
                 }
 
+
+
                 Message currentMsg = returnedMsgs.get(position);
 
+
+
                 User from = currentMsg.getFromUser();
+
                 String fromName = from.getName();
-
                 Date timestamp = currentMsg.getTimestamp();
+                String time = timestamp.toString().substring(11,19);
+                String day = timestamp.toString().substring(4,10);
+                String displayTime = time + " , " + day;
 
-                String display_msg = fromName + "\n" + currentMsg.getText() + " \n" + timestamp;
 
-                TextView tv = (TextView) itemView.findViewById(R.id.msg_item);
-                tv.setText(display_msg);
+                String display_msg = fromName + "\n" + currentMsg.getText() + " \n" + time;
+
+                TextView fromWhomTv = (TextView) itemView.findViewById(R.id.fromWhom);
+                fromWhomTv.setText("From: "+fromName);
+
+                TextView timeTv = (TextView) itemView.findViewById(R.id.timeSent);
+                timeTv.setText(displayTime);
+
+                TextView contentTv = (TextView) itemView.findViewById(R.id.msgContent);
+                contentTv.setText(currentMsg.getText());
+
 
                 if(currentMsg.isRead()){
-                    tv.setTypeface(Typeface.DEFAULT);
+                    fromWhomTv.setTypeface(Typeface.DEFAULT);
+                    timeTv.setTypeface(Typeface.DEFAULT);
+                    contentTv.setTypeface(Typeface.DEFAULT);
+                }
+                if(currentMsg.isEmergency()){
+
+                    itemView.setBackgroundResource(R.color.lightorange);
                 }
                 return itemView;
             }

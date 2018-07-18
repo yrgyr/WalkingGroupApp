@@ -100,10 +100,7 @@ public class Join_Group extends AppCompatActivity {
             sendMsgToWholeGroupBtn.setBackgroundResource(R.drawable.button_style);
 
             sendMsgToWholeGroupBtn.setTextSize(15);
-            sendMsgToWholeGroupBtn.setLayoutParams(new TableRow.LayoutParams(
-                    TableRow.LayoutParams.MATCH_PARENT,
-                    TableRow.LayoutParams.MATCH_PARENT,
-                    1.0f));
+            sendMsgToWholeGroupBtn.setLayoutParams(params);
             sendMsgToWholeGroupBtn.setPadding(0,0,0,0);
 
             sendMsgToWholeGroupBtn.setOnClickListener(new View.OnClickListener() {
