@@ -12,6 +12,7 @@ import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -48,7 +49,7 @@ public class ParentsDashboard extends FragmentActivity implements OnMapReadyCall
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1234;
     private static final float DEFAULT_ZOOM = 15f;
     private LocationManager lm;
-    private final int LOCATION_UPDATES_INTERVAL_IN_MILLISEC = 10000; // Todo: change to 30000 after testing
+    private final int UPDATE_UI_FREQUENCY_IN_MILLISECS = 10000; // Todo: change to 60000
     private final int MARKER_INACTIVE_TIME_IN_SEC = 300;
     private final int SECONDS_IN_HOUR = 3600;
 
@@ -75,7 +76,8 @@ public class ParentsDashboard extends FragmentActivity implements OnMapReadyCall
         public void run() {
             mMap.clear();
             populateLocationMarkers();
-            handler.postDelayed(this, LOCATION_UPDATES_INTERVAL_IN_MILLISEC);
+            // Todo: add code for checking new messages
+            handler.postDelayed(this, UPDATE_UI_FREQUENCY_IN_MILLISECS);
         }
     };
 
@@ -171,7 +173,7 @@ public class ParentsDashboard extends FragmentActivity implements OnMapReadyCall
                 // get the group leaders of all the groups in which this user is a member of and add user to leaders list
                 List<Group> groups = user.getMemberOfGroups();
 
-                //addGroupLeadersMarkers(groups);
+                addGroupLeadersMarkers(groups);
             }
 
 
@@ -180,6 +182,7 @@ public class ParentsDashboard extends FragmentActivity implements OnMapReadyCall
     }
 
     private void addReturnedLocationMarker(GpsLocation gpsLocation, String userName, boolean isChildren) {
+        //Log.e("Marker username: ", userName);
 
         boolean GpsLocationNotEmpty = gpsLocation.isGpsLocationNotEmpty();
 
@@ -211,8 +214,9 @@ public class ParentsDashboard extends FragmentActivity implements OnMapReadyCall
             long resTime = (sysTime - gpsTime) / 1000;
 
 
+
             if (resTime <= 60) {
-                String infoWindow = userName + "- " + "last updated: " + resTime + "sec ago";
+                String infoWindow = userName + "- " + getString(R.string.marker_last_updated) + " " + resTime + " " + getString(R.string.marker_secs_ago);
                 if (isChildren) {
                     MapsFunctions.addMarkerToMap(mMap, lat, lng, infoWindow, true, ACTIVE_CHILDREN_MARKER_COLOUR);
                 } else {
@@ -222,14 +226,14 @@ public class ParentsDashboard extends FragmentActivity implements OnMapReadyCall
             } else {
                 if (resTime > MARKER_INACTIVE_TIME_IN_SEC) {
                     if (resTime < SECONDS_IN_HOUR) {
-                        String infoWindow = userName + "- " + "went offline " + resTime / 60 + "min ago";
+                        String infoWindow = userName + "- " + getString(R.string.marker_went_offline) + " " + resTime / 60 + " " + getString(R.string.marker_mins_ago);
                         if (isChildren) {
                             MapsFunctions.addMarkerToMap(mMap, lat, lng, infoWindow, true, INACTIVE_CHILDREN_MARKER_COLOUR);
                         } else {
                             MapsFunctions.addMarkerToMap(mMap, lat, lng, infoWindow, true, INACTIVE_LEADERS_MARKER_COLOUR);
                         }
                     } else {
-                        String infoWindow = userName + "- " + "went offline " + resTime / 3600 + "hours ago";
+                        String infoWindow = userName + "- " + getString(R.string.marker_offline_more_than_1_hr);
                         if (isChildren) {
                             MapsFunctions.addMarkerToMap(mMap, lat, lng, infoWindow, true, INACTIVE_CHILDREN_MARKER_COLOUR);
                         } else {
@@ -237,7 +241,7 @@ public class ParentsDashboard extends FragmentActivity implements OnMapReadyCall
                         }
                     }
                 } else {
-                    String infoWindow = userName + "- " + "last updated: " + resTime / 60 + "min ago";
+                    String infoWindow = userName + "- " + getString(R.string.marker_last_updated) + " " + resTime / 60 + " " + getString(R.string.marker_mins_ago);
                     if (isChildren) {
                         MapsFunctions.addMarkerToMap(mMap, lat, lng, infoWindow, true, ACTIVE_CHILDREN_MARKER_COLOUR);
                     } else {

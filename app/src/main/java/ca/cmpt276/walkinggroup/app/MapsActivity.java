@@ -57,7 +57,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1234;
     private static final float DEFAULT_ZOOM = 15f;
 
-    // Todo: try chaning these 2 to private
+
     public double latitude;
     public double longitude;
     private double destLat;
@@ -73,14 +73,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
     private boolean uploadingLocation = userSingleton.getUploadingLocation();
-    private final int GPS_UPLOAD_INTERVAL_IN_MILLISEC = 8000;
+    private final int GPS_UPLOAD_INTERVAL_IN_MILLISEC = 30000;
     private final int GPS_UPLOAD_MIN_DIST_IN_METERS = 0;
     private GpsLocation currentGpsLocation = new GpsLocation();
 
     // Countdown timer when user reaches school
-    // Todo: change these back to assignment parameters
-    private final int GPS_COUNTDOWN_INTERVAL_IN_MILLISEC = 30000;
-    private final int SCHOOL_RADIUS_IN_METERS = 20;
+    private final int GPS_COUNTDOWN_INTERVAL_IN_MILLISEC = 600000;
+    private final int SCHOOL_RADIUS_IN_METERS = 200;
     private CountDownTimer DestReachedCountDown = userSingleton.getDestReachedCountDown();
     private boolean DestReachedCountDownRunning = userSingleton.isDestReachedCountDownRunning();
 
@@ -135,11 +134,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 destLat = walkingGroup.getDestLat();
                 destLng = walkingGroup.getDestLng();
 
-//                destLat = data.getDoubleExtra("destLat", 0);
-//                destLng = data.getDoubleExtra("destLng", 0);
                 destSet = true;
 
-                Toast.makeText(MapsActivity.this, "Destination lat: " + destLat + ", lng: " + destLng, Toast.LENGTH_LONG).show();
             }
         }
     }
@@ -190,7 +186,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         try{
             if (mLocationPermissionsGranted){
                 // Code obtained from StacksOverflow https://stackoverflow.com/questions/2227292/how-to-get-latitude-and-longitude-of-the-mobile-device-in-android
-                //LocationManager lm = (LocationManager)this.getSystemService(Context.LOCATION_SERVICE);
                 if (lm == null){
                     lm = (LocationManager)this.getSystemService(Context.LOCATION_SERVICE);
                     userSingleton.setLocationManager(lm);
@@ -204,7 +199,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     latitude = 37.422;
                 }
 
-                //lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 0, locationListener);
 
                 LatLng currentLatLng = new LatLng(latitude, longitude);
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, DEFAULT_ZOOM));
@@ -279,36 +273,30 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         });
     }
 
-    private void setupPanicButton(){
-
-    }
 
     private void setupUploadButton(){
         Button btn = findViewById(R.id.btn_upload_location);
         setUploadButtonText(btn);
-        //btn.setText(R.string.btn_start_uploading);
-        //Toast.makeText(MapsActivity.this, "uploadingLocation: " + uploadingLocation, Toast.LENGTH_LONG).show();
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (uploadingLocation) {
-                    //btn.setText(R.string.btn_start_uploading);
                     userSingleton.setUploadingLocation(false);
                     uploadingLocation = userSingleton.getUploadingLocation();
                     setUploadButtonText(btn);
-                        //Toast.makeText(MapsActivity.this, "Turning off location listener", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MapsActivity.this, R.string.uploading_stops, Toast.LENGTH_LONG).show();
                     lm.removeUpdates(locationListener);
                     if (DestReachedCountDownRunning){
                         resetDestReachedCountDown();
                     }
                 } else {
-                    //btn.setText(R.string.btn_stop_uploading);
                     if (!destSet) {
-                        Toast.makeText(MapsActivity.this, "Please select a group to walk with first!", Toast.LENGTH_LONG).show();
+                        Toast.makeText(MapsActivity.this, R.string.dest_not_set_error, Toast.LENGTH_LONG).show();
                     } else {
                         userSingleton.setUploadingLocation(true);
                         uploadingLocation = userSingleton.getUploadingLocation();
                         setUploadButtonText(btn);
+                        Toast.makeText(MapsActivity.this, R.string.starting_upload, Toast.LENGTH_LONG).show();
                         setupLocationListener();
                     }
                 }
@@ -318,14 +306,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     private void setUploadButtonText(Button btn){
-        //Toast.makeText(MapsActivity.this, "uploadingLocation: " + uploadingLocation, Toast.LENGTH_LONG).show();
-        //Button btn = findViewById(R.id.btn_upload_location);
         if (uploadingLocation){
             btn.setText(R.string.btn_stop_uploading);
-            //Toast.makeText(MapsActivity.this, "Set button text to stop", Toast.LENGTH_LONG).show();
         } else {
             btn.setText(R.string.btn_start_uploading);
-            //Toast.makeText(MapsActivity.this, "Set button text to start", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -339,7 +323,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         latitude = location.getLatitude();
 
                         String currentTime = MapsFunctions.getCurrentTimeStamp();
-                        Toast.makeText(MapsActivity.this, currentTime + ", lat: " + latitude + " , long: " + longitude, Toast.LENGTH_LONG).show();
+                        Toast.makeText(MapsActivity.this, R.string.uploading_location, Toast.LENGTH_LONG).show();
 
                         // Calculate distance to destination and start count down timer if one has not been started
                         double distanceToDest = MapsFunctions.distanceInMBetweenTwoCoordinates(latitude, longitude, destLat, destLng);
@@ -393,12 +377,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Group walkingGroup = userSingleton.getWalkingGroup();
         if (walkingGroup == null){
             destSet = false;
-            //Toast.makeText(MapsActivity.this, "Dest not set yet", Toast.LENGTH_SHORT).show();
         } else {
             destSet = true;
             destLat = walkingGroup.getDestLat();
             destLng = walkingGroup.getDestLng();
-            //Toast.makeText(MapsActivity.this, "Previously stored destLat: " + destLat + " , destLng: " + destLng, Toast.LENGTH_LONG).show();
         }
     }
 
@@ -407,25 +389,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public void onTick(long millisUntilFinished) {
                 long seconds = millisUntilFinished/1000;
-                Toast.makeText(MapsActivity.this, seconds + " seconds of uploading left", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onFinish() {
-                Toast.makeText(MapsActivity.this, "Uploading location stops", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MapsActivity.this, R.string.uploading_stops, Toast.LENGTH_SHORT).show();
                 lm.removeUpdates(locationListener);
                 DestReachedCountDownRunning = false;
                 userSingleton.setDestReachedCountDownRunning(DestReachedCountDownRunning);
                 uploadingLocation = false;
                 userSingleton.setUploadingLocation(uploadingLocation);
 
-                // Seemed to work using either method call
-                //setUploadButtonText();
                 setupUploadButton();
 
-                // Tried the 2 lines of code below won't even change the text of the button
-                //Button btn = findViewById(R.id.btn_upload_location);
-                //btn.setText("Timer stops");
             }
         }.start();
 
@@ -449,7 +425,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         groupSelected = group;
         userSingleton.setGroupSelected(group);
         Intent intent = new Intent(MapsActivity.this, Join_Group.class);
-        //startActivity(intent);
         startActivityForResult(intent, 888);
     }
 
@@ -462,6 +437,5 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         String receivedTime = location.getTimestamp();
         double lat = location.getLat();
         double lng = location.getLng();
-        //Toast.makeText(MapsActivity.this, "lat: " + lat + " lng: " + lng + " received at: " + receivedTime, Toast.LENGTH_LONG).show();
     }
 }

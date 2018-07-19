@@ -122,4 +122,13 @@
     <string name="menu_start_walking">Start walking with this group</string>
     <string name="btn_open_dashboard">Open dashboard</string>
     <string name="btn_panic">PANIC</string>
+    <string name="marker_last_updated">last updated: </string>
+    <string name="marker_secs_ago"> secs ago</string>
+    <string name="marker_mins_ago"> mins ago</string>
+    <string name="marker_went_offline">went offline </string>
+    <string name="marker_offline_more_than_1_hr">went offline >1 hour ago</string>
+    <string name="dest_not_set_error">Please select a group to walk with first!</string>
+    <string name="uploading_location">Uploading your location...</string>
+    <string name="uploading_stops">Uploading location stops</string>
+    <string name="starting_upload">Starting location upload...</string>
 </resources>
