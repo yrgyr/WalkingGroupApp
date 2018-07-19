@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.media.Image;
+import android.os.Handler;
 import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -115,6 +116,9 @@ public class MainActivity extends AppCompatActivity {
         setupPanicBtn();
 
 
+        updateevery10sec();
+
+        autoAdvance();
 
     }
 
@@ -243,21 +247,63 @@ public class MainActivity extends AppCompatActivity {
         groupsList = returnedGroups;
     }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    private Runnable myRun;
+
     private void getUnReadMessageList() {
         if(login.getToken(MainActivity.this) != null) {
             Call<List<Message>> caller = proxy.getUnreadMessages(currentUser.getId(),false);
             ProxyBuilder.callProxy(MainActivity.this,caller,messageReturn -> responseGetMessage(messageReturn));
         }
     }
+
+    private void updateevery10sec(){
+        myRun = new Runnable() {
+            @Override
+            public void run() {
+
+                Call<List<Message>> caller = proxy.getUnreadMessages(currentUser.getId(),false);
+                ProxyBuilder.callProxy(MainActivity.this,caller,messageReturn -> responseGetMessage(messageReturn));
+
+                Toast.makeText(MainActivity.this,"hello",Toast.LENGTH_LONG).show();
+                autoAdvance();
+
+
+            }
+        };
+    }
+    private void autoAdvance() {
+
+        Handler TIME_OUT_HANDLER;
+
+        int timeOut = 10000;
+
+        TIME_OUT_HANDLER = new Handler();
+
+
+        TIME_OUT_HANDLER.postDelayed(myRun,timeOut);
+    }
+
     private void responseGetMessage (List<Message> messageReturn) {
 
         unreadCount = messageReturn.size();
         TextView textView = findViewById(R.id.userName);
         textView.setText(getString(R.string.welcome) + " " + name + ", " + getString(R.string.unreadCount,unreadCount));
-
-        //TextView textView = findViewById(R.id.unreadCount);
-        //textView.setText(getString(R.string.unreadCount,unreadCount));
     }
+
 
 
 
