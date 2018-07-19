@@ -45,7 +45,7 @@ public class ParentsDashboard extends FragmentActivity implements OnMapReadyCall
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1234;
     private static final float DEFAULT_ZOOM = 15f;
     private LocationManager lm;
-    private final int LOCATION_UPDATES_INTERVAL_IN_MILLISEC = 10000; // Todo: change to 30000 after testing
+    private final int LOCATION_UPDATES_INTERVAL_IN_MILLISEC = 10000; // Todo: change to 60000 after testing
 
     private CurrentUserData userSingleton = CurrentUserData.getSingletonInstance();
     private WGServerProxy proxy = userSingleton.getCurrentProxy();
@@ -153,7 +153,6 @@ public class ParentsDashboard extends FragmentActivity implements OnMapReadyCall
     }
 
     private void populateLocationMarkers(){
-        // Populate children's markers
         if (monitorsUsers.size() > 0) {
             for (int i = 0; i < monitorsUsers.size(); i++) {
                 User user = monitorsUsers.get(i);
@@ -165,25 +164,7 @@ public class ParentsDashboard extends FragmentActivity implements OnMapReadyCall
 
                 // get the group leaders of all the groups in which this user is a member of and add user to leaders list
                 List<Group> groups = user.getMemberOfGroups();
-
-                for (int j = 0; j < groups.size(); j++) {
-                    Group group = groups.get(j);
-                    User leader = group.getLeader();
-
-                    if (!leaders.contains(leader)) {
-                        leaders.add(leader);
-                    }
-                }
-            }
-
-            // Populate group leaders' markers
-            for (int k = 0; k < leaders.size(); k++) {
-                User leader = leaders.get(k);
-                long leaderId = leader.getId();
-                String leaderName = leader.getName();
-
-                Call<GpsLocation> caller = proxy.getLastGpsLocation(leaderId);
-                ProxyBuilder.callProxy(ParentsDashboard.this, caller, returnedGpsLocation -> addReturnedLocationMarker(returnedGpsLocation, leaderName, false));
+                addGroupLeadersMarkers(groups);
             }
         }
 
@@ -191,71 +172,44 @@ public class ParentsDashboard extends FragmentActivity implements OnMapReadyCall
 
     private void addReturnedLocationMarker(GpsLocation gpsLocation, String userName, boolean isChildren){
         // Todo: display inactive markers with different colour
+        Log.e("Marker called: ", "User: " + userName);
+        Log.e("GpsLocation: ", gpsLocation.toString());
+        boolean GpsLocationNotEmpty = gpsLocation.isGpsLocationNotEmpty();
 
+        if (GpsLocationNotEmpty) {
+            double lat = gpsLocation.getLat();
+            double lng = gpsLocation.getLng();
+            String time = gpsLocation.getTimestamp();
+            infoWindow = userName + "- " + time;
 
-        double lat = gpsLocation.getLat();
-        double lng = gpsLocation.getLng();
-        String time = gpsLocation.getTimestamp();
-
-
-
-        //finding time diff starts..
-
-        SimpleDateFormat format=new SimpleDateFormat("yy/MM/dd HH:mm:ss");
-
-        if(a==0){
-            if(b==0){
-                String time2=gpsLocation.getTimestamp();
-                Date d1 = null;
-                Date d2 = null;
-                try {
-                    d1 = format.parse(time);
-                    d2 = format.parse(time2);
-                } catch (ParseException e) {
-                }
-
-                long diff = d2.getTime() - d1.getTime();
-                //diff in seconds
-                long DiffSecond = diff / 1000;
-                timeGlobal=time2;
-                b++;
-                infoWindow = userName + "- " + "last updated: " + DiffSecond+"seconds ago";
-            }
-            if(b!=0){
-                time=timeGlobal;
-                String time2=gpsLocation.getTimestamp();
-                Date d1 = null;
-                Date d2 = null;
-                try {
-                    d1 = format.parse(time);
-                    d2 = format.parse(time2);
-                } catch (ParseException e) {
-                }
-
-                long diff = d2.getTime() - d1.getTime();
-                //diff in seconds
-                long DiffSecond = diff / 1000;
-                infoWindow = userName + "- " + "last updated: " + DiffSecond+"seconds ago";
-                timeGlobal=time2;
-
-
+            if (isChildren) {
+                MapsFunctions.addMarkerToMap(mMap, lat, lng, infoWindow, true, ACTIVE_CHILDREN_MARKER_COLOUR);
+            } else {
+                MapsFunctions.addMarkerToMap(mMap, lat, lng, infoWindow, true, ACTIVE_LEADERS_MARKER_COLOUR);
             }
         }
+    }
 
-
-
-        //finding time diff ends..
-
-
-
-
-
-        //String infoWindow = userName + "- " + "last updated: " + time;
-        if (isChildren) {
-            MapsFunctions.addMarkerToMap(mMap, lat, lng, infoWindow, true, ACTIVE_CHILDREN_MARKER_COLOUR);
-        } else {
-            MapsFunctions.addMarkerToMap(mMap, lat, lng, infoWindow, true, ACTIVE_LEADERS_MARKER_COLOUR);
+    private void addGroupLeadersMarkers(List<Group> groups){
+        for (int i = 0; i < groups.size(); i++){
+            Group group = groups.get(i);
+            long groupId = group.getId();
+            getFullGroupDetails(groupId);
         }
+    }
+
+    private void getFullGroupDetails(long groupId){
+        Call<Group> caller = proxy.getGroupById(groupId);
+        ProxyBuilder.callProxy(ParentsDashboard.this, caller, returnedGroup -> responseReturnGroup(returnedGroup));
+    }
+
+    private void responseReturnGroup(Group group){
+        User leader = group.getLeader();
+        long leaderId = leader.getId();
+        String leaderName = leader.getName();
+
+        Call<GpsLocation> caller = proxy.getLastGpsLocation(leaderId);
+        ProxyBuilder.callProxy(ParentsDashboard.this, caller, returnedGpsLocation -> addReturnedLocationMarker(returnedGpsLocation, leaderName, false));
     }
 
 }
