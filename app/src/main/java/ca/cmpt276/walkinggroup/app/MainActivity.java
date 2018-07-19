@@ -91,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
         setUpName();
 //        setUpLogOut();
 
-        setupLogOutBtn();
+//        setupLogOutBtn();
         getRemoteGroups();
 
 
@@ -139,20 +139,20 @@ public class MainActivity extends AppCompatActivity {
 //        });
 //    }
 
-    private void setupLogOutBtn(){
-
-        Button btn = (Button) findViewById(R.id.logOutBtn);
-        btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                isLogOut = true;
-                Intent i = new Intent(MainActivity.this,login.class);
-                startActivity(i);
-                finish();
-            }
-        });
-
-    }
+//    private void setupLogOutBtn(){
+//
+//        Button btn = (Button) findViewById(R.id.logOutBtn);
+//        btn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                isLogOut = true;
+//                Intent i = new Intent(MainActivity.this,login.class);
+//                startActivity(i);
+//                finish();
+//            }
+//        });
+//
+//    }
 
 
     private void setupGetMonitorByBtn() {
