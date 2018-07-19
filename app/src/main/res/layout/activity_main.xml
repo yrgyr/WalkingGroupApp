@@ -94,7 +94,7 @@
         android:layout_marginBottom="3dp"
         android:fontFamily="casual"
         android:lineSpacingExtra="24sp"
-        android:textColor="@color/brown"
+        android:textColor="@android:color/black"
         android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/addUsers"

@@ -2,12 +2,15 @@ package ca.cmpt276.walkinggroup.app;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,21 +35,6 @@ public class SendMessage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_send_message);
 
-//        Button btn = findViewById(R.id.button);
-//        btn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Long id = new Long( (long)411 );
-//
-//
-//
-//                Call<List<Message>> caller = proxy.getMessages(currentUser.getId());
-//                ProxyBuilder.callProxy(SendMessage.this,caller,messageReturn -> responseGetMessage(messageReturn));
-//
-//            }
-//        });
-
-
         int case1 = getIntent().getIntExtra("case1",0);
         int case2 = getIntent().getIntExtra("case2",0);
         int case3 = getIntent().getIntExtra("case3",0);
@@ -66,6 +54,8 @@ public class SendMessage extends AppCompatActivity {
         }
 
         extraDataFromIntent();
+
+
     }
 
     private void nonEmergencyMsgToParent() {
@@ -90,15 +80,18 @@ public class SendMessage extends AppCompatActivity {
 
 
     private void EmergencyToParent() {
+        EditText editText = (EditText) findViewById(R.id.messageEdit);
+        editText.setText(getString(R.string.defalut_emergency_msg_));
 
         Button btn = (Button) findViewById(R.id.sendBtn);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 message = new Message();
-                EditText textView = (EditText) findViewById(R.id.messageEdit);
-                String text = textView.getText().toString();
 
+                EditText editText = (EditText) findViewById(R.id.messageEdit);
+
+                String text = editText.getText().toString();
                 message.setIsRead(false);
                 message.setEmergency(true);
                 message.setFromUser(currentUser);
@@ -112,7 +105,15 @@ public class SendMessage extends AppCompatActivity {
     }
     private void childMsgResponse(List<Message> returnedMsg){
 
-        Toast.makeText(this, ""+returnedMsg.get(0).getId(), Toast.LENGTH_LONG).show();
+        if(!returnedMsg.isEmpty()){
+            Toast.makeText(this, getString(R.string.msg_sent_successful_text,returnedMsg.get(0).getId()), Toast.LENGTH_LONG).show();
+
+        }
+        else{
+            Toast.makeText(this, getString(R.string.fail_to_send_msg_text), Toast.LENGTH_LONG).show();
+
+        }
+
     }
 
     private void extraDataFromIntent() {
@@ -121,6 +122,17 @@ public class SendMessage extends AppCompatActivity {
     }
 
     private void setUpSendMsgToGroupBtn() {
+
+        TableRow tr = (TableRow) findViewById(R.id.my_table_row);
+        CheckBox checkBox = new CheckBox(this);
+        checkBox.setText(getString(R.string.checkbox_text));
+        checkBox.setTextSize(22);
+        checkBox.setTypeface(Typeface.DEFAULT_BOLD);
+
+        tr.setPadding(250,0,50,0);
+
+        tr.addView(checkBox);
+
         Button btn = findViewById(R.id.sendBtn);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -130,8 +142,15 @@ public class SendMessage extends AppCompatActivity {
                 EditText textView = (EditText) findViewById(R.id.messageEdit);
                 String text = textView.getText().toString();
 
+                if(checkBox.isChecked()){
+                    message.setEmergency(true);
+
+                }
+                else{
+                    message.setEmergency(false);
+
+                }
                 message.setIsRead(false);
-                message.setEmergency(false);
                 message.setFromUser(currentUser);
                 message.setText(""+text);
 
@@ -142,8 +161,7 @@ public class SendMessage extends AppCompatActivity {
     }
     private void response(List<Message> returnedMsg) {
         Toast.makeText(this, ""+returnedMsg.get(0).getId(), Toast.LENGTH_LONG).show();
-//        finish();
-        // ================================================
+
 
     }
     public static Intent makeIntent(Context context, Long groupId){

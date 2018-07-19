@@ -71,7 +71,7 @@ public class MsgToMe extends AppCompatActivity {
                 String content = all_Msgs.get(position).getText();
 
                 AlertDialog.Builder alertBuilder = new AlertDialog.Builder(MsgToMe.this);
-                alertBuilder.setTitle("message content");
+                alertBuilder.setTitle(getString(R.string.msg_content_dialog_title));
 
 
                 alertBuilder.setMessage(content);
@@ -109,13 +109,8 @@ public class MsgToMe extends AppCompatActivity {
                 return o1.getTimestamp().compareTo(o2.getTimestamp());
             }
         });
-
-
         Collections.reverse(returnedMsgs);
 
-
-
-//        returnedMsgs.sort(Comparator.comparing(Message::getTimestamp).reversed());
 
         ListView msg_list = (ListView) findViewById(R.id.msgListView);
         ArrayAdapter<Message> adapter = new ArrayAdapter<Message>(this,R.layout.msg_list,returnedMsgs){
@@ -144,7 +139,7 @@ public class MsgToMe extends AppCompatActivity {
                 String display_msg = fromName + "\n" + currentMsg.getText() + " \n" + time;
 
                 TextView fromWhomTv = (TextView) convertView.findViewById(R.id.fromWhom);
-                fromWhomTv.setText("From: "+fromName);
+                fromWhomTv.setText(getString(R.string.from_whom_display,fromName));
 
                 TextView timeTv = (TextView) convertView.findViewById(R.id.timeSent);
                 timeTv.setText(displayTime);

@@ -61,8 +61,6 @@ public class Join_Group extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_join__group);
 
-
-
         setUpValidUserCanCheckInfo();
 
         populateGroupID();
@@ -72,7 +70,6 @@ public class Join_Group extends AppCompatActivity {
         populateGroupMembersListView();
         setupActionBar();
 
-//        setUpSendMessage();
     }
 
 
@@ -95,7 +92,7 @@ public class Join_Group extends AppCompatActivity {
 
             // ================ first button ===========================
             Button sendMsgToWholeGroupBtn = new Button(this);
-            sendMsgToWholeGroupBtn.setText("Send Message To Group Members \n and their parents");
+            sendMsgToWholeGroupBtn.setText(getString(R.string.leader_btn_text));
             sendMsgToWholeGroupBtn.setTypeface(Typeface.DEFAULT_BOLD);
             sendMsgToWholeGroupBtn.setBackgroundResource(R.drawable.button_style);
 
@@ -124,40 +121,19 @@ public class Join_Group extends AppCompatActivity {
             if(currentUser.getId().equals(memberId)){
                 isValid = true;
             }
-//            Call<List<User>> caller = proxy.getMonitoredByUsers(memberId);
-//
-//            ProxyBuilder.callProxy(this, caller, returnedUsers -> response(returnedUsers));
+            Call<List<User>> caller = proxy.getMonitoredByUsers(memberId);
+
+            ProxyBuilder.callProxy(this, caller, returnedUsers -> response(returnedUsers));
 
 
         }
 
         if(validUser.contains(currentUserId)){
 
-            // ================= first button ==========================
-            Button toParentBtn = new Button(this);
-            toParentBtn.setText("Panic");
-            toParentBtn.setTypeface(Typeface.DEFAULT_BOLD);
-
-            toParentBtn.setLayoutParams(params);
-            toParentBtn.setPadding(0,0,0,0);
-            toParentBtn.setBackgroundResource(R.drawable.button_style);
-
-
-
-            toParentBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = SendMessage.makeIntent(Join_Group.this,grpId);
-                    intent.putExtra("case2",666);
-                    startActivity(intent);
-                }
-            });
-            btns.addView(toParentBtn);
-
 //            // ===================== second button ================================
 //
             Button NonEmergencyBtn = new Button(this);
-            NonEmergencyBtn.setText("Non Emergency msg \n To Parent");
+            NonEmergencyBtn.setText(getString(R.string.non_emergency_btn_text));
             NonEmergencyBtn.setTypeface(Typeface.DEFAULT_BOLD);
 
 
@@ -180,18 +156,18 @@ public class Join_Group extends AppCompatActivity {
 
     }
 
-//    private void response(List<User> returnedUsers) {
-//        for(int i =0; i < returnedUsers.size();i++){
-//            User memberUser = returnedUsers.get(i);
-//            Long memberId = memberUser.getId();
+    private void response(List<User> returnedUsers) {
+        for(int i =0; i < returnedUsers.size();i++){
+            User memberUser = returnedUsers.get(i);
+            Long memberId = memberUser.getId();
 //            validUser.add(memberId);
-//            if(currentUser.getId().equals(memberId)){
-//                isValid = true;
-//            }
-//        }
-//
-//
-//    }
+            if(currentUser.getId().equals(memberId)){
+                isValid = true;
+            }
+        }
+
+
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -267,10 +243,6 @@ public class Join_Group extends AppCompatActivity {
                 }
             }
         });
-
-
-
-
     }
 
     private void setupActionBar(){
@@ -282,7 +254,6 @@ public class Join_Group extends AppCompatActivity {
     private void showRemoveMembersDialog(boolean isLeader){
         String[] membersList;
         if (isLeader){
-            //membersList = members;
             membersList = groupSelected.getGroupMembersNames();
         } else {
             List<User> groupMembers = groupSelected.getMemberUsers();
@@ -487,16 +458,5 @@ public class Join_Group extends AppCompatActivity {
     }
 
 
-//    private void setUpSendMessage() {
-//        Button btn = findViewById(R.id.messageBtn);
-//        btn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent intent = SendMessage.makeIntent(Join_Group.this, grpId);
-//                startActivity(intent);
-//            }
-//        });
-//
-//    }
 
 }
