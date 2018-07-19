@@ -167,32 +167,17 @@ public class ParentsDashboard extends FragmentActivity implements OnMapReadyCall
 
                 // get the group leaders of all the groups in which this user is a member of and add user to leaders list
                 List<Group> groups = user.getMemberOfGroups();
-
-                for (int j = 0; j < groups.size(); j++) {
-                    Group group = groups.get(j);
-                    User leader = group.getLeader();
-
-                    if (!leaders.contains(leader)) {
-                        leaders.add(leader);
-                    }
-                }
+                addGroupLeadersMarkers(groups);
             }
-
-            // Populate group leaders' markers
-//            for (int k = 0; k < leaders.size(); k++) {
-//                User leader = leaders.get(k);
-//                long leaderId = leader.getId();
-//                String leaderName = leader.getName();
-//
-//                Call<GpsLocation> caller = proxy.getLastGpsLocation(leaderId);
-//                ProxyBuilder.callProxy(ParentsDashboard.this, caller, returnedGpsLocation -> addReturnedLocationMarker(returnedGpsLocation, leaderName, false));
-//            }
         }
 
     }
 
     private void addReturnedLocationMarker(GpsLocation gpsLocation, String userName, boolean isChildren){
         // Todo: display inactive markers with different colour
+        Log.e("Marker called: ", "User: " + userName);
+        Log.e("GpsLocation: ", gpsLocation.toString());
+        boolean GpsLocationNotEmpty = gpsLocation.isGpsLocationNotEmpty();
 
 
         double lat = gpsLocation.getLat();
@@ -223,7 +208,40 @@ public class ParentsDashboard extends FragmentActivity implements OnMapReadyCall
             MapsFunctions.addMarkerToMap(mMap, lat, lng, infoWindow, true, ACTIVE_CHILDREN_MARKER_COLOUR);
         } else {
             MapsFunctions.addMarkerToMap(mMap, lat, lng, infoWindow, true, ACTIVE_LEADERS_MARKER_COLOUR);
+        if (GpsLocationNotEmpty) {
+            double lat = gpsLocation.getLat();
+            double lng = gpsLocation.getLng();
+            String time = gpsLocation.getTimestamp();
+            infoWindow = userName + "- " + time;
+
+            if (isChildren) {
+                MapsFunctions.addMarkerToMap(mMap, lat, lng, infoWindow, true, ACTIVE_CHILDREN_MARKER_COLOUR);
+            } else {
+                MapsFunctions.addMarkerToMap(mMap, lat, lng, infoWindow, true, ACTIVE_LEADERS_MARKER_COLOUR);
+            }
         }
+    }
+
+    private void addGroupLeadersMarkers(List<Group> groups){
+        for (int i = 0; i < groups.size(); i++){
+            Group group = groups.get(i);
+            long groupId = group.getId();
+            getFullGroupDetails(groupId);
+        }
+    }
+
+    private void getFullGroupDetails(long groupId){
+        Call<Group> caller = proxy.getGroupById(groupId);
+        ProxyBuilder.callProxy(ParentsDashboard.this, caller, returnedGroup -> responseReturnGroup(returnedGroup));
+    }
+
+    private void responseReturnGroup(Group group){
+        User leader = group.getLeader();
+        long leaderId = leader.getId();
+        String leaderName = leader.getName();
+
+        Call<GpsLocation> caller = proxy.getLastGpsLocation(leaderId);
+        ProxyBuilder.callProxy(ParentsDashboard.this, caller, returnedGpsLocation -> addReturnedLocationMarker(returnedGpsLocation, leaderName, false));
     }
 
 }
