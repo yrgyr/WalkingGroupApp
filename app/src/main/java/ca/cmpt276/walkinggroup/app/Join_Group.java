@@ -1,5 +1,6 @@
 package ca.cmpt276.walkinggroup.app;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -35,12 +36,12 @@ import ca.cmpt276.walkinggroup.proxy.ProxyBuilder;
 import ca.cmpt276.walkinggroup.proxy.WGServerProxy;
 import retrofit2.Call;
 
-import static ca.cmpt276.walkinggroup.app.MapsActivity.groupSelected;
 
 public class Join_Group extends AppCompatActivity {
     private CurrentUserData userSingleton = CurrentUserData.getSingletonInstance();
     private WGServerProxy proxy = userSingleton.getCurrentProxy();
     private User currentUser = userSingleton.getCurrentUser();
+    private Group groupSelected = userSingleton.getGroupSelected();
     private List<User> groupMembers = groupSelected.getMemberUsers();
 
     private List<Long> validUser = new ArrayList<Long>();
@@ -49,17 +50,25 @@ public class Join_Group extends AppCompatActivity {
     Long grpId = groupSelected.getId();
     String grpDesc = groupSelected.getGroupDescription();
     String leaderName = groupSelected.getLeader().getName();
+    Long leaderId = groupSelected.getLeader().getId();
 
     Long currentUserId = currentUser.getId();
     String[] members = groupSelected.getGroupMembersNames();
-
+    long[] membersId = groupSelected.getGroupMembersIds();
     private List<User> monitorsUsers = new ArrayList<>();
+
+    private boolean IAmInThisGroup = false;
+
+    private boolean uploadingLocation = false;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_join__group);
+
+        checkIfIAmInGroup();
+
 
         setUpValidUserCanCheckInfo();
 
@@ -69,7 +78,6 @@ public class Join_Group extends AppCompatActivity {
 
         populateGroupMembersListView();
         setupActionBar();
-
     }
 
 
@@ -160,7 +168,6 @@ public class Join_Group extends AppCompatActivity {
         for(int i =0; i < returnedUsers.size();i++){
             User memberUser = returnedUsers.get(i);
             Long memberId = memberUser.getId();
-//            validUser.add(memberId);
             if(currentUser.getId().equals(memberId)){
                 isValid = true;
             }
@@ -203,6 +210,21 @@ public class Join_Group extends AppCompatActivity {
             case R.id.menu_go_back:
                 finish();
                 break;
+            case R.id.menu_start_walking:
+                if (!IAmInThisGroup){
+                    Toast.makeText(Join_Group.this, "Please join this group first!", Toast.LENGTH_LONG).show();
+                } else {
+                    userSingleton.setWalkingGroup(groupSelected);
+//                    double destLat = groupSelected.getDestLat();
+//                    double destLng = groupSelected.getDestLng();
+
+                    Intent intent = new Intent();
+//                    intent.putExtra("destLat",destLat);
+//                    intent.putExtra("destLng",destLng);
+                    setResult(Activity.RESULT_OK,intent);
+                    finish();
+                }
+
         }
         return super.onOptionsItemSelected(item);
     }
@@ -389,6 +411,21 @@ public class Join_Group extends AppCompatActivity {
 
         AlertDialog aDialog = alertBuilder.create();
         aDialog.show();
+    }
+
+    private void checkIfIAmInGroup(){
+        //Toast.makeText(Join_Group.this, "currentUserId: " + currentUserId, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(Join_Group.this, "LeaderId: " + leaderId, Toast.LENGTH_SHORT).show();
+        if (currentUserId.equals(leaderId)){
+            IAmInThisGroup = true;
+        } else {
+            for (int i = 0; i < membersId.length; i++){
+                if (currentUserId == membersId[i]){
+                    IAmInThisGroup = true;
+                    break;
+                }
+            }
+        }
     }
 
 

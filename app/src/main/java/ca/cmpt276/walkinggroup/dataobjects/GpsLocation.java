@@ -8,6 +8,7 @@ public class GpsLocation {
     private Double lng;
     private String timestamp;
 
+
     public Double getLat() {
         return lat;
     }

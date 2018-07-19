@@ -13,6 +13,10 @@
         android:id="@+id/menu_leave_group"
         android:title="@string/menu_leave_group" />
     <item
+        android:id="@+id/menu_start_walking"
+        android:title="@string/menu_start_walking" />
+    <item
         android:id="@+id/menu_go_back"
         android:title="@string/menu_go_back" />
+
 </menu>
