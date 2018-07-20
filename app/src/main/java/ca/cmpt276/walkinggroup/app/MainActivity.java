@@ -7,13 +7,21 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.media.Image;
+import android.os.Handler;
+import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,6 +32,7 @@ import java.util.List;
 import ca.cmpt276.walkinggroup.dataobjects.CurrentUserData;
 import ca.cmpt276.walkinggroup.dataobjects.EarnedRewards;
 import ca.cmpt276.walkinggroup.dataobjects.Group;
+import ca.cmpt276.walkinggroup.dataobjects.Message;
 import ca.cmpt276.walkinggroup.dataobjects.User;
 import ca.cmpt276.walkinggroup.proxy.ProxyBuilder;
 import ca.cmpt276.walkinggroup.proxy.WGServerProxy;
@@ -34,10 +43,41 @@ public class MainActivity extends AppCompatActivity {
     private WGServerProxy proxy;
     public static boolean isLogOut = false;
     public static List<Group> groupsList = new ArrayList<>();
+    public static List<Message> messageList = new ArrayList<>();
+    private User currentUser;
+    private int unreadCount = 0;
+
     private String name = "default";
 
     private CurrentUserData userSingleton = CurrentUserData.getSingletonInstance();
 
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater=getMenuInflater();
+        inflater.inflate(R.menu.test_menu,menu);
+        return true;
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.Edit_User:
+                Intent intent=new Intent(MainActivity.this,EditContactInfo.class);
+                startActivity(intent);
+                break;
+
+            case R.id.log_out:
+                isLogOut = true;
+                Intent i = new Intent(MainActivity.this,login.class);
+                startActivity(i);
+                finish();
+
+
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
     /* =======================================================================================
         This Activity is the app's main menu
@@ -71,11 +111,27 @@ public class MainActivity extends AppCompatActivity {
         setupGetMonitorByBtn();
         setupCreateGroupButton();
 
+        setupImageBtn();
+
+        setupPanicBtn();
 
 
+        updateevery10sec();
 
+        autoAdvance();
 
+    }
 
+    private void setupImageBtn() {
+
+        ImageView myImg = (ImageView) findViewById(R.id.mailImage);
+        myImg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this,MsgToMe.class);
+                startActivity(intent);
+            }
+        });
     }
 
 
@@ -87,34 +143,15 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
-    private void updateUI() {
-        TextView textView = findViewById(R.id.userName);
-        textView.setText(getString(R.string.welcome) + " " + name);
-    }
 
     private void response(User user) {
         name = user.getName();
         userSingleton.setCurrentUser(user);
-
+        currentUser = user;
+        getUnReadMessageList();
         Toast.makeText(this, getString(R.string.welcome) + " " + name, Toast.LENGTH_LONG).show();
-        updateUI();
 
     }
-//    private void setUpLogOut() {
-//        TextView logOut = findViewById(R.id.LogOutText);
-//        logOut.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);
-//        logOut.setTextColor(Color.BLUE);
-//
-//        logOut.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                isLogOut = true;
-//                Intent i = new Intent(MainActivity.this,login.class);
-//                startActivity(i);
-//                finish();
-//            }
-//        });
-//    }
 
     private void setupLogOutBtn(){
 
@@ -208,5 +245,79 @@ public class MainActivity extends AppCompatActivity {
     }
     private void returnGroups(List<Group> returnedGroups){
         groupsList = returnedGroups;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    private Runnable myRun;
+
+    private void getUnReadMessageList() {
+        if(login.getToken(MainActivity.this) != null) {
+            Call<List<Message>> caller = proxy.getUnreadMessages(currentUser.getId(),false);
+            ProxyBuilder.callProxy(MainActivity.this,caller,messageReturn -> responseGetMessage(messageReturn));
+        }
+    }
+
+    private void updateevery10sec(){
+        myRun = new Runnable() {
+            @Override
+            public void run() {
+                if(login.getToken(MainActivity.this) != null) {
+                    Call<List<Message>> caller = proxy.getUnreadMessages(currentUser.getId(), false);
+                    ProxyBuilder.callProxy(MainActivity.this, caller, messageReturn -> responseGetMessage(messageReturn));
+
+                    Toast.makeText(MainActivity.this, "hello", Toast.LENGTH_LONG).show();
+                    autoAdvance();
+                }
+
+
+            }
+        };
+    }
+    private void autoAdvance() {
+
+        Handler TIME_OUT_HANDLER;
+
+        int timeOut = 10000;
+
+        TIME_OUT_HANDLER = new Handler();
+
+
+        TIME_OUT_HANDLER.postDelayed(myRun,timeOut);
+    }
+
+    private void responseGetMessage (List<Message> messageReturn) {
+
+        unreadCount = messageReturn.size();
+        TextView textView = findViewById(R.id.userName);
+        textView.setText(getString(R.string.welcome) + " " + name + ", " + getString(R.string.unreadCount,unreadCount));
+    }
+
+
+
+
+    private void setupPanicBtn(){
+
+        Button btn = (Button) findViewById(R.id.panicBtn);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this,SendMessage.class);
+                intent.putExtra("case2",666);
+                startActivity(intent);
+            }
+        });
     }
 }

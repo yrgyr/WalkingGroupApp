@@ -47,7 +47,8 @@
 
         <activity
             android:name=".MapsActivity"
-            android:label="@string/title_activity_maps" />
+            android:label="@string/title_activity_maps"
+            android:screenOrientation="portrait"/>
         <activity android:name=".Join_Group" />
         <activity android:name=".AddWhomUserMointor" />
         <activity android:name=".MonitorUsersList" />
@@ -62,7 +63,8 @@
             android:label="@string/title_activity_parents_dashboard" />
         <activity android:name=".SendMessage" />
         <activity android:name=".ParentInfo" />
-        <activity android:name=".parentInfoList"></activity>
+        <activity android:name=".parentInfoList" />
+        <activity android:name=".MsgToMe"></activity>
     </application>
 
 </manifest>

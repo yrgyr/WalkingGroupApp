@@ -84,6 +84,19 @@
     <string name="empt_group_name_toast_msg">Group name can not be empty</string>
     <string name="create_group_success_toast_msg">Create group successfully ,Server replied with group ID:</string>
     <string name="title_activity_parents_dashboard">Map</string>
+    <string name="edit_user">EDIT USER</string>
+    <string name="users_you_are_monitoring_long_click_to_delete_single_click_to_edit">Users you are monitoring \nlong click to delete \nsingle click to edit</string>
+    <string name="edit_this_user_info">Edit this user info</string>
+    <string name="edit_user_detail">Edit User Detail</string>
+    <string name="menu_start_uploading">Start uploading</string>
+    <string name="menu_stop_uploading">Stop uploading</string>
+
+    <!-- MapsActivity -->
+    <string name="btn_start_uploading"> Start uploading</string>
+    <string name="btn_stop_uploading">Stop uploading</string>
+    <string name="menu_start_walking">Start walking with this group</string>
+    <string name="btn_open_dashboard">Open dashboard</string>
+    <string name="btn_panic">PANIC</string>
     <string name="new_name">New Name</string>
     <string name="your_name">your name</string>
     <string name="email">Email</string>
@@ -96,7 +109,7 @@
     <string name="address">ADDRESS</string>
     <string name="grade">GRADE</string>
     <string name="teacher_name">TEACHER NAME</string>
-    <string name="emergency_contact">EMERGENCY CONTACT</string>
+    <string name="emergency_contact">EMERGENCY \n CONTACT</string>
     <string name="year_of_birth">year of birth</string>
     <string name="month_of_birth">month of birth</string>
     <string name="house_address">house address</string>
@@ -111,4 +124,32 @@
     <string name="birthday">BirthDay</string>
     <string name="cell_phone">CELL PHONE</string>
     <string name="cantAccess">Sorry, you can not access the parents\' information of this group.</string>
+    <string name="send_message">Send Message</string>
+    <string name="unreadCount"> \n You have %d unread messages</string>
+    <string name="empty_msg_error_text">Message can not be empty</string>
+    <string name="defalut_emergency_msg_">emergency msg!!!</string>
+    <string name="checkbox_text">Is this emergency?</string>
+    <string name="fail_to_send_msg_text">Fail to send message. you must have at least one parent or group leader</string>
+    <string name="msg_sent_successful_text">message sent successfully, msg ID: %1$d</string>
+    <string name="msg_content_dialog_title">message content</string>
+    <string name="from_whom_display">From: %1$s</string>
+    <string name="leader_btn_text">Send Message To Group Members   and their parents</string>
+    <string name="panic_btn_text">Panic</string>
+    <string name="non_emergency_btn_text">Non Emergency msg   To Parent</string>
+
+    <!-- MapsActivity -->
+    <string name="btn_start_uploading"> Start uploading</string>
+    <string name="btn_stop_uploading">Stop uploading</string>
+    <string name="menu_start_walking">Start walking with this group</string>
+    <string name="btn_open_dashboard">Open dashboard</string>
+    <string name="btn_panic">PANIC</string>
+    <string name="marker_last_updated">last updated: </string>
+    <string name="marker_secs_ago"> secs ago</string>
+    <string name="marker_mins_ago"> mins ago</string>
+    <string name="marker_went_offline">went offline </string>
+    <string name="marker_offline_more_than_1_hr">went offline >1 hour ago</string>
+    <string name="dest_not_set_error">Please select a group to walk with first!</string>
+    <string name="uploading_location">Uploading your location...</string>
+    <string name="uploading_stops">Uploading location stops</string>
+    <string name="starting_upload">Starting location upload...</string>
 </resources>

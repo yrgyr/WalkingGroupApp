@@ -71,6 +71,16 @@ public class Group extends IdItemBase{
         this.routeLngArray.add(lng);
     }
 
+    @JsonIgnore
+    public double getDestLat(){
+        return routeLatArray.get(1);
+    }
+
+    @JsonIgnore
+    public double getDestLng(){
+        return routeLngArray.get(1);
+    }
+
     public void addLatCoordinate(int index,double lat){
 
         if (routeLatArray.size() < 2){
