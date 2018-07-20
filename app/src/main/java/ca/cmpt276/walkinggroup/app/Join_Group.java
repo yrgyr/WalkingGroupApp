@@ -80,8 +80,6 @@ public class Join_Group extends AppCompatActivity {
         setupActionBar();
     }
 
-
-
     private void setUpValidUserCanCheckInfo() {
         User leader = groupSelected.getLeader();
         Long leaderId = leader.getId();
@@ -265,6 +263,10 @@ public class Join_Group extends AppCompatActivity {
                 }
             }
         });
+
+
+
+
     }
 
     private void setupActionBar(){
@@ -493,7 +495,5 @@ public class Join_Group extends AppCompatActivity {
         Toast.makeText(Join_Group.this, R.string.Toast_left_group, Toast.LENGTH_LONG).show();
         finish();
     }
-
-
 
 }

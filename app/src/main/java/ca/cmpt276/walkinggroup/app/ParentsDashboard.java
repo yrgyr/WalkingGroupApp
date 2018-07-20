@@ -2,14 +2,17 @@ package ca.cmpt276.walkinggroup.app;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.location.Location;
 import android.location.LocationManager;
 import android.os.Handler;
+import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -19,8 +22,13 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.security.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import ca.cmpt276.walkinggroup.dataobjects.CurrentUserData;
 import ca.cmpt276.walkinggroup.dataobjects.GpsLocation;
@@ -41,7 +49,9 @@ public class ParentsDashboard extends FragmentActivity implements OnMapReadyCall
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1234;
     private static final float DEFAULT_ZOOM = 15f;
     private LocationManager lm;
-    private final int LOCATION_UPDATES_INTERVAL_IN_MILLISEC = 10000; // Todo: change to 30000 after testing
+    private final int UPDATE_UI_FREQUENCY_IN_MILLISECS = 10000; // Todo: change to 60000
+    private final int MARKER_INACTIVE_TIME_IN_SEC = 300;
+    private final int SECONDS_IN_HOUR = 3600;
 
     private CurrentUserData userSingleton = CurrentUserData.getSingletonInstance();
     private WGServerProxy proxy = userSingleton.getCurrentProxy();
@@ -55,6 +65,10 @@ public class ParentsDashboard extends FragmentActivity implements OnMapReadyCall
     private final float INACTIVE_CHILDREN_MARKER_COLOUR = BitmapDescriptorFactory.HUE_RED;
     private final float INACTIVE_LEADERS_MARKER_COLOUR = BitmapDescriptorFactory.HUE_ORANGE;
 
+
+
+
+
     // Code for handler: https://guides.codepath.com/android/Repeating-Periodic-Tasks
     private Handler handler = new Handler();
     private Runnable runnableCode = new Runnable() {
@@ -62,7 +76,8 @@ public class ParentsDashboard extends FragmentActivity implements OnMapReadyCall
         public void run() {
             mMap.clear();
             populateLocationMarkers();
-            handler.postDelayed(this, LOCATION_UPDATES_INTERVAL_IN_MILLISEC);
+            // Todo: add code for checking new messages
+            handler.postDelayed(this, UPDATE_UI_FREQUENCY_IN_MILLISECS);
         }
     };
 
@@ -146,51 +161,122 @@ public class ParentsDashboard extends FragmentActivity implements OnMapReadyCall
 
     private void populateLocationMarkers(){
         // Populate children's markers
-        for(int i = 0; i < monitorsUsers.size(); i++){
-            User user = monitorsUsers.get(i);
-            long userId = user.getId();
-            String userName = user.getName();
+        if (monitorsUsers.size() > 0) {
+            for (int i = 0; i < monitorsUsers.size(); i++) {
+                User user = monitorsUsers.get(i);
+                long userId = user.getId();
+                String userName = user.getName();
 
-            Call<GpsLocation> caller = proxy.getLastGpsLocation(userId);
-            ProxyBuilder.callProxy(ParentsDashboard.this, caller, returnedGpsLocation -> addReturnedLocationMarker(returnedGpsLocation, userName, true));
+                Call<GpsLocation> caller = proxy.getLastGpsLocation(userId);
+                ProxyBuilder.callProxy(ParentsDashboard.this, caller, returnedGpsLocation -> addReturnedLocationMarker(returnedGpsLocation, userName, true));
 
-            // get the group leaders of all the groups in which this user is a member of and add user to leaders list
-            List<Group> groups = user.getMemberOfGroups();
+                // get the group leaders of all the groups in which this user is a member of and add user to leaders list
+                List<Group> groups = user.getMemberOfGroups();
 
-            for(int j = 0; j < groups.size(); j++){
-                Group group = groups.get(j);
-                User leader = group.getLeader();
+                addGroupLeadersMarkers(groups);
+            }
 
-                if (!leaders.contains(leader)){
-                    leaders.add(leader);
+
+        }
+
+    }
+
+    private void addReturnedLocationMarker(GpsLocation gpsLocation, String userName, boolean isChildren) {
+        //Log.e("Marker username: ", userName);
+
+        boolean GpsLocationNotEmpty = gpsLocation.isGpsLocationNotEmpty();
+
+        if (GpsLocationNotEmpty) {
+
+
+            double lat = gpsLocation.getLat();
+            double lng = gpsLocation.getLng();
+            String time = gpsLocation.getTimestamp();
+
+
+            //convert the timestamp to datetime.
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+            Date d1 = null;
+
+            try {
+                d1 = format.parse(time);
+
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+            long gpsTime = d1.getTime();
+
+
+            long sysTime = System.currentTimeMillis();
+            //restTime in seconds
+            long resTime = (sysTime - gpsTime) / 1000;
+
+
+
+            if (resTime <= 60) {
+                String infoWindow = userName + "- " + getString(R.string.marker_last_updated) + " " + resTime + " " + getString(R.string.marker_secs_ago);
+                if (isChildren) {
+                    MapsFunctions.addMarkerToMap(mMap, lat, lng, infoWindow, true, ACTIVE_CHILDREN_MARKER_COLOUR);
+                } else {
+                    MapsFunctions.addMarkerToMap(mMap, lat, lng, infoWindow, true, ACTIVE_LEADERS_MARKER_COLOUR);
                 }
+
+            } else {
+                if (resTime > MARKER_INACTIVE_TIME_IN_SEC) {
+                    if (resTime < SECONDS_IN_HOUR) {
+                        String infoWindow = userName + "- " + getString(R.string.marker_went_offline) + " " + resTime / 60 + " " + getString(R.string.marker_mins_ago);
+                        if (isChildren) {
+                            MapsFunctions.addMarkerToMap(mMap, lat, lng, infoWindow, true, INACTIVE_CHILDREN_MARKER_COLOUR);
+                        } else {
+                            MapsFunctions.addMarkerToMap(mMap, lat, lng, infoWindow, true, INACTIVE_LEADERS_MARKER_COLOUR);
+                        }
+                    } else {
+                        String infoWindow = userName + "- " + getString(R.string.marker_offline_more_than_1_hr);
+                        if (isChildren) {
+                            MapsFunctions.addMarkerToMap(mMap, lat, lng, infoWindow, true, INACTIVE_CHILDREN_MARKER_COLOUR);
+                        } else {
+                            MapsFunctions.addMarkerToMap(mMap, lat, lng, infoWindow, true, INACTIVE_LEADERS_MARKER_COLOUR);
+                        }
+                    }
+                } else {
+                    String infoWindow = userName + "- " + getString(R.string.marker_last_updated) + " " + resTime / 60 + " " + getString(R.string.marker_mins_ago);
+                    if (isChildren) {
+                        MapsFunctions.addMarkerToMap(mMap, lat, lng, infoWindow, true, ACTIVE_CHILDREN_MARKER_COLOUR);
+                    } else {
+                        MapsFunctions.addMarkerToMap(mMap, lat, lng, infoWindow, true, ACTIVE_LEADERS_MARKER_COLOUR);
+                    }
+                }
+
             }
         }
-
-        // Populate group leaders' markers
-        for (int k = 0; k < leaders.size(); k++){
-            User leader = leaders.get(k);
-            long leaderId = leader.getId();
-            String leaderName = leader.getName();
-
-            Call<GpsLocation> caller = proxy.getLastGpsLocation(leaderId);
-            ProxyBuilder.callProxy(ParentsDashboard.this, caller, returnedGpsLocation -> addReturnedLocationMarker(returnedGpsLocation, leaderName, false));
-        }
-
     }
 
-    private void addReturnedLocationMarker(GpsLocation gpsLocation, String userName, boolean isChildren){
-        // Todo: display inactive markers with different colour
-        double lat = gpsLocation.getLat();
-        double lng = gpsLocation.getLng();
-        String time = gpsLocation.getTimestamp();
 
-        String infoWindow = userName + "- " + "last updated: " + time;
-        if (isChildren) {
-            MapsFunctions.addMarkerToMap(mMap, lat, lng, infoWindow, true, ACTIVE_CHILDREN_MARKER_COLOUR);
-        } else {
-            MapsFunctions.addMarkerToMap(mMap, lat, lng, infoWindow, true, ACTIVE_LEADERS_MARKER_COLOUR);
+    private void addGroupLeadersMarkers(List<Group> groups){
+        for (int i = 0; i < groups.size(); i++){
+            Group group = groups.get(i);
+            long groupId = group.getId();
+            getFullGroupDetails(groupId);
         }
     }
+
+    private void getFullGroupDetails(long groupId){
+        Call<Group> caller = proxy.getGroupById(groupId);
+        ProxyBuilder.callProxy(ParentsDashboard.this, caller, returnedGroup -> responseReturnGroup(returnedGroup));
+    }
+
+    private void responseReturnGroup(Group group){
+        User leader = group.getLeader();
+        long leaderId = leader.getId();
+        String leaderName = leader.getName();
+
+        Call<GpsLocation> caller = proxy.getLastGpsLocation(leaderId);
+        ProxyBuilder.callProxy(ParentsDashboard.this, caller, returnedGpsLocation -> addReturnedLocationMarker(returnedGpsLocation, leaderName, false));
+    }
+
+
+
 
 }
