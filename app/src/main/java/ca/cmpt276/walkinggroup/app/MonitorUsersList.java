@@ -1,8 +1,6 @@
 package ca.cmpt276.walkinggroup.app;
 
-
 import android.support.v7.app.AlertDialog;
-//import android.app.AlertDialog;
 import android.app.FragmentManager;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -114,7 +112,6 @@ public class MonitorUsersList extends AppCompatActivity {
 
 
 
-
     private void longClick() {
 
         ListView lv = (ListView) findViewById(R.id.monitorUsersList);
@@ -131,7 +128,7 @@ public class MonitorUsersList extends AppCompatActivity {
                 //create view
                 View mview=getLayoutInflater().inflate(R.layout.delete_dialog,null);
 
-                builder.setMessage("ALERT!!!")
+                builder.setMessage(R.string.alert_dialog_frag)
                         .setView(mview)
                         .setPositiveButton("delete", new DialogInterface.OnClickListener() {
                             @Override
@@ -170,6 +167,8 @@ public class MonitorUsersList extends AppCompatActivity {
 
 
     }
+
+
 
 
     private void setUpRefresh() {
