@@ -52,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
     private CurrentUserData userSingleton = CurrentUserData.getSingletonInstance();
 
 
+
     
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
