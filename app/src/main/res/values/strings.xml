@@ -152,4 +152,5 @@
     <string name="optional_only_child_need">optional - only child need</string>
     <string name="refresh">REFRESH</string>
     <string name="panic_button">Panic Button</string>
+    <string name="delete_user">Delete User</string>
 </resources>

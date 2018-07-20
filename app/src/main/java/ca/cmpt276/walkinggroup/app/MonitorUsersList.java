@@ -1,6 +1,8 @@
 package ca.cmpt276.walkinggroup.app;
 
-import android.app.AlertDialog;
+
+import android.support.v7.app.AlertDialog;
+//import android.app.AlertDialog;
 import android.app.FragmentManager;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -110,26 +112,66 @@ public class MonitorUsersList extends AppCompatActivity {
     }
 
 
+
+
+
     private void longClick() {
+
         ListView lv = (ListView) findViewById(R.id.monitorUsersList);
         lv.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 
-                User litterUser = usersList.get(position);
-                Long deleteID = litterUser.getId();
-                Call<Void> caller = proxy.removeFromMonitorsUsers(userID,deleteID);
-                ProxyBuilder.callProxy(MonitorUsersList.this, caller, nothing -> responseVoid(nothing));
 
-            return true;
+
+
+
+                android.support.v7.app.AlertDialog.Builder builder= new android.support.v7.app.AlertDialog.Builder(MonitorUsersList.this);
+
+                //create view
+                View mview=getLayoutInflater().inflate(R.layout.delete_dialog,null);
+
+                builder.setMessage("ALERT!!!")
+                        .setView(mview)
+                        .setPositiveButton("delete", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+
+                                User litterUser = usersList.get(position);
+
+                                Long deleteID = litterUser.getId();
+
+
+
+                                Call<Void> caller = proxy.removeFromMonitorsUsers(userID,deleteID);
+                                ProxyBuilder.callProxy(MonitorUsersList.this, caller, nothing -> responseVoid(nothing));
+
+                            }
+                        })
+
+
+                        .setNegativeButton("cancel",null)
+                        .setCancelable(false);
+
+
+                AlertDialog alert=builder.create();
+                alert.show();
+
+
+                return true;
+
+
+
 
             }
-
 
         });
 
 
+
     }
+
+
     private void setUpRefresh() {
         Button button = findViewById(R.id.btnRefresh);
         button.setOnClickListener(new View.OnClickListener() {
