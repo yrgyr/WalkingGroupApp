@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -84,6 +85,7 @@ public class MsgToMe extends AppCompatActivity {
                 ProxyBuilder.callProxy(MsgToMe.this,caller, returnedMsg -> responseMarkedMsg(returnedMsg));
 
 
+
             }
         });
 
@@ -93,6 +95,7 @@ public class MsgToMe extends AppCompatActivity {
 
 
     }
+
     private void displayMsgs() {
 
         Call<List<Message>> caller = proxy.getMessages(currentUser.getId());

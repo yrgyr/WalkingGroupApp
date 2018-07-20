@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -51,6 +52,7 @@ public class MonitorUsersList extends AppCompatActivity {
         setupListView();
         listViewOnclick();
         longClick();
+        setUpRefresh();
 
     }
 
@@ -128,7 +130,15 @@ public class MonitorUsersList extends AppCompatActivity {
 
 
     }
-
+    private void setUpRefresh() {
+        Button button = findViewById(R.id.btnRefresh);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setupListView();
+            }
+        });
+    }
 
     private void responseVoid(Void nothing){
         Toast.makeText(this,"Server replied to delete request.",Toast.LENGTH_LONG).show();

@@ -1,6 +1,7 @@
 package ca.cmpt276.walkinggroup.app;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
@@ -12,6 +13,9 @@ import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -34,6 +38,7 @@ import ca.cmpt276.walkinggroup.dataobjects.CurrentUserData;
 import ca.cmpt276.walkinggroup.dataobjects.GpsLocation;
 import ca.cmpt276.walkinggroup.dataobjects.Group;
 import ca.cmpt276.walkinggroup.dataobjects.MapsFunctions;
+import ca.cmpt276.walkinggroup.dataobjects.Message;
 import ca.cmpt276.walkinggroup.dataobjects.User;
 import ca.cmpt276.walkinggroup.proxy.ProxyBuilder;
 import ca.cmpt276.walkinggroup.proxy.WGServerProxy;
@@ -49,7 +54,7 @@ public class ParentsDashboard extends FragmentActivity implements OnMapReadyCall
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1234;
     private static final float DEFAULT_ZOOM = 15f;
     private LocationManager lm;
-    private final int UPDATE_UI_FREQUENCY_IN_MILLISECS = 10000; // Todo: change to 60000
+    private final int UPDATE_UI_FREQUENCY_IN_MILLISECS = 60000;
     private final int MARKER_INACTIVE_TIME_IN_SEC = 300;
     private final int SECONDS_IN_HOUR = 3600;
 
@@ -65,7 +70,8 @@ public class ParentsDashboard extends FragmentActivity implements OnMapReadyCall
     private final float INACTIVE_CHILDREN_MARKER_COLOUR = BitmapDescriptorFactory.HUE_RED;
     private final float INACTIVE_LEADERS_MARKER_COLOUR = BitmapDescriptorFactory.HUE_ORANGE;
 
-
+    public static int unreadCount = 0;
+    private Runnable myRun;
 
 
 
@@ -76,7 +82,11 @@ public class ParentsDashboard extends FragmentActivity implements OnMapReadyCall
         public void run() {
             mMap.clear();
             populateLocationMarkers();
-            // Todo: add code for checking new messages
+
+            Call<List<Message>> caller = proxy.getUnreadMessages(currentUser.getId(), false);
+            ProxyBuilder.callProxy(ParentsDashboard.this, caller, messageReturn -> responseGetMessage(messageReturn));
+
+
             handler.postDelayed(this, UPDATE_UI_FREQUENCY_IN_MILLISECS);
         }
     };
@@ -87,10 +97,16 @@ public class ParentsDashboard extends FragmentActivity implements OnMapReadyCall
         setContentView(R.layout.activity_parents_dashboard);
         getLocationPermission();
         populateLocationMarkers();
+        getUnReadMessageList();
+        setUpMail();
+
+        setUpRefresh();
+
 
         // start the routine to update location markers every 30 seconds
         handler.post(runnableCode);
     }
+
 
 
     /**
@@ -275,7 +291,41 @@ public class ParentsDashboard extends FragmentActivity implements OnMapReadyCall
         Call<GpsLocation> caller = proxy.getLastGpsLocation(leaderId);
         ProxyBuilder.callProxy(ParentsDashboard.this, caller, returnedGpsLocation -> addReturnedLocationMarker(returnedGpsLocation, leaderName, false));
     }
+    private void getUnReadMessageList() {
 
+        Call<List<Message>> caller = proxy.getUnreadMessages(currentUser.getId(),false);
+        ProxyBuilder.callProxy(ParentsDashboard.this,caller,messageReturn -> responseGetMessage(messageReturn));
+
+    }
+    private void responseGetMessage (List<Message> messageReturn) {
+        unreadCount = messageReturn.size();
+        Button button = findViewById(R.id.showUnreadText);
+        button.setText(getString(R.string.unreadCountForParent, unreadCount));
+
+    }
+    private void setUpMail() {
+        Button button = findViewById(R.id.showUnreadText);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ParentsDashboard.this,MsgToMe.class);
+                startActivity(intent);
+            }
+        });
+    }
+    private void setUpRefresh() {
+        Button button = findViewById(R.id.refreshButton);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mMap.clear();
+                populateLocationMarkers();
+                // Todo: add code for checking new messages
+                Call<List<Message>> caller = proxy.getUnreadMessages(currentUser.getId(), false);
+                ProxyBuilder.callProxy(ParentsDashboard.this, caller, messageReturn -> responseGetMessage(messageReturn));
+            }
+        });
+    }
 
 
 

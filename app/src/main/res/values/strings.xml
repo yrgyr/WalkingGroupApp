@@ -121,6 +121,7 @@
     <string name="cantAccess">Sorry, you can not access the parents\' information of this group.</string>
     <string name="send_message">Send Message</string>
     <string name="unreadCount"> \n You have %d unread messages</string>
+    <string name="unreadCountForParent"> %d unread messages</string>
     <string name="empty_msg_error_text">Message can not be empty</string>
     <string name="defalut_emergency_msg_">emergency msg!!!</string>
     <string name="checkbox_text">Is this emergency?</string>
@@ -149,4 +150,6 @@
     <string name="starting_upload">Starting location upload...</string>
     <string name="emailAlreadyRegister">This email address is already registered!</string>
     <string name="optional_only_child_need">optional - only child need</string>
+    <string name="refresh">REFRESH</string>
+    <string name="panic_button">Panic Button</string>
 </resources>

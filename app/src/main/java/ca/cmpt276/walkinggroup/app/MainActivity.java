@@ -1,28 +1,14 @@
 package ca.cmpt276.walkinggroup.app;
 
-import android.app.Activity;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.media.Image;
-import android.os.Handler;
-import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,7 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ca.cmpt276.walkinggroup.dataobjects.CurrentUserData;
-import ca.cmpt276.walkinggroup.dataobjects.EarnedRewards;
 import ca.cmpt276.walkinggroup.dataobjects.Group;
 import ca.cmpt276.walkinggroup.dataobjects.Message;
 import ca.cmpt276.walkinggroup.dataobjects.User;
@@ -46,14 +31,14 @@ public class MainActivity extends AppCompatActivity {
     public static List<Message> messageList = new ArrayList<>();
     private User currentUser;
     private int unreadCount = 0;
-
+    private Runnable myRun;
     private String name = "default";
 
     private CurrentUserData userSingleton = CurrentUserData.getSingletonInstance();
 
 
 
-    
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater=getMenuInflater();
@@ -101,9 +86,9 @@ public class MainActivity extends AppCompatActivity {
         userSingleton.setCurrentProxy(proxy);
 
         setUpName();
-//        setUpLogOut();
 
-        setupLogOutBtn();
+
+        setupParentDashboardBtn();
         getRemoteGroups();
 
 
@@ -118,9 +103,9 @@ public class MainActivity extends AppCompatActivity {
         setupPanicBtn();
 
 
-        updateevery10sec();
-
-        autoAdvance();
+//        updateevery10sec();
+//
+//        autoAdvance();
 
     }
 
@@ -155,16 +140,18 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void setupLogOutBtn(){
+    private void setupParentDashboardBtn(){
 
-        Button btn = (Button) findViewById(R.id.logOutBtn);
+        Button btn = (Button) findViewById(R.id.parentDashBtn);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                isLogOut = true;
-                Intent i = new Intent(MainActivity.this,login.class);
+//                isLogOut = true;
+//                Intent i = new Intent(MainActivity.this,login.class);
+//                startActivity(i);
+//                finish();
+                Intent i = new Intent(MainActivity.this,ParentsDashboard.class);
                 startActivity(i);
-                finish();
             }
         });
 
@@ -263,7 +250,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-    private Runnable myRun;
+
 
     private void getUnReadMessageList() {
         if(login.getToken(MainActivity.this) != null) {
@@ -272,39 +259,39 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void updateevery10sec(){
-        myRun = new Runnable() {
-            @Override
-            public void run() {
-                if(login.getToken(MainActivity.this) != null) {
-                    Call<List<Message>> caller = proxy.getUnreadMessages(currentUser.getId(), false);
-                    ProxyBuilder.callProxy(MainActivity.this, caller, messageReturn -> responseGetMessage(messageReturn));
-
-                    Toast.makeText(MainActivity.this, "hello", Toast.LENGTH_LONG).show();
-                    autoAdvance();
-                }
-
-
-            }
-        };
-    }
-    private void autoAdvance() {
-
-        Handler TIME_OUT_HANDLER;
-
-        int timeOut = 10000;
-
-        TIME_OUT_HANDLER = new Handler();
-
-
-        TIME_OUT_HANDLER.postDelayed(myRun,timeOut);
-    }
+//    private void updateevery10sec(){
+//        myRun = new Runnable() {
+//            @Override
+//            public void run() {
+//                if(login.getToken(MainActivity.this) != null) {
+//                    Call<List<Message>> caller = proxy.getUnreadMessages(currentUser.getId(), false);
+//                    ProxyBuilder.callProxy(MainActivity.this, caller, messageReturn -> responseGetMessage(messageReturn));
+//
+//                    //Toast.makeText(MainActivity.this, "hello", Toast.LENGTH_LONG).show();
+//                    autoAdvance();
+//                }
+//
+//
+//            }
+//        };
+//    }
+//    private void autoAdvance() {
+//
+//        Handler TIME_OUT_HANDLER;
+//
+//        int timeOut = 10000;
+//
+//        TIME_OUT_HANDLER = new Handler();
+//
+//
+//        TIME_OUT_HANDLER.postDelayed(myRun,timeOut);
+//    }
 
     private void responseGetMessage (List<Message> messageReturn) {
 
         unreadCount = messageReturn.size();
         TextView textView = findViewById(R.id.userName);
-        textView.setText(getString(R.string.welcome) + " " + name + ", " + getString(R.string.unreadCount,unreadCount));
+        textView.setText(getString(R.string.welcome) + " " + name );
     }
 
 

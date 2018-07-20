@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="37dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="38dp"
+        android:layout_marginTop="37dp"
         android:fontFamily="casual"
         android:text="@string/users_you_are_monitoring_long_click_to_delete_single_click_to_edit"
         android:textColor="@android:color/background_dark"
@@ -27,12 +27,27 @@
         android:id="@+id/monitorUsersList"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginBottom="71dp"
+        android:layout_marginBottom="7dp"
         android:layout_marginEnd="24dp"
         android:layout_marginStart="24dp"
+        app:layout_constraintBottom_toTopOf="@+id/btnRefresh"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView4" />
+
+    <Button
+        android:id="@+id/btnRefresh"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="17dp"
+        android:fontFamily="casual"
+        android:text="@string/refresh"
+        android:background="@drawable/button_style"
+        android:textColor="@android:color/black"
+        android:textSize="24sp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView4"
-        />
+        app:layout_constraintTop_toBottomOf="@+id/monitorUsersList" />
 </android.support.constraint.ConstraintLayout>
