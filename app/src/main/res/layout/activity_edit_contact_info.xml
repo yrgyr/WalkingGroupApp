@@ -310,6 +310,7 @@
                     android:layout_width="200dp"
                     android:layout_height="43dp"
                     android:layout_weight="1"
+                    android:contentDescription="@string/optional_only_child_need"
                     android:ems="10"
                     android:fontFamily="casual"
                     android:inputType="number"
@@ -318,7 +319,8 @@
                     android:textSize="18sp"
                     android:textStyle="bold"
                     tools:layout_editor_absoluteX="114dp"
-                    tools:layout_editor_absoluteY="334dp" />
+                    tools:layout_editor_absoluteY="334dp"
+                    tools:text="@string/optional_only_child_need" />
             </LinearLayout>
 
             <LinearLayout
@@ -347,6 +349,7 @@
                     android:layout_width="200dp"
                     android:layout_height="43dp"
                     android:layout_weight="1"
+                    android:contentDescription="@string/optional_only_child_need"
                     android:ems="10"
                     android:fontFamily="casual"
                     android:inputType="textPersonName"
@@ -355,7 +358,8 @@
                     android:textSize="18sp"
                     android:textStyle="bold"
                     tools:layout_editor_absoluteX="123dp"
-                    tools:layout_editor_absoluteY="367dp" />
+                    tools:layout_editor_absoluteY="367dp"
+                    tools:text="@string/optional_only_child_need" />
             </LinearLayout>
 
             <LinearLayout
@@ -384,6 +388,7 @@
                     android:layout_width="200dp"
                     android:layout_height="43dp"
                     android:layout_weight="1"
+                    android:contentDescription="@string/optional_only_child_need"
                     android:ems="10"
                     android:fontFamily="casual"
                     android:inputType="textPersonName"
@@ -392,7 +397,8 @@
                     android:textSize="18sp"
                     android:textStyle="bold"
                     tools:layout_editor_absoluteX="192dp"
-                    tools:layout_editor_absoluteY="407dp" />
+                    tools:layout_editor_absoluteY="407dp"
+                    tools:text="@string/optional_only_child_need" />
             </LinearLayout>
 
             <Button

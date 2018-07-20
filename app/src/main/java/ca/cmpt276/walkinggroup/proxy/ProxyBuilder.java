@@ -138,6 +138,9 @@ public class ProxyBuilder {
                             message = context.getString(R.string.empty_msg_error_text);
 
                         }
+                        else if(contextString.contains("EditContactInfo")){
+                            message = context.getString(R.string.emailAlreadyRegister);
+                        }
                         else{
                             message = "CALL TO SERVER FAILED:\n" + response.errorBody().string();
 

@@ -1,11 +1,14 @@
 package ca.cmpt276.walkinggroup.app;
 
+import android.content.Context;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import ca.cmpt276.walkinggroup.dataobjects.CurrentUserData;
 import ca.cmpt276.walkinggroup.dataobjects.User;
@@ -42,14 +45,26 @@ public class EditContactInfo extends AppCompatActivity {
 
         proxy = userSingleton.getCurrentProxy();
 
-        user = userSingleton.getCurrentUser();
 
+        extraDataFromIntent();
 
-        setUpdatedInfo();
         setupValidateButton();
 
 
 
+    }
+    private void extraDataFromIntent() {
+        Intent intent = getIntent();
+        Long userId = intent.getLongExtra("ID",-1);
+        if(userId != -1){
+            Call<User> caller = proxy.getUserById(userId);
+            ProxyBuilder.callProxy(EditContactInfo.this, caller, returnedUser -> response(returnedUser));
+        }
+
+    }
+    private void response(User returnUser) {
+        user = returnUser;
+        setUpdatedInfo();
     }
 
     //Get the new info from the fields
@@ -159,5 +174,10 @@ public class EditContactInfo extends AppCompatActivity {
     private void userResponse(User returnedUser) {
         Log.i("Updated Name","Successfull");
         finish();
+    }
+    public static Intent makeIntent(Context context, Long UserId){
+        Intent intent = new Intent(context,EditContactInfo.class);
+        intent.putExtra("ID",UserId);
+        return intent;
     }
 }

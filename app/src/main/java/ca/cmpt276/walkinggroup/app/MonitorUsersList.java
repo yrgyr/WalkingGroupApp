@@ -97,9 +97,8 @@ public class MonitorUsersList extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                android.support.v4.app.FragmentManager manager=getSupportFragmentManager();
-                MessageFragment dialog=new MessageFragment();
-                dialog.show(manager,"MessageDialog");
+                Intent intent = EditContactInfo.makeIntent(MonitorUsersList.this,usersList.get(position).getId());
+                startActivity(intent);
 
 
 
