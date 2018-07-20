@@ -10,12 +10,14 @@
 
     <ScrollView
         android:id="@+id/scrollView4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:layout_marginStart="16dp"
+        android:layout_width="204dp"
+        android:layout_height="465dp"
+        android:layout_marginBottom="12dp"
+        android:layout_marginEnd="25dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintEnd_toStartOf="@+id/mailImage"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/userName">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -117,7 +119,7 @@
                 android:layout_width="200dp"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
-                android:background="@drawable/button_style"
+                android:background="@drawable/panic_button_style"
                 android:fontFamily="casual"
                 android:text="@string/panic_button"
                 android:textSize="18sp"
@@ -132,29 +134,27 @@
 
     <TextView
         android:id="@+id/userName"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginEnd="55dp"
-        android:layout_marginStart="55dp"
-        android:layout_marginTop="13dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
         android:fontFamily="casual"
         android:lineSpacingExtra="24sp"
         android:textColor="@android:color/black"
         android:textSize="20sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/scrollView4"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/scrollView4"
+        app:layout_constraintStart_toEndOf="@+id/scrollView4"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/mailImage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="37dp"
-        android:layout_marginTop="28dp"
+        android:layout_width="115dp"
+        android:layout_height="92dp"
+        android:layout_marginEnd="33dp"
+        android:layout_marginTop="153dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/userName"
+        app:layout_constraintStart_toEndOf="@+id/scrollView4"
+        app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@mipmap/mail" />
 
 

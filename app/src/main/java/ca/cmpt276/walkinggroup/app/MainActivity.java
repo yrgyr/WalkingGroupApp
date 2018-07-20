@@ -112,6 +112,7 @@ public class MainActivity extends AppCompatActivity {
     private void setupImageBtn() {
 
         ImageView myImg = (ImageView) findViewById(R.id.mailImage);
+
         myImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
