@@ -3,6 +3,8 @@ package ca.cmpt276.walkinggroup.app;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.TypedValue;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -29,10 +31,11 @@ public class MonitorByUsersList extends AppCompatActivity {
     private CurrentUserData userSingleton = CurrentUserData.getSingletonInstance();
 
 
+
     /* =======================================================================================
-       ============== This Activity displays all users who monitor the logged in user =========
-        ====================================================================================
-    */
+           ============== This Activity displays all users who monitor the logged in user =========
+            ====================================================================================
+        */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,6 +46,11 @@ public class MonitorByUsersList extends AppCompatActivity {
         userID = user.getId();
         setupListView();
         listViewOnclick();
+
+
+
+
+
 
     }
 

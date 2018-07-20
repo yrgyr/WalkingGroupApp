@@ -110,6 +110,7 @@ public class ProxyBuilder {
             @Override
             public void onResponse(Call<T> call, retrofit2.Response<T> response) {
 
+
                 // Process the response
                 if (response.errorBody() == null) {
                     // Check for authentication token:
@@ -130,7 +131,17 @@ public class ProxyBuilder {
                 } else {
                     String message;
                     try {
-                        message = "CALL TO SERVER FAILED:\n" + response.errorBody().string();
+
+                        String contextString = context.toString();
+
+                        if(contextString.contains("SendMessage")){
+                            message = context.getString(R.string.empty_msg_error_text);
+
+                        }
+                        else{
+                            message = "CALL TO SERVER FAILED:\n" + response.errorBody().string();
+
+                        }
                     } catch (IOException e) {
                         e.printStackTrace();
                         message = "Unable to decode response (body or error's body).";
