@@ -78,7 +78,7 @@ public class MonitorUsersList extends AppCompatActivity {
             Long ID = THIS_USER.getId();
             String name = THIS_USER.getName();
 
-            String DISPLAY_THIS_USER = "Name: " + name + " , ID: "+ ID + " , email: " + email;
+            String DISPLAY_THIS_USER = "Name: " + name + " , ID: "+ ID + " \nemail: " + email;
             ALL_USERS.add(DISPLAY_THIS_USER);
         }
 

@@ -274,12 +274,13 @@ public class MainActivity extends AppCompatActivity {
         myRun = new Runnable() {
             @Override
             public void run() {
+                if(login.getToken(MainActivity.this) != null) {
+                    Call<List<Message>> caller = proxy.getUnreadMessages(currentUser.getId(), false);
+                    ProxyBuilder.callProxy(MainActivity.this, caller, messageReturn -> responseGetMessage(messageReturn));
 
-                Call<List<Message>> caller = proxy.getUnreadMessages(currentUser.getId(),false);
-                ProxyBuilder.callProxy(MainActivity.this,caller,messageReturn -> responseGetMessage(messageReturn));
-
-                Toast.makeText(MainActivity.this,"hello",Toast.LENGTH_LONG).show();
-                autoAdvance();
+                    Toast.makeText(MainActivity.this, "hello", Toast.LENGTH_LONG).show();
+                    autoAdvance();
+                }
 
 
             }

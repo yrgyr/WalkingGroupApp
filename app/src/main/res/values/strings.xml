@@ -85,7 +85,7 @@
     <string name="create_group_success_toast_msg">Create group successfully ,Server replied with group ID:</string>
     <string name="title_activity_parents_dashboard">Map</string>
     <string name="edit_user">EDIT USER</string>
-    <string name="users_you_are_monitoring_long_click_to_delete_single_click_to_edit">Users you are monitoring (*long click to delete *single click to edit)</string>
+    <string name="users_you_are_monitoring_long_click_to_delete_single_click_to_edit">Users you are monitoring \nlong click to delete \nsingle click to edit</string>
     <string name="edit_this_user_info">Edit this user info</string>
     <string name="edit_user_detail">Edit User Detail</string>
     <string name="menu_start_uploading">Start uploading</string>

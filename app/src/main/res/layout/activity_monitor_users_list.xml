@@ -17,7 +17,7 @@
         android:fontFamily="casual"
         android:text="@string/users_you_are_monitoring_long_click_to_delete_single_click_to_edit"
         android:textColor="@android:color/background_dark"
-        android:textSize="14sp"
+        android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/monitorUsersList"
         app:layout_constraintStart_toStartOf="parent"

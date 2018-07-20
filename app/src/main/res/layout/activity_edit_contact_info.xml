@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="ca.cmpt276.walkinggroup.app.MainActivity"
-    tools:layout_editor_absoluteY="81dp">
+    tools:layout_editor_absoluteY="81dp"
+    android:background="@drawable/testimg2">
 
 
     <ScrollView
@@ -398,8 +399,11 @@
                 android:id="@+id/doneBtn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:fontFamily="casual"
+                android:background="@drawable/button_style"
                 android:text="@string/validate"
+                android:textStyle="bold"
+                android:textSize="22sp"
+                android:layout_marginBottom="10dp"
                 tools:layout_editor_absoluteX="0dp"
                 tools:layout_editor_absoluteY="456dp" />
         </LinearLayout>
