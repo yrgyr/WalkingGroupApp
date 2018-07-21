@@ -20,7 +20,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="80dp"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
 
 
@@ -49,7 +49,7 @@
                 <EditText
                     android:id="@+id/updateName"
                     android:layout_width="200dp"
-                    android:layout_height="43dp"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:ems="10"
                     android:fontFamily="casual"
@@ -86,7 +86,7 @@
                 <EditText
                     android:id="@+id/updateEmail"
                     android:layout_width="200dp"
-                    android:layout_height="43dp"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:ems="10"
                     android:fontFamily="casual"
@@ -123,7 +123,7 @@
                 <EditText
                     android:id="@+id/updateYear"
                     android:layout_width="200dp"
-                    android:layout_height="43dp"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:ems="10"
                     android:fontFamily="casual"
@@ -160,7 +160,7 @@
                 <EditText
                     android:id="@+id/updateMonth"
                     android:layout_width="200dp"
-                    android:layout_height="43dp"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:ems="10"
                     android:fontFamily="casual"
@@ -234,7 +234,7 @@
                 <EditText
                     android:id="@+id/updatePhone"
                     android:layout_width="200dp"
-                    android:layout_height="43dp"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:ems="10"
                     android:fontFamily="casual"
@@ -271,7 +271,7 @@
                 <EditText
                     android:id="@+id/updateHomePhone"
                     android:layout_width="200dp"
-                    android:layout_height="43dp"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:ems="10"
                     android:fontFamily="casual"
@@ -308,7 +308,7 @@
                 <EditText
                     android:id="@+id/updateGrade"
                     android:layout_width="200dp"
-                    android:layout_height="43dp"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:contentDescription="@string/optional_only_child_need"
                     android:ems="10"
@@ -347,7 +347,7 @@
                 <EditText
                     android:id="@+id/updateTeacherName"
                     android:layout_width="200dp"
-                    android:layout_height="43dp"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:contentDescription="@string/optional_only_child_need"
                     android:ems="10"
@@ -386,7 +386,7 @@
                 <EditText
                     android:id="@+id/updateEmergencyContact"
                     android:layout_width="200dp"
-                    android:layout_height="43dp"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:contentDescription="@string/optional_only_child_need"
                     android:ems="10"
@@ -405,11 +405,11 @@
                 android:id="@+id/doneBtn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
                 android:background="@drawable/button_style"
                 android:text="@string/validate"
-                android:textStyle="bold"
                 android:textSize="22sp"
-                android:layout_marginBottom="10dp"
+                android:textStyle="bold"
                 tools:layout_editor_absoluteX="0dp"
                 tools:layout_editor_absoluteY="456dp" />
         </LinearLayout>

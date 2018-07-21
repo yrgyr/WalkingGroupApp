@@ -70,8 +70,12 @@ public class ParentsDashboard extends FragmentActivity implements OnMapReadyCall
     private final float INACTIVE_CHILDREN_MARKER_COLOUR = BitmapDescriptorFactory.HUE_RED;
     private final float INACTIVE_LEADERS_MARKER_COLOUR = BitmapDescriptorFactory.HUE_ORANGE;
 
-    public static int unreadCount = 0;
+
     private Runnable myRun;
+
+    private int unemergentUnread = 0;
+    private int emergentUnread = 0;
+    private int unreadCount = 0;
 
 
 
@@ -298,11 +302,19 @@ public class ParentsDashboard extends FragmentActivity implements OnMapReadyCall
 
     }
     private void responseGetMessage (List<Message> messageReturn) {
-        unreadCount = messageReturn.size();
-        Button button = findViewById(R.id.showUnreadText);
-        button.setText(getString(R.string.unreadCountForParent, unreadCount));
+        Call<List<Message>> caller = proxy.getUnreadMessages(currentUser.getId(), true);
+        ProxyBuilder.callProxy(ParentsDashboard.this, caller, messageReturnList -> responseGetMessageEmergent(messageReturnList));
+        unemergentUnread = messageReturn.size();
 
     }
+
+    private void responseGetMessageEmergent(List<Message> messageReturnList) {
+        emergentUnread = messageReturnList.size();
+        unreadCount = unemergentUnread + emergentUnread;
+        Button button = findViewById(R.id.showUnreadText);
+        button.setText(getString(R.string.unreadCountForParent, unreadCount));
+    }
+
     private void setUpMail() {
         Button button = findViewById(R.id.showUnreadText);
         button.setOnClickListener(new View.OnClickListener() {
@@ -320,7 +332,7 @@ public class ParentsDashboard extends FragmentActivity implements OnMapReadyCall
             public void onClick(View v) {
                 mMap.clear();
                 populateLocationMarkers();
-                // Todo: add code for checking new messages
+                
                 Call<List<Message>> caller = proxy.getUnreadMessages(currentUser.getId(), false);
                 ProxyBuilder.callProxy(ParentsDashboard.this, caller, messageReturn -> responseGetMessage(messageReturn));
             }
