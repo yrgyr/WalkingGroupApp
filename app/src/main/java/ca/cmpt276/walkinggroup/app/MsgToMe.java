@@ -45,13 +45,10 @@ public class MsgToMe extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_msg_to_me);
-        if(MainActivity.unreadCount != 0) {
-            displayMsgs();
-            setupOnItemClick();
-        }
-        else{
-            Toast.makeText(MsgToMe.this, getString(R.string.Not_Message),Toast.LENGTH_LONG).show();
-        }
+
+        displayMsgs();
+        setupOnItemClick();
+
 
 
     }
@@ -108,78 +105,83 @@ public class MsgToMe extends AppCompatActivity {
     }
 
     private void responseAllMsg(List<Message> returnedMsgs) {
+        if(!returnedMsgs.isEmpty()) {
+            all_Msgs = returnedMsgs;
 
-        all_Msgs = returnedMsgs;
-
-        Collections.sort(returnedMsgs, new Comparator<Message>() {
-            @Override
-            public int compare(Message o1, Message o2) {
-                return o1.getTimestamp().compareTo(o2.getTimestamp());
-            }
-        });
-        Collections.reverse(returnedMsgs);
-
-
-        ListView msg_list = (ListView) findViewById(R.id.msgListView);
-        ArrayAdapter<Message> adapter = new ArrayAdapter<Message>(this,R.layout.msg_list,returnedMsgs){
+            Collections.sort(returnedMsgs, new Comparator<Message>() {
+                @Override
+                public int compare(Message o1, Message o2) {
+                    return o1.getTimestamp().compareTo(o2.getTimestamp());
+                }
+            });
+            Collections.reverse(returnedMsgs);
 
 
-            @NonNull
-            @Override
-            public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+            ListView msg_list = (ListView) findViewById(R.id.msgListView);
+            ArrayAdapter<Message> adapter = new ArrayAdapter<Message>(this, R.layout.msg_list, returnedMsgs) {
+
+
+                @NonNull
+                @Override
+                public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
 
 //                View convertView = convertView;
-                if(convertView == null){
-                    convertView = getLayoutInflater().inflate(R.layout.msg_list,parent,false);
+                    if (convertView == null) {
+                        convertView = getLayoutInflater().inflate(R.layout.msg_list, parent, false);
+                    }
+
+                    Message currentMsg = returnedMsgs.get(position);
+
+                    User from = currentMsg.getFromUser();
+
+                    String fromName = from.getName();
+                    Date timestamp = currentMsg.getTimestamp();
+                    String time = timestamp.toString().substring(11, 19);
+                    String day = timestamp.toString().substring(4, 10);
+                    String displayTime = time + " , " + day;
+
+
+                    String display_msg = fromName + "\n" + currentMsg.getText() + " \n" + time;
+
+                    TextView fromWhomTv = (TextView) convertView.findViewById(R.id.fromWhom);
+                    fromWhomTv.setText(getString(R.string.from_whom_display, fromName));
+
+                    TextView timeTv = (TextView) convertView.findViewById(R.id.timeSent);
+                    timeTv.setText(displayTime);
+
+                    TextView contentTv = (TextView) convertView.findViewById(R.id.msgContent);
+                    contentTv.setText(currentMsg.getText());
+
+
+                    if (currentMsg.isRead()) {
+                        fromWhomTv.setTypeface(Typeface.DEFAULT);
+                        timeTv.setTypeface(Typeface.DEFAULT);
+                        contentTv.setTypeface(Typeface.DEFAULT);
+                    }
+                    if (currentMsg.isEmergency()) {
+
+                        convertView.setBackgroundResource(R.color.lightorange);
+                    }
+                    return convertView;
                 }
 
-                Message currentMsg = returnedMsgs.get(position);
+                @Override
+                public int getViewTypeCount() {
 
-                User from = currentMsg.getFromUser();
-
-                String fromName = from.getName();
-                Date timestamp = currentMsg.getTimestamp();
-                String time = timestamp.toString().substring(11,19);
-                String day = timestamp.toString().substring(4,10);
-                String displayTime = time + " , " + day;
-
-
-                String display_msg = fromName + "\n" + currentMsg.getText() + " \n" + time;
-
-                TextView fromWhomTv = (TextView) convertView.findViewById(R.id.fromWhom);
-                fromWhomTv.setText(getString(R.string.from_whom_display,fromName));
-
-                TextView timeTv = (TextView) convertView.findViewById(R.id.timeSent);
-                timeTv.setText(displayTime);
-
-                TextView contentTv = (TextView) convertView.findViewById(R.id.msgContent);
-                contentTv.setText(currentMsg.getText());
-
-
-                if(currentMsg.isRead()){
-                    fromWhomTv.setTypeface(Typeface.DEFAULT);
-                    timeTv.setTypeface(Typeface.DEFAULT);
-                    contentTv.setTypeface(Typeface.DEFAULT);
+                    return getCount();
                 }
-                if(currentMsg.isEmergency()){
 
-                    convertView.setBackgroundResource(R.color.lightorange);
+                @Override
+                public int getItemViewType(int position) {
+
+                    return position;
                 }
-                return convertView;
-            }
-            @Override
-            public int getViewTypeCount() {
 
-                return getCount();
-            }
-
-            @Override
-            public int getItemViewType(int position) {
-
-                return position;
-            }
-
-        };
-        msg_list.setAdapter(adapter);
+            };
+            msg_list.setAdapter(adapter);
+        }
+        else{
+            Toast.makeText(MsgToMe.this, getString(R.string.Not_Message),Toast.LENGTH_LONG).show();
+        }
     }
 }
