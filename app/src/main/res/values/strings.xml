@@ -154,7 +154,6 @@
     <string name="panic_button">Panic Button</string>
     <string name="alert_dialog_frag">ALERT!!!</string>
     <string name="delete_user">Delete User</string>
-    <string name="No_Email">You don\'t have any email yet!</string>
 
 
 </resources>

@@ -14,7 +14,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.sql.DatabaseMetaData;
 import java.util.ArrayList;
@@ -46,13 +45,8 @@ public class MsgToMe extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_msg_to_me);
 
-        if(MainActivity.unreadCount != 0){
-            displayMsgs();
-            setupOnItemClick();
-        }
-        else{
-            Toast.makeText(MsgToMe.this, getString(R.string.No_Email),Toast.LENGTH_LONG).show();
-        }
+        displayMsgs();
+        setupOnItemClick();
 
 
     }
