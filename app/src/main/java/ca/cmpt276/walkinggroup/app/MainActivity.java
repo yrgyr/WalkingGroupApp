@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
     public static List<Group> groupsList = new ArrayList<>();
     public static List<Message> messageList = new ArrayList<>();
     private User currentUser;
-    public static int unreadCount = 0;
+    private int unreadCount = 0;
     private Runnable myRun;
     private String name = "default";
 
@@ -103,7 +103,9 @@ public class MainActivity extends AppCompatActivity {
         setupPanicBtn();
 
 
-
+//        updateevery10sec();
+//
+//        autoAdvance();
 
     }
 
@@ -253,11 +255,38 @@ public class MainActivity extends AppCompatActivity {
 
     private void getUnReadMessageList() {
         if(login.getToken(MainActivity.this) != null) {
-            Call<List<Message>> caller = proxy.getMessages(currentUser.getId());
+            Call<List<Message>> caller = proxy.getUnreadMessages(currentUser.getId(),false);
             ProxyBuilder.callProxy(MainActivity.this,caller,messageReturn -> responseGetMessage(messageReturn));
         }
     }
 
+//    private void updateevery10sec(){
+//        myRun = new Runnable() {
+//            @Override
+//            public void run() {
+//                if(login.getToken(MainActivity.this) != null) {
+//                    Call<List<Message>> caller = proxy.getUnreadMessages(currentUser.getId(), false);
+//                    ProxyBuilder.callProxy(MainActivity.this, caller, messageReturn -> responseGetMessage(messageReturn));
+//
+//                    //Toast.makeText(MainActivity.this, "hello", Toast.LENGTH_LONG).show();
+//                    autoAdvance();
+//                }
+//
+//
+//            }
+//        };
+//    }
+//    private void autoAdvance() {
+//
+//        Handler TIME_OUT_HANDLER;
+//
+//        int timeOut = 10000;
+//
+//        TIME_OUT_HANDLER = new Handler();
+//
+//
+//        TIME_OUT_HANDLER.postDelayed(myRun,timeOut);
+//    }
 
     private void responseGetMessage (List<Message> messageReturn) {
 
