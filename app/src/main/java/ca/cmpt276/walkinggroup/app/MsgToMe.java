@@ -49,6 +49,7 @@ public class MsgToMe extends AppCompatActivity {
         displayMsgs();
         setupOnItemClick();
 
+        
 
 
     }
