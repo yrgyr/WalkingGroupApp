@@ -154,6 +154,7 @@
     <string name="panic_button">Panic Button</string>
     <string name="alert_dialog_frag">ALERT!!!</string>
     <string name="delete_user">Delete User</string>
+    <string name="Not_Message">You don\'t have any message yet!</string>
 
 
 </resources>

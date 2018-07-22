@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
     public static List<Group> groupsList = new ArrayList<>();
     public static List<Message> messageList = new ArrayList<>();
     private User currentUser;
-    private int unreadCount = 0;
+    public static int unreadCount = 0;
     private Runnable myRun;
     private String name = "default";
 
@@ -252,7 +252,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void getUnReadMessageList() {
         if(login.getToken(MainActivity.this) != null) {
-            Call<List<Message>> caller = proxy.getUnreadMessages(currentUser.getId(),false);
+            Call<List<Message>> caller = proxy.getMessages(currentUser.getId());
             ProxyBuilder.callProxy(MainActivity.this,caller,messageReturn -> responseGetMessage(messageReturn));
         }
     }

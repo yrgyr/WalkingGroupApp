@@ -70,7 +70,9 @@ public class ParentsDashboard extends FragmentActivity implements OnMapReadyCall
     private final float INACTIVE_CHILDREN_MARKER_COLOUR = BitmapDescriptorFactory.HUE_RED;
     private final float INACTIVE_LEADERS_MARKER_COLOUR = BitmapDescriptorFactory.HUE_ORANGE;
 
-    public static int unreadCount = 0;
+    private int unreadCount = 0;
+    private int unreadNotEmergent = 0;
+    private int unreadEmergent = 0;
     private Runnable myRun;
 
 
@@ -298,11 +300,20 @@ public class ParentsDashboard extends FragmentActivity implements OnMapReadyCall
 
     }
     private void responseGetMessage (List<Message> messageReturn) {
-        unreadCount = messageReturn.size();
-        Button button = findViewById(R.id.showUnreadText);
-        button.setText(getString(R.string.unreadCountForParent, unreadCount));
+        unreadNotEmergent = messageReturn.size();
+
+        Call<List<Message>> caller = proxy.getUnreadMessages(currentUser.getId(), true);
+        ProxyBuilder.callProxy(ParentsDashboard.this, caller, messageReturnEm -> responseGetMessageForEmergent(messageReturnEm));
 
     }
+
+    private void responseGetMessageForEmergent(List<Message> messageReturnEm) {
+        unreadEmergent = messageReturnEm.size();
+        unreadCount = unreadEmergent + unreadNotEmergent;
+        Button button = findViewById(R.id.showUnreadText);
+        button.setText(getString(R.string.unreadCountForParent, unreadCount));
+    }
+
     private void setUpMail() {
         Button button = findViewById(R.id.showUnreadText);
         button.setOnClickListener(new View.OnClickListener() {
