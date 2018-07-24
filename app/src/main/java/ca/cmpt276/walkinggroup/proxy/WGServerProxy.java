@@ -56,23 +56,23 @@ public interface WGServerProxy {
     // User Monitoring
     // -----------------------------
     @GET("/users/{id}/monitoredByUsers")
-    Call<List<User>> getMonitoredByUsers(@Path("id") Long userId);
+    Call<List<User>> getMonitoredByUsers(@Path("id") Long childId);
 
     @POST("/users/{id}/monitoredByUsers")
-    Call<List<User>> addToMonitoredByUsers(@Path("id") Long userId, @Body User user);
+    Call<List<User>> addToMonitoredByUsers(@Path("id") Long childId, @Body User parent);
 
-    @DELETE("/users/{id}/monitoredByUsers/{childId}")
-    Call<Void> removeFromMonitoredByUsers(@Path("id") Long userId, @Path("childId") Long childId);
+    @DELETE("/users/{id}/monitoredByUsers/{parentId}")
+    Call<Void> removeFromMonitoredByUsers(@Path("id") Long childId, @Path("parentId") Long parentId);
 
 
     @GET("/users/{id}/monitorsUsers")
-    Call<List<User>> getMonitorsUsers(@Path("id") Long userId);
+    Call<List<User>> getMonitorsUsers(@Path("id") Long parentId);
 
     @POST("/users/{id}/monitorsUsers")
-    Call<List<User>> addToMonitorsUsers(@Path("id") Long userId, @Body User user);
+    Call<List<User>> addToMonitorsUsers(@Path("id") Long parentId, @Body User child);
 
     @DELETE("/users/{id}/monitorsUsers/{childId}")
-    Call<Void> removeFromMonitorsUsers(@Path("id") Long userId, @Path("childId") Long childId);
+    Call<Void> removeFromMonitorsUsers(@Path("id") Long parentId, @Path("childId") Long childId);
 
 
     // -----------------------------
