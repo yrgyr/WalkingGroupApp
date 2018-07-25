@@ -155,6 +155,10 @@
     <string name="alert_dialog_frag">ALERT!!!</string>
     <string name="delete_user">Delete User</string>
     <string name="Not_Message">You don\'t have any message yet!</string>
+    <string name="permission">PERMISSION</string>
+    <string name="pending">Pending</string>
+    <string name="Approved">Approved</string>
+    <string name="denied">Denied</string>
 
 
 </resources>

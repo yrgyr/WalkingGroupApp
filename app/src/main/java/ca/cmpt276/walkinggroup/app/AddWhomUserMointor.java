@@ -65,6 +65,7 @@ public class AddWhomUserMointor extends AppCompatActivity {
 
                 //  ---------------FIND INPUT USER BY EMAIL --------------------------
                 Call<User> caller = proxy.getUserByEmail(email);
+
                 ProxyBuilder.callProxyForUser(AddWhomUserMointor.this, caller, returnedUser -> responseAddMonitor(returnedUser));
 
 

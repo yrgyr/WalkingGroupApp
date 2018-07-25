@@ -497,6 +497,7 @@ public class ProxyBuilder {
             }
 
             builder.header("json-depth", "1"); // add this line to get all user infos when getGroupMembers is called
+            builder.header("permissions-enabled", "true");
             Request modifiedRequest = builder.build();
 
             return chain.proceed(modifiedRequest);
