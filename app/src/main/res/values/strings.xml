@@ -159,6 +159,7 @@
     <string name="pending">Pending</string>
     <string name="Approved">Approved</string>
     <string name="denied">Denied</string>
+    <string name="theRequest">the request.</string>
 
 
 </resources>

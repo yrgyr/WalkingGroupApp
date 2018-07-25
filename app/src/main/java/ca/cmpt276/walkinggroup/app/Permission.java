@@ -43,7 +43,7 @@ public class Permission extends AppCompatActivity {
     }
 
     private void displayPermission() {
-        Call<List<PermissionRequest>> caller = proxy.getPermissions();
+        Call<List<PermissionRequest>> caller = proxy.getPermissions(currentUser.getId());
         ProxyBuilder.callProxy(this,caller, returnedPermission -> responseReturnListPermission(returnedPermission));
     }
 
@@ -75,9 +75,9 @@ public class Permission extends AppCompatActivity {
                     String message = permissionRequest.getMessage();
                     //TODO: list who have approved this request or deny.
 
-//                    Set<PermissionRequest.Authorizor> authorizors;
-//                    authorizors = permissionRequest.getAuthorizors();
-//                    permissionRequest.getAuthorizors().size();
+                    Set<PermissionRequest.Authorizor> authorizors;
+                    authorizors = permissionRequest.getAuthorizors();
+                    permissionRequest.getAuthorizors().size();
 
                     if(status == WGServerProxy.PermissionStatus.PENDING){
                         statusText.setText(getString(R.string.pending));
@@ -92,23 +92,27 @@ public class Permission extends AppCompatActivity {
                     permissionContent.setText(message);
 
 
-//                    if(authorizors.size()==0){
-//                        userDeny.setText("zero");
-//                    }
-//                    else if (authorizors.size()==1){
-//                        userDeny.setText("one");
-//                    }
-//                    else{
-//                        userDeny.setText("more than 2");
-//                    }
                     //userDeny.setText("" + authorizors.size());
-                    //Iterator<PermissionRequest.Authorizor> iterator = authorizors.iterator();
+//                    Iterator<PermissionRequest.Authorizor> iterator = authorizors.iterator();
+//                    String text = "";
 //                    while(iterator.hasNext()) {
 //                        PermissionRequest.Authorizor authorizor = iterator.next();
-//                        if(authorizor.getStatus() == WGServerProxy.PermissionStatus.PENDING){
-//                            userDeny.setText("pending !");
+//                        if(authorizor.getStatus() != WGServerProxy.PermissionStatus.PENDING){
+////                            userDeny.setText("pending !");
+//                            User grantUser = authorizor.getWhoApprovedOrDenied();
+//
+//                            if(authorizor.getStatus() == WGServerProxy.PermissionStatus.APPROVED){
+//                                 text += grantUser.getName() + " " + getString(R.string.Approved) + getString(R.string.theRequest) + "\n";
+//
+//                            }
+//                            else{
+//                                text += grantUser.getName() + " " + getString(R.string.denied) + getString(R.string.theRequest)+ "\n";
+//
+//                            }
 //                        }
+//
 //                    }
+//                    userDeny.setText(text);
 
 
 
