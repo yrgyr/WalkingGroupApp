@@ -75,7 +75,7 @@ public class PermissionRequest extends IdItemBase {
         return authorizors;
     }
 
-    @JsonIgnore
+
     public void setAuthorizors(Set<Authorizor> authorizors) {
         this.authorizors = authorizors;
     }

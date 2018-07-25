@@ -1,5 +1,6 @@
 package ca.cmpt276.walkinggroup.app;
 
+import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -9,10 +10,15 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.w3c.dom.Text;
 
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import ca.cmpt276.walkinggroup.dataobjects.CurrentUserData;
 import ca.cmpt276.walkinggroup.dataobjects.Message;
@@ -44,38 +50,82 @@ public class Permission extends AppCompatActivity {
     private void responseReturnListPermission(List<PermissionRequest> returnedPermission) {
         if(!returnedPermission.isEmpty()){
             permissionRequestList = returnedPermission;
+
+
             ListView permissionList = findViewById(R.id.permissionListView);
             ArrayAdapter<PermissionRequest> adapter= new ArrayAdapter<PermissionRequest>(this, R.layout.permission_list,returnedPermission){
-//                @NonNull
-//               @Override
-//                public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-//                    if (convertView == null) {
-//                        convertView = getLayoutInflater().inflate(R.layout.msg_list, parent, false);
+
+
+                @NonNull
+                @Override
+                public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+
+                    if (convertView == null) {
+                        convertView = getLayoutInflater().inflate(R.layout.permission_list, parent, false);
+                    }
+
+                    TextView statusText = convertView.findViewById(R.id.statusText);
+                    TextView permissionContent = convertView.findViewById(R.id.permissionContent);
+                    TextView userDeny = convertView.findViewById(R.id.userApproveOrDeny);
+
+
+                    PermissionRequest permissionRequest = returnedPermission.get(position);
+
+                    WGServerProxy.PermissionStatus status = permissionRequest.getStatus();
+                    String message = permissionRequest.getMessage();
+                    //TODO: list who have approved this request or deny.
+
+//                    Set<PermissionRequest.Authorizor> authorizors;
+//                    authorizors = permissionRequest.getAuthorizors();
+//                    permissionRequest.getAuthorizors().size();
+
+                    if(status == WGServerProxy.PermissionStatus.PENDING){
+                        statusText.setText(getString(R.string.pending));
+                    }
+                    else if (status == WGServerProxy.PermissionStatus.APPROVED){
+                        statusText.setText(getString(R.string.Approved));
+                    }
+                    else{
+                        statusText.setText(getString(R.string.denied));
+                    }
+
+                    permissionContent.setText(message);
+
+
+//                    if(authorizors.size()==0){
+//                        userDeny.setText("zero");
 //                    }
-//                    PermissionRequest permissionRequest = returnedPermission.get(position);
-//
-//                    WGServerProxy.PermissionStatus status = permissionRequest.getStatus();
-//
-//                    String statusString;
-//                    if(status == WGServerProxy.PermissionStatus.PENDING){
-//                        statusString = getString(R.string.pending);
-//                    }
-//                    else if(status == WGServerProxy.PermissionStatus.APPROVED){
-//                        statusString = getString(R.string.Approved);
+//                    else if (authorizors.size()==1){
+//                        userDeny.setText("one");
 //                    }
 //                    else{
-//                        statusString = getString(R.string.denied);
+//                        userDeny.setText("more than 2");
 //                    }
-//                    TextView statusText = findViewById(R.id.statusText);
-//                    statusText.setText(statusString);
-//
-//                    if(status != WGServerProxy.PermissionStatus.PENDING){
-//                        //String
+                    //userDeny.setText("" + authorizors.size());
+                    //Iterator<PermissionRequest.Authorizor> iterator = authorizors.iterator();
+//                    while(iterator.hasNext()) {
+//                        PermissionRequest.Authorizor authorizor = iterator.next();
+//                        if(authorizor.getStatus() == WGServerProxy.PermissionStatus.PENDING){
+//                            userDeny.setText("pending !");
+//                        }
 //                    }
-//
-//                }
+
+
+
+
+
+                    return convertView;
+                }
+
             };
+            permissionList.setAdapter(adapter);
         }
+        else{
+            //TODO
+            Toast.makeText(Permission.this,"empty",Toast.LENGTH_LONG).show();;
+        }
+
+
     }
 
 }

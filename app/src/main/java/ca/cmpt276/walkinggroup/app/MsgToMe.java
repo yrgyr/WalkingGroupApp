@@ -154,6 +154,7 @@ public class MsgToMe extends AppCompatActivity {
                     contentTv.setText(currentMsg.getText());
 
 
+
                     if (currentMsg.isRead()) {
                         fromWhomTv.setTypeface(Typeface.DEFAULT);
                         timeTv.setTypeface(Typeface.DEFAULT);

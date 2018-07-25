@@ -101,6 +101,7 @@ public class MainActivity extends AppCompatActivity {
         setupImageBtn();
 
         setupPanicBtn();
+        setUpPermissionListBtn();
 
 
 //        updateevery10sec();
@@ -108,6 +109,7 @@ public class MainActivity extends AppCompatActivity {
 //        autoAdvance();
 
     }
+
 
     private void setupImageBtn() {
 
@@ -307,4 +309,16 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+    private void setUpPermissionListBtn() {
+        Button btn = findViewById(R.id.permissionBtn);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, Permission.class);
+                startActivity(intent);
+            }
+        });
+    }
+
 }
