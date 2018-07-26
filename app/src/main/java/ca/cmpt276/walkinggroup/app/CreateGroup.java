@@ -1,7 +1,9 @@
 package ca.cmpt276.walkinggroup.app;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -96,16 +98,17 @@ public class CreateGroup extends AppCompatActivity {
 
     private void setupCreateGroupButton(){
         Button btn = findViewById(R.id.btn_create_new_group);
+
         btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                createNewGroup();
+                @Override
+                public void onClick(View view) {
+                    createNewGroup();
 //                Toast.makeText(CreateGroup.this, "Created new group:" + newGroup.getGroupDescription(), Toast.LENGTH_SHORT).show();
 //                finish();
-            }
-        });
+                }
+            });
+        }
 
-    }
 
     private void createNewGroup(){
 
@@ -115,14 +118,52 @@ public class CreateGroup extends AppCompatActivity {
         if(groupName.isEmpty()){
             Toast.makeText(this, R.string.empt_group_name_toast_msg,Toast.LENGTH_LONG).show();
         }
-        else{
-            User currentUser = userSingleton.getCurrentUser();
-            newGroup.setGroupDescription(groupName);
-            newGroup.setLeader(currentUser);
-            Call<Group> caller = proxy.createGroup(newGroup);
-            ProxyBuilder.callProxy(CreateGroup.this, caller, returnedGroup->response(returnedGroup));
-        }
+        else if(!groupName.isEmpty()) {
+            if (newGroup.getLeader() == null) {
+                //Toast.makeText(this,"No Leader",Toast.LENGTH_LONG).show();
+                ///Alert Dialog
 
+
+
+                android.support.v7.app.AlertDialog.Builder builder= new android.support.v7.app.AlertDialog.Builder(CreateGroup.this);
+
+                //create view
+                View mview=getLayoutInflater().inflate(R.layout.leader_permission,null);
+
+                builder.setMessage("")
+                        .setView(mview)
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                User currentUser = userSingleton.getCurrentUser();
+                                newGroup.setLeader(currentUser);
+                                newGroup.setGroupDescription(groupName);
+
+                                Call<Group> caller = proxy.createGroup(newGroup);
+                                ProxyBuilder.callProxy(CreateGroup.this, caller, returnedGroup -> response(returnedGroup));
+
+
+
+
+
+
+                            }
+                        })
+
+
+                        .setNegativeButton("no",null)
+                        .setCancelable(false);
+
+
+                AlertDialog alert=builder.create();
+                alert.show();
+
+
+
+                ////
+
+            }
+        }
     }
 
 
