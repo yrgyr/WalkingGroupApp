@@ -83,6 +83,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private CountDownTimer DestReachedCountDown = userSingleton.getDestReachedCountDown();
     private boolean DestReachedCountDownRunning = userSingleton.isDestReachedCountDownRunning();
 
+    // Rewards
+    private Integer WALK_COMPLETION_REWARD_POINTS = 50;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -392,6 +395,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 uploadingLocation = false;
                 userSingleton.setUploadingLocation(uploadingLocation);
 
+                rewardPointsForCompletingWalk();
                 setupUploadButton();
 
             }
@@ -429,5 +433,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         String receivedTime = location.getTimestamp();
         double lat = location.getLat();
         double lng = location.getLng();
+    }
+
+    private void rewardPointsForCompletingWalk(){
+        Integer currentPoints = currentUser.getCurrentPoints();
+        Integer totalPoints = currentUser.getTotalPointsEarned();
+        currentPoints += WALK_COMPLETION_REWARD_POINTS;
+        totalPoints += WALK_COMPLETION_REWARD_POINTS;
+        currentUser.setCurrentPoints(currentPoints);
+        currentUser.setTotalPointsEarned(totalPoints);
+
+        // Todo: call server to editUser
     }
 }
