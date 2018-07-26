@@ -43,7 +43,7 @@ public class Permission extends AppCompatActivity {
     }
 
     private void displayPermission() {
-        Call<List<PermissionRequest>> caller = proxy.getPermissions(currentUser.getId());
+        Call<List<PermissionRequest>> caller = proxy.getAllPermissionByUserId(currentUser.getId());
         ProxyBuilder.callProxy(this,caller, returnedPermission -> responseReturnListPermission(returnedPermission));
     }
 
