@@ -118,53 +118,16 @@ public class CreateGroup extends AppCompatActivity {
         if(groupName.isEmpty()){
             Toast.makeText(this, R.string.empt_group_name_toast_msg,Toast.LENGTH_LONG).show();
         }
-        else if(!groupName.isEmpty()) {
-            if (newGroup.getLeader() == null) {
-                //Toast.makeText(this,"No Leader",Toast.LENGTH_LONG).show();
-                ///Alert Dialog
-
-
-
-                android.support.v7.app.AlertDialog.Builder builder= new android.support.v7.app.AlertDialog.Builder(CreateGroup.this);
-
-                //create view
-                View mview=getLayoutInflater().inflate(R.layout.leader_permission,null);
-
-                builder.setMessage("")
-                        .setView(mview)
-                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                User currentUser = userSingleton.getCurrentUser();
-                                newGroup.setLeader(currentUser);
-                                newGroup.setGroupDescription(groupName);
-
-                                Call<Group> caller = proxy.createGroup(newGroup);
-                                ProxyBuilder.callProxy(CreateGroup.this, caller, returnedGroup -> response(returnedGroup));
-
-
-
-
-
-
-                            }
-                        })
-
-
-                        .setNegativeButton("no",null)
-                        .setCancelable(false);
-
-
-                AlertDialog alert=builder.create();
-                alert.show();
-
-
-
-                ////
-
-            }
+        else{
+            User currentUser = userSingleton.getCurrentUser();
+            newGroup.setGroupDescription(groupName);
+            newGroup.setLeader(currentUser);
+            Call<Group> caller = proxy.createGroup(newGroup);
+            ProxyBuilder.callProxy(CreateGroup.this, caller, returnedGroup->response(returnedGroup));
         }
+
     }
+
 
 
     private void response(Group returnedGroup){
