@@ -102,7 +102,7 @@ public class PermissionRequest extends IdItemBase {
             this.id = id;
         }
 
-        @JsonIgnore
+
         public Set<User> getUsers() {
             return users;
         }
@@ -119,7 +119,7 @@ public class PermissionRequest extends IdItemBase {
             this.status = status;
         }
 
-        @JsonIgnore
+
         public User getWhoApprovedOrDenied() {
             return whoApprovedOrDenied;
         }
