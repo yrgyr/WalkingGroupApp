@@ -101,6 +101,7 @@ public class MainActivity extends AppCompatActivity {
         setupImageBtn();
 
         setupPanicBtn();
+        setupViewRewardsBtn();
 
 
 //        updateevery10sec();
@@ -303,6 +304,17 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this,SendMessage.class);
                 intent.putExtra("case2",666);
+                startActivity(intent);
+            }
+        });
+    }
+
+    private void setupViewRewardsBtn(){
+        Button btn = findViewById(R.id.btn_view_rewards);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, MyRewardPoints.class);
                 startActivity(intent);
             }
         });

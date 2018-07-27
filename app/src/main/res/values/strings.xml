@@ -155,6 +155,9 @@
     <string name="alert_dialog_frag">ALERT!!!</string>
     <string name="delete_user">Delete User</string>
     <string name="Not_Message">You don\'t have any message yet!</string>
+    <string name="view_reward_points">View reward points</string>
+    <string name="btn_open_leader_board">Open leader board</string>
+    <string name="txt_top_100_users">Top 100 users:</string>
 
 
 </resources>
