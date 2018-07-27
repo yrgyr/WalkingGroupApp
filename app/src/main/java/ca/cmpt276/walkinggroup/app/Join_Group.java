@@ -31,10 +31,14 @@ import java.util.List;
 
 import ca.cmpt276.walkinggroup.dataobjects.CurrentUserData;
 import ca.cmpt276.walkinggroup.dataobjects.Group;
+import ca.cmpt276.walkinggroup.dataobjects.PermissionRequest;
 import ca.cmpt276.walkinggroup.dataobjects.User;
 import ca.cmpt276.walkinggroup.proxy.ProxyBuilder;
 import ca.cmpt276.walkinggroup.proxy.WGServerProxy;
 import retrofit2.Call;
+import retrofit2.http.Path;
+
+import static ca.cmpt276.walkinggroup.proxy.WGServerProxy.PermissionStatus.APPROVED;
 
 
 public class Join_Group extends AppCompatActivity {
@@ -49,8 +53,8 @@ public class Join_Group extends AppCompatActivity {
 
     Long grpId = groupSelected.getId();
     String grpDesc = groupSelected.getGroupDescription();
-    String leaderName = groupSelected.getLeader().getName();
-    Long leaderId = groupSelected.getLeader().getId();
+    String leaderName;
+    Long leaderId;
 
     Long currentUserId = currentUser.getId();
     String[] members = groupSelected.getGroupMembersNames();
@@ -67,7 +71,12 @@ public class Join_Group extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_join__group);
 
-        checkIfIAmInGroup();
+
+        Call<List<PermissionRequest>> caller1=proxy.getPermissionByGroup(grpId);
+        ProxyBuilder.callProxy(Join_Group.this,caller1,rgroup->res(rgroup));
+
+
+        /*checkIfIAmInGroup();
 
 
         setUpValidUserCanCheckInfo();
@@ -77,8 +86,67 @@ public class Join_Group extends AppCompatActivity {
         populateGroupLeader();
 
         populateGroupMembersListView();
-        setupActionBar();
+        setupActionBar();*/
     }
+
+
+    private void res(List<PermissionRequest> rgroup){
+
+        //Long l=rgroup.get(0).getId();
+        if(rgroup.size()!=0){
+            PermissionRequest permissionRequest=rgroup.get(0);
+            if(permissionRequest.getStatus()==WGServerProxy.PermissionStatus.PENDING){
+                Toast.makeText(this,"No Leader yet!!",Toast.LENGTH_LONG).show();
+            }
+            else if(permissionRequest.getStatus()==WGServerProxy.PermissionStatus.APPROVED){
+
+
+                leaderName = groupSelected.getLeader().getName();
+                leaderId = groupSelected.getLeader().getId();
+
+
+                checkIfIAmInGroup();
+
+
+                setUpValidUserCanCheckInfo();
+
+                populateGroupID();
+                populateGroupDesc();
+                populateGroupLeader();
+
+                populateGroupMembersListView();
+                setupActionBar();
+
+            }
+            else if(permissionRequest.getStatus()==WGServerProxy.PermissionStatus.DENIED){
+                groupSelected.setLeader(null);
+
+                //Call<Group> updateGroup(@Path("id") Long groupId, @Body Group group);
+
+                Call<Group> caller1=proxy.updateGroup(grpId,groupSelected);
+                ProxyBuilder.callProxy(this,caller1,resGrrp11->resp11(resGrrp11));
+
+                //Call<Void> caller=proxy.deleteGroup(grpId);
+                //ProxyBuilder.callProxy(Join_Group.this,caller,resGrrp->resp(resGrrp));
+            }
+
+        }
+
+        //Call<PermissionRequest> approveCaller = proxy.approveOrDenyPermissionRequest(l, APPROVED);
+    }
+
+    private void resp(Void resGrrp){
+        finish();
+    }
+
+    private void resp11(Group resGrrp11){
+        Call<Void> caller=proxy.deleteGroup(grpId);
+        ProxyBuilder.callProxy(Join_Group.this,caller,resGrrp->resp(resGrrp));
+    }
+
+
+
+
 
     private void setUpValidUserCanCheckInfo() {
         User leader = groupSelected.getLeader();

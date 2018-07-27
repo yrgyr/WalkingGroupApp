@@ -41,7 +41,6 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignTop="@+id/txt_join_grp_grpdesc"
-        android:text="TextView"
         android:textColor="@android:color/black"
         android:textSize="24sp" />
 
@@ -51,7 +50,6 @@
         android:layout_height="wrap_content"
         android:layout_alignStart="@+id/txt_join_grp_grpdesc_val"
         android:layout_alignTop="@+id/txt_join_grp_grpid"
-        android:text="TextView"
         android:textColor="@android:color/black"
         android:textSize="24sp" />
 
@@ -73,7 +71,6 @@
         android:layout_height="wrap_content"
         android:layout_alignStart="@+id/txt_join_grp_grpdesc_val"
         android:layout_alignTop="@+id/txt_join_group_grp_leader"
-        android:text="TextView"
         android:textColor="@android:color/black"
         android:textSize="24sp"
         android:textStyle="bold" />

@@ -155,15 +155,14 @@ public interface WGServerProxy {
             @Body PermissionStatus status
     );
 
-    @GET("/permissions")
-    Call<List<PermissionRequest>> getPermissions(@Query("touser") Long toUserId);
+
 
 
     @GET("/permissions")
     Call<List<PermissionRequest>> getAllPermissionByUserId(@Query("userId") Long userId);
 
-    @GET("/permissions/{id}")
-    Call<PermissionRequest> getPermissionByGroup(@Path("id") Long groupId);
+    @GET("/permissions")
+    Call<List<PermissionRequest>> getPermissionByGroup(@Query("groupId") Long groupId);
 
 
 

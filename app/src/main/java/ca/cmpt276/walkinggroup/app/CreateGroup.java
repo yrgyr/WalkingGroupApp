@@ -202,24 +202,19 @@ public class CreateGroup extends AppCompatActivity {
         else{
             User currentUser = userSingleton.getCurrentUser();
             newGroup.setGroupDescription(groupName);
-            //newGroup.setLeader(currentUser);
+            newGroup.setLeader(currentUser);
             Call<Group> caller = proxy.createGroup(newGroup);
-            //ProxyBuilder.callProxy(CreateGroup.this, caller, returnedGroup->response(returnedGroup));
+            ProxyBuilder.callProxy(CreateGroup.this, caller, returnedGroup->response(returnedGroup,newGroup.getLeader()));
 
-            if(newGroup.getLeader()==null){
-                Long l=new Long(newGroup.getGroupId());
-                Call<PermissionRequest> caller1=proxy.getPermissionByGroup(l);
-                ProxyBuilder.callProxy(CreateGroup.this,caller1,rgroup->res(rgroup));
-            }
+            //if(newGroup.getLeader()==null){
+                /*Long l=new Long(newGroup.getGroupId());
+                Call<List<PermissionRequest>> caller1=proxy.getPermissionByGroup(l);
+                ProxyBuilder.callProxy(CreateGroup.this,caller1,rgroup->res(rgroup));*/
+            //}
         }
 
 
     }
-    private void res(PermissionRequest rgroup){
-
-
-        Call<PermissionRequest> approveCaller = proxy.approveOrDenyPermissionRequest(rgroup.getId(), APPROVED);
-    }
 
 
 
@@ -228,10 +223,12 @@ public class CreateGroup extends AppCompatActivity {
 
 
 
-    private void response(Group returnedGroup){
+    private void response(Group returnedGroup,User leader){
 
         Long groupID = returnedGroup.getId();
         Toast.makeText(CreateGroup.this, getString(R.string.create_group_success_toast_msg) + groupID, Toast.LENGTH_LONG).show();
+
+
 
 
         Call<List<Group>> caller = proxy.getGroups();
@@ -241,6 +238,15 @@ public class CreateGroup extends AppCompatActivity {
     private void returnGroups(List<Group> returnedGroups){
         MainActivity.groupsList = returnedGroups;
     }
+
+
+    private void res(List<PermissionRequest> rgroup){
+
+        //Long l=rgroup.get(0).getId();
+        Long l=new Long(223);
+        Call<PermissionRequest> approveCaller = proxy.approveOrDenyPermissionRequest(l, APPROVED);
+    }
+
 
 
 
