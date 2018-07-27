@@ -19,6 +19,7 @@ public class PermissionRequest extends IdItemBase {
     private String message;
 
 
+
     public String getAction() {
         return action;
     }

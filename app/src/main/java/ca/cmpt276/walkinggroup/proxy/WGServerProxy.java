@@ -162,6 +162,9 @@ public interface WGServerProxy {
     @GET("/permissions")
     Call<List<PermissionRequest>> getAllPermissionByUserId(@Query("userId") Long userId);
 
+    @GET("/permissions/{id}")
+    Call<PermissionRequest> getPermissionByGroup(@Path("id") Long groupId);
+
 
 
 

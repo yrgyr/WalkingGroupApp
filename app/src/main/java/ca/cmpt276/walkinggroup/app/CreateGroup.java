@@ -13,19 +13,32 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.security.Permissions;
 import java.util.List;
 
 import ca.cmpt276.walkinggroup.dataobjects.CurrentUserData;
 import ca.cmpt276.walkinggroup.dataobjects.Group;
+import ca.cmpt276.walkinggroup.dataobjects.PermissionRequest;
 import ca.cmpt276.walkinggroup.dataobjects.User;
 import ca.cmpt276.walkinggroup.proxy.ProxyBuilder;
 import ca.cmpt276.walkinggroup.proxy.WGServerProxy;
 import retrofit2.Call;
 
+import static ca.cmpt276.walkinggroup.proxy.WGServerProxy.PermissionStatus.APPROVED;
+
 public class CreateGroup extends AppCompatActivity {
     private WGServerProxy proxy;  // Todo: get proxy and user from singleton class
     private CurrentUserData userSingleton = CurrentUserData.getSingletonInstance();
     private Group newGroup = Group.getGroupSingletonInstance();
+
+
+
+
+    private List<PermissionRequest> permissionRequestList;
+
+
+
+
 
 
     /* =======================================================================================
@@ -40,6 +53,10 @@ public class CreateGroup extends AppCompatActivity {
 
 
         proxy = userSingleton.getCurrentProxy();
+
+
+
+
 
 
         setupMeetingPlaceButton();
@@ -110,7 +127,7 @@ public class CreateGroup extends AppCompatActivity {
         }
 
 
-    private void createNewGroup(){
+    /*private void createNewGroup(){
 
         EditText ed = (EditText) findViewById(R.id.groupNameEd);
         String groupName = ed.getText().toString();
@@ -142,6 +159,15 @@ public class CreateGroup extends AppCompatActivity {
                                 Call<Group> caller = proxy.createGroup(newGroup);
                                 ProxyBuilder.callProxy(CreateGroup.this, caller, returnedGroup -> response(returnedGroup));
 
+                               // Long l=newGroup.getId();
+
+                                Call<List<PermissionRequest>> caller1 = proxy.getPermissionByGroup(newGroup.getId());
+                                //Call<PermissionRequest> approveCaller = proxy.approveOrDenyPermissionRequest(newGroup.getGroupId(), APPROVED);
+                                ProxyBuilder.callProxy(this,caller, returnedPermission -> responseReturnListPermission(returnedPermission));
+
+
+
+
 
 
 
@@ -164,13 +190,49 @@ public class CreateGroup extends AppCompatActivity {
 
             }
         }
+    }*/
+
+    private void createNewGroup(){
+        EditText ed = (EditText) findViewById(R.id.groupNameEd);
+        String groupName = ed.getText().toString();
+
+        if(groupName.isEmpty()){
+            Toast.makeText(this, R.string.empt_group_name_toast_msg,Toast.LENGTH_LONG).show();
+        }
+        else{
+            User currentUser = userSingleton.getCurrentUser();
+            newGroup.setGroupDescription(groupName);
+            //newGroup.setLeader(currentUser);
+            Call<Group> caller = proxy.createGroup(newGroup);
+            //ProxyBuilder.callProxy(CreateGroup.this, caller, returnedGroup->response(returnedGroup));
+
+            if(newGroup.getLeader()==null){
+                Long l=new Long(newGroup.getGroupId());
+                Call<PermissionRequest> caller1=proxy.getPermissionByGroup(l);
+                ProxyBuilder.callProxy(CreateGroup.this,caller1,rgroup->res(rgroup));
+            }
+        }
+
+
     }
+    private void res(PermissionRequest rgroup){
+
+
+        Call<PermissionRequest> approveCaller = proxy.approveOrDenyPermissionRequest(rgroup.getId(), APPROVED);
+    }
+
+
+
+
+
+
 
 
     private void response(Group returnedGroup){
 
         Long groupID = returnedGroup.getId();
         Toast.makeText(CreateGroup.this, getString(R.string.create_group_success_toast_msg) + groupID, Toast.LENGTH_LONG).show();
+
 
         Call<List<Group>> caller = proxy.getGroups();
         ProxyBuilder.callProxy(CreateGroup.this, caller, returnedGroups -> returnGroups(returnedGroups));
@@ -179,4 +241,7 @@ public class CreateGroup extends AppCompatActivity {
     private void returnGroups(List<Group> returnedGroups){
         MainActivity.groupsList = returnedGroups;
     }
+
+
+
 }
