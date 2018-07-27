@@ -20,9 +20,24 @@
         android:textStyle="bold" />
 
     <ListView
+        android:id="@+id/listview_top100_users"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="379dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="98dp" />
+
+    <Button
+        android:id="@+id/btn_referesh_leaderboard"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/listview_top100_users"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="17dp"
+        android:fontFamily="casual"
+        android:background="@drawable/button_style"
+        android:textColor="@android:color/black"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:text="@string/refresh" />
 </RelativeLayout>

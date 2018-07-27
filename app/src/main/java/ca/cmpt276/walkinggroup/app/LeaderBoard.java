@@ -3,6 +3,10 @@ package ca.cmpt276.walkinggroup.app;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -22,6 +26,7 @@ public class LeaderBoard extends AppCompatActivity {
     private List<User> allUsersOnServer = new ArrayList<>();
     private TopUsers topUsers;
     private List<User> top100Users = new ArrayList<>();
+    private List<String> top100NamesAndPoints;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +34,7 @@ public class LeaderBoard extends AppCompatActivity {
         setContentView(R.layout.activity_leader_board);
 
         getAllUsersOnServer();
+        setupRefreshButton();
 
     }
 
@@ -42,6 +48,8 @@ public class LeaderBoard extends AppCompatActivity {
         topUsers = new TopUsers(allUsersOnServer);
         top100Users = topUsers.getTop100Users();
 
+        populateTop100ListView();
+
         // Todo: code for testing sorting user by points function; remove later
         String rewardsAscend = "";
         for (int i = 0; i < top100Users.size(); i++){
@@ -51,5 +59,28 @@ public class LeaderBoard extends AppCompatActivity {
         }
         Log.e("Rewards:", rewardsAscend);
 
+    }
+
+    private void populateTop100ListView(){
+        top100NamesAndPoints = new ArrayList<>();
+        for (int i = 0; i < top100Users.size(); i++){
+            User user = top100Users.get(i);
+            String userEntry = user.getName() + "- " + user.getTotalPointsEarned() + " points";
+            top100NamesAndPoints.add(userEntry);
+        }
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.users_list, top100NamesAndPoints);
+        ListView usersList = findViewById(R.id.listview_top100_users);
+        usersList.setAdapter(adapter);
+    }
+
+    private void setupRefreshButton(){
+        Button btn = findViewById(R.id.btn_referesh_leaderboard);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getAllUsersOnServer();
+            }
+        });
     }
 }
