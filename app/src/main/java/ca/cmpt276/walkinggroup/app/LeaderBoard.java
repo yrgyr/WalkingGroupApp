@@ -65,7 +65,14 @@ public class LeaderBoard extends AppCompatActivity {
         top100NamesAndPoints = new ArrayList<>();
         for (int i = 0; i < top100Users.size(); i++){
             User user = top100Users.get(i);
-            String userEntry = user.getName() + "- " + user.getTotalPointsEarned() + " points";
+            String[] origNameSplit = user.getName().split(" ");
+            String newName = "";
+            if (origNameSplit.length >= 2) {
+                newName = origNameSplit[0] + " " + origNameSplit[1].charAt(0);
+            } else {
+                newName = user.getName();
+            }
+            String userEntry = newName + "- " + user.getTotalPointsEarned() + " points";
             top100NamesAndPoints.add(userEntry);
         }
 
