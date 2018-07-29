@@ -105,6 +105,15 @@ public class Join_Group extends AppCompatActivity {
                 leaderId = groupSelected.getLeader().getId();
 
 
+                Call<Group> caller1=proxy.updateGroup(grpId,groupSelected);
+                ProxyBuilder.callProxy(this,caller1,resGrrp11->resp11(resGrrp11));
+
+
+
+                Call<PermissionRequest> approveCaller = proxy.approveOrDenyPermissionRequest(permissionRequest.getId(), WGServerProxy.PermissionStatus.APPROVED);
+                ProxyBuilder.callProxy(Join_Group.this,approveCaller,returnedPermission->newPerm(returnedPermission));
+
+
                 checkIfIAmInGroup();
 
 
@@ -133,6 +142,11 @@ public class Join_Group extends AppCompatActivity {
         }
 
         //Call<PermissionRequest> approveCaller = proxy.approveOrDenyPermissionRequest(l, APPROVED);
+    }
+    private void newPerm(PermissionRequest returnedPermission){
+        Toast.makeText(this,"ENTERED",Toast.LENGTH_LONG).show();
+
+        finish();
     }
 
     private void resp(Void resGrrp){

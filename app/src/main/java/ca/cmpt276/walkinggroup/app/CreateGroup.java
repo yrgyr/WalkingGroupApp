@@ -205,63 +205,7 @@ public class CreateGroup extends AppCompatActivity {
         }
     }
 
-    /*private void c11reateNewGroup(){
-        EditText ed = (EditText) findViewById(R.id.groupNameEd);
-        String groupName = ed.getText().toString();
 
-        if(groupName.isEmpty()){
-            Toast.makeText(this, R.string.empt_group_name_toast_msg,Toast.LENGTH_LONG).show();
-        }
-        else{
-            User currentUser = userSingleton.getCurrentUser();
-            newGroup.setGroupDescription(groupName);
-            newGroup.setLeader(currentUser);
-            Call<Group> caller = proxy.createGroup(newGroup);
-            ProxyBuilder.callProxy(CreateGroup.this, caller, returnedGroup->response(returnedGroup,newGroup.getLeader()));
-
-            android.support.v7.app.AlertDialog.Builder builder= new android.support.v7.app.AlertDialog.Builder(CreateGroup.this);
-
-            View mview=getLayoutInflater().inflate(R.layout.leader_permission,null);
-
-            builder.setMessage("")
-                    .setView(mview)
-                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-
-
-                        }
-                    })
-
-
-                    .setNegativeButton("no",null)
-                    .setCancelable(false);
-
-
-            AlertDialog alert=builder.create();
-            alert.show();
-
-        }
-
-
-
-
-
-
-
-
-            //if(newGroup.getLeader()==null){
-                /*Long l=new Long(newGroup.getGroupId());
-                Call<List<PermissionRequest>> caller1=proxy.getPermissionByGroup(l);
-                ProxyBuilder.callProxy(CreateGroup.this,caller1,rgroup->res(rgroup));
-            //}
-
-
-
-        }
-
-
-    }*/
 
     private void resp11(Group resGrrp11){
         finish();
@@ -349,15 +293,25 @@ public class CreateGroup extends AppCompatActivity {
     private void res(List<PermissionRequest> rgroup){
 
 
+
         PermissionRequest permissionRequest=rgroup.get(0);
+        WGServerProxy.PermissionStatus status = APPROVED;
 
 
-        Call<PermissionRequest> approveCaller = proxy.approveOrDenyPermissionRequest(permissionRequest.getId(), APPROVED);
-        ProxyBuilder.callProxy(CreateGroup.this,approveCaller,returnedPermission->newPerm(returnedPermission));
+        //Toast.makeText(CreateGroup.this,"Before req",Toast.LENGTH_LONG).show();
+
+
+        //Call<PermissionRequest> approveCaller = proxy.approveOrDenyPermissionRequest(permissionRequest.getId(), WGServerProxy.PermissionStatus.APPROVED);
+        //Toast.makeText(CreateGroup.this,"Middle req",Toast.LENGTH_LONG).show();
+
+        //ProxyBuilder.callProxy(CreateGroup.this,approveCaller,returnedPermission->newPerm(returnedPermission));
+        //Toast.makeText(CreateGroup.this,"Last req",Toast.LENGTH_LONG).show();
+
     }
 
 
     private void newPerm(PermissionRequest returnedPermission){
+
         finish();
     }
 
