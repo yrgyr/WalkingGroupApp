@@ -234,6 +234,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
     private void addGroupsToCluster(List<Group> groups){
+        //if (groups != null)
         if (groups != null) {
             if (groups.size() > 0) {
                 for (int i = 0; i < groups.size(); i++) {
@@ -242,17 +243,23 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     String grpDesc = group.getGroupDescription();
 
 
+
                     List<Double> latArr = group.getRouteLatArray();
                     List<Double> lngArr = group.getRouteLngArray();
 
 
-                    // only populate groups with non-empty lat and lng arrays
-                    if (latArr.size() > 0 && lngArr.size() > 0) {
-                        double lat = group.getStartLat();
-                        double lng = group.getStartLng();
 
-                        MyItem newItem = new MyItem(lat, lng, getString(R.string.tag_on_info_window) + grpDesc, getString(R.string.group_info_window_snippet), grpId);
-                        mClusterManager.addItem(newItem);
+
+                    // only populate groups with non-empty lat and lng arrays
+                    if (latArr.size() > 0 && lngArr.size() > 0 && group.getLeader()!=null) {
+
+
+                            double lat = group.getStartLat();
+                            double lng = group.getStartLng();
+
+                            MyItem newItem = new MyItem(lat, lng, getString(R.string.tag_on_info_window) + grpDesc, getString(R.string.group_info_window_snippet), grpId);
+                            mClusterManager.addItem(newItem);
+
                     }
                 }
             } else {

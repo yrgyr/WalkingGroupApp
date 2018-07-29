@@ -119,7 +119,7 @@ public class Join_Group extends AppCompatActivity {
 
             }
             else if(permissionRequest.getStatus()==WGServerProxy.PermissionStatus.DENIED){
-                groupSelected.setLeader(null);
+                //groupSelected.setLeader(null);
 
                 //Call<Group> updateGroup(@Path("id") Long groupId, @Body Group group);
 
@@ -140,9 +140,13 @@ public class Join_Group extends AppCompatActivity {
     }
 
     private void resp11(Group resGrrp11){
-        Call<Void> caller=proxy.deleteGroup(grpId);
-        ProxyBuilder.callProxy(Join_Group.this,caller,resGrrp->resp(resGrrp));
+        //Call<Void> caller=proxy.deleteGroup(resGrrp11.getId());
+        //ProxyBuilder.callProxy(Join_Group.this,caller,resGrrp->resp(resGrrp));
+        resGrrp11.setLeader(null);
+
     }
+
+
 
 
 
