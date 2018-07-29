@@ -295,17 +295,17 @@ public class CreateGroup extends AppCompatActivity {
 
 
         PermissionRequest permissionRequest=rgroup.get(0);
-        WGServerProxy.PermissionStatus status = APPROVED;
+        WGServerProxy.PermissionStatus status=APPROVED;
 
 
         //Toast.makeText(CreateGroup.this,"Before req",Toast.LENGTH_LONG).show();
 
 
-        //Call<PermissionRequest> approveCaller = proxy.approveOrDenyPermissionRequest(permissionRequest.getId(), WGServerProxy.PermissionStatus.APPROVED);
+        Call<PermissionRequest> approveCaller = proxy.approveOrDenyPermissionRequest(permissionRequest.getId(),status);
         //Toast.makeText(CreateGroup.this,"Middle req",Toast.LENGTH_LONG).show();
 
-        //ProxyBuilder.callProxy(CreateGroup.this,approveCaller,returnedPermission->newPerm(returnedPermission));
-        //Toast.makeText(CreateGroup.this,"Last req",Toast.LENGTH_LONG).show();
+        ProxyBuilder.callProxy(CreateGroup.this,approveCaller,returnedPermission->newPerm(returnedPermission));
+        Toast.makeText(CreateGroup.this,"Last req",Toast.LENGTH_LONG).show();
 
     }
 

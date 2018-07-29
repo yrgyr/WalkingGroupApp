@@ -110,8 +110,7 @@ public class Join_Group extends AppCompatActivity {
 
 
 
-                Call<PermissionRequest> approveCaller = proxy.approveOrDenyPermissionRequest(permissionRequest.getId(), WGServerProxy.PermissionStatus.APPROVED);
-                ProxyBuilder.callProxy(Join_Group.this,approveCaller,returnedPermission->newPerm(returnedPermission));
+
 
 
                 checkIfIAmInGroup();
