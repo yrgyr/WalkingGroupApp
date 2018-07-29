@@ -97,30 +97,6 @@ public class Permission extends AppCompatActivity {
                     permissionContent.setText(message);
 
 
-                    //userDeny.setText("" + authorizors.size());
-//                    Iterator<PermissionRequest.Authorizor> iterator = authorizors.iterator();
-//                    String text = "";
-//                    while(iterator.hasNext()) {
-//                        PermissionRequest.Authorizor authorizor = iterator.next();
-//                        if(authorizor.getStatus() != WGServerProxy.PermissionStatus.PENDING){
-////                            userDeny.setText("pending !");
-//                            User grantUser = authorizor.getWhoApprovedOrDenied();
-//
-//                            if(authorizor.getStatus() == WGServerProxy.PermissionStatus.APPROVED){
-//                                 text += grantUser.getName() + " " + getString(R.string.Approved) + getString(R.string.theRequest) + "\n";
-//
-//                            }
-//                            else{
-//                                text += grantUser.getName() + " " + getString(R.string.denied) + getString(R.string.theRequest)+ "\n";
-//
-//                            }
-//                        }
-//
-//                    }
-//                    userDeny.setText(text);
-
-
-
 
 
                     return convertView;

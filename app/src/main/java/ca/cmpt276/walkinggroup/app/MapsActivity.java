@@ -250,6 +250,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
 
+
+
+
                     // only populate groups with non-empty lat and lng arrays
                     if (latArr.size() > 0 && lngArr.size() > 0 && group.getLeader()!=null) {
 
@@ -261,6 +264,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             mClusterManager.addItem(newItem);
 
                     }
+
+
                 }
             } else {
                 Toast.makeText(MapsActivity.this, R.string.group_size_zero, Toast.LENGTH_LONG).show();
@@ -269,6 +274,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             Toast.makeText(MapsActivity.this, R.string.group_list_null, Toast.LENGTH_LONG).show();
         }
     }
+
 
 
 

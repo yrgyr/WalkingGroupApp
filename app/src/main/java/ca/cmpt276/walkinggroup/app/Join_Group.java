@@ -75,24 +75,11 @@ public class Join_Group extends AppCompatActivity {
         Call<List<PermissionRequest>> caller1=proxy.getPermissionByGroup(grpId);
         ProxyBuilder.callProxy(Join_Group.this,caller1,rgroup->res(rgroup));
 
-
-        /*checkIfIAmInGroup();
-
-
-        setUpValidUserCanCheckInfo();
-
-        populateGroupID();
-        populateGroupDesc();
-        populateGroupLeader();
-
-        populateGroupMembersListView();
-        setupActionBar();*/
     }
 
 
     private void res(List<PermissionRequest> rgroup){
 
-        //Long l=rgroup.get(0).getId();
         if(rgroup.size()!=0){
             PermissionRequest permissionRequest=rgroup.get(0);
             if(permissionRequest.getStatus()==WGServerProxy.PermissionStatus.PENDING){
@@ -127,34 +114,23 @@ public class Join_Group extends AppCompatActivity {
 
             }
             else if(permissionRequest.getStatus()==WGServerProxy.PermissionStatus.DENIED){
-                //groupSelected.setLeader(null);
 
-                //Call<Group> updateGroup(@Path("id") Long groupId, @Body Group group);
 
                 Call<Group> caller1=proxy.updateGroup(grpId,groupSelected);
                 ProxyBuilder.callProxy(this,caller1,resGrrp11->resp11(resGrrp11));
 
-                //Call<Void> caller=proxy.deleteGroup(grpId);
-                //ProxyBuilder.callProxy(Join_Group.this,caller,resGrrp->resp(resGrrp));
             }
 
         }
 
-        //Call<PermissionRequest> approveCaller = proxy.approveOrDenyPermissionRequest(l, APPROVED);
-    }
-    private void newPerm(PermissionRequest returnedPermission){
-        Toast.makeText(this,"ENTERED",Toast.LENGTH_LONG).show();
 
-        finish();
     }
 
-    private void resp(Void resGrrp){
-        finish();
-    }
+
+
 
     private void resp11(Group resGrrp11){
-        //Call<Void> caller=proxy.deleteGroup(resGrrp11.getId());
-        //ProxyBuilder.callProxy(Join_Group.this,caller,resGrrp->resp(resGrrp));
+
         resGrrp11.setLeader(null);
 
     }
