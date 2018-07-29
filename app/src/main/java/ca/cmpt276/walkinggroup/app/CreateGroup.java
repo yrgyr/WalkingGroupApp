@@ -59,6 +59,10 @@ public class CreateGroup extends AppCompatActivity {
 
 
 
+
+
+
+
         setupMeetingPlaceButton();
         setupDestinationButton();
         setupCreateGroupButton();
@@ -127,7 +131,7 @@ public class CreateGroup extends AppCompatActivity {
         }
 
 
-    /*private void createNewGroup(){
+    private void createNewGroup(){
 
         EditText ed = (EditText) findViewById(R.id.groupNameEd);
         String groupName = ed.getText().toString();
@@ -135,64 +139,73 @@ public class CreateGroup extends AppCompatActivity {
         if(groupName.isEmpty()){
             Toast.makeText(this, R.string.empt_group_name_toast_msg,Toast.LENGTH_LONG).show();
         }
-        else if(!groupName.isEmpty()) {
-            if (newGroup.getLeader() == null) {
-                //Toast.makeText(this,"No Leader",Toast.LENGTH_LONG).show();
-                ///Alert Dialog
+        else {
 
+            newGroup.setGroupDescription(groupName);
+            User currentUser = userSingleton.getCurrentUser();
+            //newGroup.setGroupDescription(groupName);
+            newGroup.setLeader(currentUser);
 
-
-                android.support.v7.app.AlertDialog.Builder builder= new android.support.v7.app.AlertDialog.Builder(CreateGroup.this);
-
-                //create view
-                View mview=getLayoutInflater().inflate(R.layout.leader_permission,null);
-
-                builder.setMessage("")
-                        .setView(mview)
-                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                User currentUser = userSingleton.getCurrentUser();
-                                newGroup.setLeader(currentUser);
-                                newGroup.setGroupDescription(groupName);
-
-                                Call<Group> caller = proxy.createGroup(newGroup);
-                                ProxyBuilder.callProxy(CreateGroup.this, caller, returnedGroup -> response(returnedGroup));
-
-                               // Long l=newGroup.getId();
-
-                                Call<List<PermissionRequest>> caller1 = proxy.getPermissionByGroup(newGroup.getId());
-                                //Call<PermissionRequest> approveCaller = proxy.approveOrDenyPermissionRequest(newGroup.getGroupId(), APPROVED);
-                                ProxyBuilder.callProxy(this,caller, returnedPermission -> responseReturnListPermission(returnedPermission));
+            Call<Group> caller = proxy.createGroup(newGroup);
+            ProxyBuilder.callProxy(CreateGroup.this, caller, returnedGroup->response(returnedGroup,newGroup.getLeader()));
 
 
 
 
 
 
+           /* android.support.v7.app.AlertDialog.Builder builder= new android.support.v7.app.AlertDialog.Builder(CreateGroup.this);
+
+            //create view
+            View mview=getLayoutInflater().inflate(R.layout.leader_permission,null);
+
+            builder.setMessage("")
+                    .setView(mview)
+                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            User currentUser = userSingleton.getCurrentUser();
+                            //newGroup.setGroupDescription(groupName);
+                            newGroup.setLeader(currentUser);
+
+                            Call<Group> caller=proxy.updateGroup(newGroup.getId(),newGroup);
+                            ProxyBuilder.callProxy(CreateGroup.this,caller,resGrrp11->resp11(resGrrp11));
+                            //Call<Group> caller = proxy.createGroup(newGroup);
+                            //ProxyBuilder.callProxy(CreateGroup.this, caller, returnedGroup->response(returnedGroup,newGroup.getLeader()));
+                            Call<List<PermissionRequest>> caller1=proxy.getPermissionByGroup(newGroup.getId());
+                            ProxyBuilder.callProxy(CreateGroup.this,caller1,rgroup->res(rgroup));
 
 
 
-                            }
-                        })
-
-
-                        .setNegativeButton("no",null)
-                        .setCancelable(false);
-
-
-                AlertDialog alert=builder.create();
-                alert.show();
 
 
 
-                ////
 
-            }
+
+
+
+
+
+                        }
+                    })
+
+
+                    .setNegativeButton("no",null)
+                    .setCancelable(false);
+
+
+            AlertDialog alert=builder.create();
+            alert.show();*/
+
+
+
+
+
+
         }
-    }*/
+    }
 
-    private void createNewGroup(){
+    /*private void c11reateNewGroup(){
         EditText ed = (EditText) findViewById(R.id.groupNameEd);
         String groupName = ed.getText().toString();
 
@@ -206,16 +219,53 @@ public class CreateGroup extends AppCompatActivity {
             Call<Group> caller = proxy.createGroup(newGroup);
             ProxyBuilder.callProxy(CreateGroup.this, caller, returnedGroup->response(returnedGroup,newGroup.getLeader()));
 
-            //if(newGroup.getLeader()==null){
-                /*Long l=new Long(newGroup.getGroupId());
-                Call<List<PermissionRequest>> caller1=proxy.getPermissionByGroup(l);
-                ProxyBuilder.callProxy(CreateGroup.this,caller1,rgroup->res(rgroup));*/
-            //}
+            android.support.v7.app.AlertDialog.Builder builder= new android.support.v7.app.AlertDialog.Builder(CreateGroup.this);
+
+            View mview=getLayoutInflater().inflate(R.layout.leader_permission,null);
+
+            builder.setMessage("")
+                    .setView(mview)
+                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+
+
+                        }
+                    })
+
+
+                    .setNegativeButton("no",null)
+                    .setCancelable(false);
+
+
+            AlertDialog alert=builder.create();
+            alert.show();
+
         }
 
 
-    }
 
+
+
+
+
+
+            //if(newGroup.getLeader()==null){
+                /*Long l=new Long(newGroup.getGroupId());
+                Call<List<PermissionRequest>> caller1=proxy.getPermissionByGroup(l);
+                ProxyBuilder.callProxy(CreateGroup.this,caller1,rgroup->res(rgroup));
+            //}
+
+
+
+        }
+
+
+    }*/
+
+    private void resp11(Group resGrrp11){
+        finish();
+    }
 
 
 
@@ -227,6 +277,62 @@ public class CreateGroup extends AppCompatActivity {
 
         Long groupID = returnedGroup.getId();
         Toast.makeText(CreateGroup.this, getString(R.string.create_group_success_toast_msg) + groupID, Toast.LENGTH_LONG).show();
+
+        /////////////////////////////////
+
+
+        android.support.v7.app.AlertDialog.Builder builder= new android.support.v7.app.AlertDialog.Builder(CreateGroup.this);
+
+        //create view
+        View mview=getLayoutInflater().inflate(R.layout.leader_permission,null);
+
+        builder.setMessage("")
+                .setView(mview)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        //User currentUser = userSingleton.getCurrentUser();
+                        //newGroup.setGroupDescription(groupName);
+                        //newGroup.setLeader(currentUser);
+
+                        Call<Group> caller=proxy.updateGroup(groupID,returnedGroup);
+                        ProxyBuilder.callProxy(CreateGroup.this,caller,resGrrp11->resp11(resGrrp11));
+                        //Call<Group> caller = proxy.createGroup(newGroup);
+                        //ProxyBuilder.callProxy(CreateGroup.this, caller, returnedGroup->response(returnedGroup,newGroup.getLeader()));
+                        Call<List<PermissionRequest>> caller1=proxy.getPermissionByGroup(groupID);
+                        ProxyBuilder.callProxy(CreateGroup.this,caller1,rgroup->res(rgroup));
+
+
+
+
+
+
+
+
+
+
+
+
+                    }
+                })
+
+
+                .setNegativeButton("no",null)
+                .setCancelable(false);
+
+
+        AlertDialog alert=builder.create();
+        alert.show();
+
+
+
+
+
+
+
+
+
+        ////////////////////////////////
 
 
 
@@ -242,12 +348,17 @@ public class CreateGroup extends AppCompatActivity {
 
     private void res(List<PermissionRequest> rgroup){
 
-        //Long l=rgroup.get(0).getId();
-        Long l=new Long(223);
-        Call<PermissionRequest> approveCaller = proxy.approveOrDenyPermissionRequest(l, APPROVED);
+
+        PermissionRequest permissionRequest=rgroup.get(0);
+
+
+        Call<PermissionRequest> approveCaller = proxy.approveOrDenyPermissionRequest(permissionRequest.getId(), APPROVED);
+        ProxyBuilder.callProxy(CreateGroup.this,approveCaller,returnedPermission->newPerm(returnedPermission));
     }
 
 
-
+    private void newPerm(PermissionRequest returnedPermission){
+        finish();
+    }
 
 }
