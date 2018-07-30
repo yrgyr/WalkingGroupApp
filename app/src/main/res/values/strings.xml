@@ -158,6 +158,7 @@
     <string name="view_reward_points">View reward points</string>
     <string name="btn_open_leader_board">Open leader board</string>
     <string name="txt_top_100_users">Top 100 users:</string>
+    <string name="toast_walk_completed">You have been rewarded 50 points for completing the walk!</string>
 
 
 </resources>

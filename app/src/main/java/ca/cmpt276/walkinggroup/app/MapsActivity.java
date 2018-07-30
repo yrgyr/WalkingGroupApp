@@ -448,6 +448,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     private void responseEditUser(User user){
-        Toast.makeText(MapsActivity.this, "Current points: " + user.getCurrentPoints() + ", total points: " + user.getTotalPointsEarned(), Toast.LENGTH_LONG).show();
+        Toast.makeText(MapsActivity.this, R.string.toast_walk_completed, Toast.LENGTH_LONG).show();
     }
 }
