@@ -50,35 +50,31 @@ public class LeaderBoard extends AppCompatActivity {
 
         populateTop100ListView();
 
-        // Todo: code for testing sorting user by points function; remove later
-        String rewardsAscend = "";
-        for (int i = 0; i < top100Users.size(); i++){
-            User user = top100Users.get(i);
-            String reward = user.getName() + ": " + user.getTotalPointsEarned() + ",";
-            rewardsAscend += reward;
-        }
-        Log.e("Rewards:", rewardsAscend);
 
     }
 
     private void populateTop100ListView(){
-        top100NamesAndPoints = new ArrayList<>();
-        for (int i = 0; i < top100Users.size(); i++){
-            User user = top100Users.get(i);
-            String[] origNameSplit = user.getName().split(" ");
-            String newName = "";
-            if (origNameSplit.length >= 2) {
-                newName = origNameSplit[0] + " " + origNameSplit[1].charAt(0);
-            } else {
-                newName = user.getName();
-            }
-            String userEntry = newName + "- " + user.getTotalPointsEarned() + " points";
-            top100NamesAndPoints.add(userEntry);
-        }
+        if (top100Users != null) {
+            if (top100Users.size() > 0) {
+                top100NamesAndPoints = new ArrayList<>();
+                for (int i = 0; i < top100Users.size(); i++) {
+                    User user = top100Users.get(i);
+                    String[] origNameSplit = user.getName().split(" ");
+                    String newName = "";
+                    if (origNameSplit.length >= 2) {
+                        newName = origNameSplit[0] + " " + origNameSplit[1].charAt(0);
+                    } else {
+                        newName = user.getName();
+                    }
+                    String userEntry = newName + "- " + user.getTotalPointsEarned() + " points";
+                    top100NamesAndPoints.add(userEntry);
+                }
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.users_list, top100NamesAndPoints);
-        ListView usersList = findViewById(R.id.listview_top100_users);
-        usersList.setAdapter(adapter);
+                ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.users_list, top100NamesAndPoints);
+                ListView usersList = findViewById(R.id.listview_top100_users);
+                usersList.setAdapter(adapter);
+            }
+        }
     }
 
     private void setupRefreshButton(){
