@@ -91,6 +91,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         checkIfDestSet();
         getLocationPermission();
         setupUploadButton();
+        refreashMap();
 
         
     }
@@ -442,5 +443,31 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         String receivedTime = location.getTimestamp();
         double lat = location.getLat();
         double lng = location.getLng();
+    }
+
+    private void refreashMap() {
+        Button btn = (Button) findViewById(R.id.refresh_map_btn);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Call<List<Group>> caller = proxy.getGroups();
+                ProxyBuilder.callProxy(MapsActivity.this, caller, returnedGroups -> returnGroups(returnedGroups));
+
+
+            }
+
+
+        });
+    }
+
+
+
+    private void returnGroups(List<Group> returnedGroups){
+        MainActivity.groupsList = returnedGroups;
+
+        Toast.makeText(MapsActivity.this, "Refreshed", Toast.LENGTH_LONG).show();
+        addGroupsToCluster(MainActivity.groupsList);
+
     }
 }

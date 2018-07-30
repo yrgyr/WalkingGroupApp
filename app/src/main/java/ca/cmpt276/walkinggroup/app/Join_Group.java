@@ -119,6 +119,9 @@ public class Join_Group extends AppCompatActivity {
                 Call<Group> caller1=proxy.updateGroup(grpId,groupSelected);
                 ProxyBuilder.callProxy(this,caller1,resGrrp11->resp11(resGrrp11));
 
+
+
+
             }
 
         }
