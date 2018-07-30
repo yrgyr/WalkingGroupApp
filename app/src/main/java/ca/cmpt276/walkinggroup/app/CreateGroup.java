@@ -55,14 +55,6 @@ public class CreateGroup extends AppCompatActivity {
         proxy = userSingleton.getCurrentProxy();
 
 
-
-
-
-
-
-
-
-
         setupMeetingPlaceButton();
         setupDestinationButton();
         setupCreateGroupButton();
@@ -158,7 +150,6 @@ public class CreateGroup extends AppCompatActivity {
         Long groupID = returnedGroup.getId();
         Toast.makeText(CreateGroup.this, getString(R.string.create_group_success_toast_msg) + groupID, Toast.LENGTH_LONG).show();
 
-
         Call<List<Group>> caller = proxy.getGroups();
         ProxyBuilder.callProxy(CreateGroup.this, caller, returnedGroups -> returnGroups(returnedGroups));
     }
@@ -166,6 +157,4 @@ public class CreateGroup extends AppCompatActivity {
     private void returnGroups(List<Group> returnedGroups){
         MainActivity.groupsList = returnedGroups;
     }
-
-
 }
