@@ -212,6 +212,20 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    /*private void refreashButton(){
+        Button btn=(Button)findViewById(R.id.refreash_app);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+
+                Intent intent=new Intent(MainActivity.this,Join_Group.class);
+                startActivity(intent);
+
+            }
+        });
+    }*/
+
 
     // ==========================================GET MONITOR USERS ========================================================
     private void setupGetMonitorUsersBtn() {

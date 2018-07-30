@@ -19,6 +19,7 @@ public class PermissionRequest extends IdItemBase {
     private String message;
 
 
+
     public String getAction() {
         return action;
     }
@@ -35,7 +36,7 @@ public class PermissionRequest extends IdItemBase {
         this.status = status;
     }
 
-    @JsonIgnore
+
     public User getUserA() {
         return userA;
     }
@@ -53,7 +54,7 @@ public class PermissionRequest extends IdItemBase {
         this.userB = userB;
     }
 
-    @JsonIgnore
+
     public Group getGroupG() {
         return groupG;
     }

@@ -91,6 +91,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         checkIfDestSet();
         getLocationPermission();
         setupUploadButton();
+        refreashMap();
 
         
     }
@@ -234,6 +235,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
     private void addGroupsToCluster(List<Group> groups){
+        //if (groups != null)
         if (groups != null) {
             if (groups.size() > 0) {
                 for (int i = 0; i < groups.size(); i++) {
@@ -242,18 +244,29 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     String grpDesc = group.getGroupDescription();
 
 
+
                     List<Double> latArr = group.getRouteLatArray();
                     List<Double> lngArr = group.getRouteLngArray();
 
 
-                    // only populate groups with non-empty lat and lng arrays
-                    if (latArr.size() > 0 && lngArr.size() > 0) {
-                        double lat = group.getStartLat();
-                        double lng = group.getStartLng();
 
-                        MyItem newItem = new MyItem(lat, lng, getString(R.string.tag_on_info_window) + grpDesc, getString(R.string.group_info_window_snippet), grpId);
-                        mClusterManager.addItem(newItem);
+
+
+
+
+                    // only populate groups with non-empty lat and lng arrays
+                    if (latArr.size() > 0 && lngArr.size() > 0 && group.getLeader()!=null) {
+
+
+                            double lat = group.getStartLat();
+                            double lng = group.getStartLng();
+
+                            MyItem newItem = new MyItem(lat, lng, getString(R.string.tag_on_info_window) + grpDesc, getString(R.string.group_info_window_snippet), grpId);
+                            mClusterManager.addItem(newItem);
+
                     }
+
+
                 }
             } else {
                 Toast.makeText(MapsActivity.this, R.string.group_size_zero, Toast.LENGTH_LONG).show();
@@ -262,6 +275,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             Toast.makeText(MapsActivity.this, R.string.group_list_null, Toast.LENGTH_LONG).show();
         }
     }
+
 
 
 
@@ -429,5 +443,31 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         String receivedTime = location.getTimestamp();
         double lat = location.getLat();
         double lng = location.getLng();
+    }
+
+    private void refreashMap() {
+        Button btn = (Button) findViewById(R.id.refresh_map_btn);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Call<List<Group>> caller = proxy.getGroups();
+                ProxyBuilder.callProxy(MapsActivity.this, caller, returnedGroups -> returnGroups(returnedGroups));
+
+
+            }
+
+
+        });
+    }
+
+
+
+    private void returnGroups(List<Group> returnedGroups){
+        MainActivity.groupsList = returnedGroups;
+
+        Toast.makeText(MapsActivity.this, "Refreshed", Toast.LENGTH_LONG).show();
+        addGroupsToCluster(MainActivity.groupsList);
+
     }
 }

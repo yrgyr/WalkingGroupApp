@@ -13,19 +13,32 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.security.Permissions;
 import java.util.List;
 
 import ca.cmpt276.walkinggroup.dataobjects.CurrentUserData;
 import ca.cmpt276.walkinggroup.dataobjects.Group;
+import ca.cmpt276.walkinggroup.dataobjects.PermissionRequest;
 import ca.cmpt276.walkinggroup.dataobjects.User;
 import ca.cmpt276.walkinggroup.proxy.ProxyBuilder;
 import ca.cmpt276.walkinggroup.proxy.WGServerProxy;
 import retrofit2.Call;
 
+import static ca.cmpt276.walkinggroup.proxy.WGServerProxy.PermissionStatus.APPROVED;
+
 public class CreateGroup extends AppCompatActivity {
     private WGServerProxy proxy;  // Todo: get proxy and user from singleton class
     private CurrentUserData userSingleton = CurrentUserData.getSingletonInstance();
     private Group newGroup = Group.getGroupSingletonInstance();
+
+
+
+
+    private List<PermissionRequest> permissionRequestList;
+
+
+
+
 
 
     /* =======================================================================================
@@ -123,14 +136,16 @@ public class CreateGroup extends AppCompatActivity {
             newGroup.setGroupDescription(groupName);
             newGroup.setLeader(currentUser);
             Call<Group> caller = proxy.createGroup(newGroup);
-            ProxyBuilder.callProxy(CreateGroup.this, caller, returnedGroup->response(returnedGroup));
+            ProxyBuilder.callProxy(CreateGroup.this, caller, returnedGroup->response(returnedGroup,newGroup.getLeader()));
         }
 
     }
 
 
 
-    private void response(Group returnedGroup){
+
+
+    private void response(Group returnedGroup,User leader){
 
         Long groupID = returnedGroup.getId();
         Toast.makeText(CreateGroup.this, getString(R.string.create_group_success_toast_msg) + groupID, Toast.LENGTH_LONG).show();

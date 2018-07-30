@@ -161,6 +161,7 @@
     <string name="denied">Denied</string>
     <string name="theRequest">the request.</string>
     <string name="would_you_like_to_lead_the_group">Would you like to lead the group?</string>
+    <string name="record">Record</string>
     <string name="noPermission">Yon don\'t have any permissions.</string>
     <string name="makeDecision">Make decision!</string>
     <string name="approveThisReq">\u0020approved this request.</string>
