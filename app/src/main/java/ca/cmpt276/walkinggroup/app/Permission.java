@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -47,7 +48,10 @@ public class Permission extends AppCompatActivity {
 
         displayPermission();
         itemClick();
+        setUpRefreshBtn();
     }
+
+
 
 
     private void displayPermission() {
@@ -217,12 +221,22 @@ public class Permission extends AppCompatActivity {
         String text;
         if(status == WGServerProxy.PermissionStatus.APPROVED){
             text = getString(R.string.Approved);
+
         }
         else{
             text = getString(R.string.denied);
         }
         Toast.makeText(Permission.this,text,Toast.LENGTH_LONG).show();
     }
+    private void setUpRefreshBtn() {
+        Button btn = findViewById(R.id.refreshBtnForPermission);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                displayPermission();
+            }
+        });
 
+    }
 
 }
