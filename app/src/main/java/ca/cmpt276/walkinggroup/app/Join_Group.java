@@ -53,8 +53,8 @@ public class Join_Group extends AppCompatActivity {
 
     Long grpId = groupSelected.getId();
     String grpDesc = groupSelected.getGroupDescription();
-    String leaderName;
-    Long leaderId;
+    String leaderName = groupSelected.getLeader().getName();;
+    Long leaderId = groupSelected.getLeader().getId();;
 
     Long currentUserId = currentUser.getId();
     String[] members = groupSelected.getGroupMembersNames();
@@ -72,76 +72,19 @@ public class Join_Group extends AppCompatActivity {
         setContentView(R.layout.activity_join__group);
 
 
-        Call<List<PermissionRequest>> caller1=proxy.getPermissionByGroup(grpId);
-        ProxyBuilder.callProxy(Join_Group.this,caller1,rgroup->res(rgroup));
+        checkIfIAmInGroup();
+
+
+        setUpValidUserCanCheckInfo();
+
+        populateGroupID();
+        populateGroupDesc();
+        populateGroupLeader();
+
+        populateGroupMembersListView();
+        setupActionBar();
 
     }
-
-
-    private void res(List<PermissionRequest> rgroup){
-
-        if(rgroup.size()!=0){
-            PermissionRequest permissionRequest=rgroup.get(0);
-            if(permissionRequest.getStatus()==WGServerProxy.PermissionStatus.PENDING){
-                Toast.makeText(this,"No Leader yet!!",Toast.LENGTH_LONG).show();
-            }
-            else if(permissionRequest.getStatus()==WGServerProxy.PermissionStatus.APPROVED){
-
-
-                leaderName = groupSelected.getLeader().getName();
-                leaderId = groupSelected.getLeader().getId();
-
-
-                Call<Group> caller1=proxy.updateGroup(grpId,groupSelected);
-                ProxyBuilder.callProxy(this,caller1,resGrrp11->resp11(resGrrp11));
-
-
-
-
-
-
-                checkIfIAmInGroup();
-
-
-                setUpValidUserCanCheckInfo();
-
-                populateGroupID();
-                populateGroupDesc();
-                populateGroupLeader();
-
-                populateGroupMembersListView();
-                setupActionBar();
-
-            }
-            else if(permissionRequest.getStatus()==WGServerProxy.PermissionStatus.DENIED){
-
-
-                Call<Group> caller1=proxy.updateGroup(grpId,groupSelected);
-                ProxyBuilder.callProxy(this,caller1,resGrrp11->resp11(resGrrp11));
-
-
-
-
-            }
-
-        }
-
-
-    }
-
-
-
-
-    private void resp11(Group resGrrp11){
-
-        resGrrp11.setLeader(null);
-
-    }
-
-
-
-
-
 
 
     private void setUpValidUserCanCheckInfo() {
