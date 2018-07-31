@@ -464,9 +464,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
     private void returnGroups(List<Group> returnedGroups){
+        MainActivity.groupsList.clear();
         MainActivity.groupsList = returnedGroups;
 
         Toast.makeText(MapsActivity.this, "Refreshed", Toast.LENGTH_LONG).show();
+        mClusterManager.clearItems();
         addGroupsToCluster(MainActivity.groupsList);
 
     }
