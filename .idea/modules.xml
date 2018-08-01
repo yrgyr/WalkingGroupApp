@@ -7,6 +7,7 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/WalkingGroupNew.iml" filepath="$PROJECT_DIR$/.idea/WalkingGroupNew.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/walkinggroup.iml" filepath="$PROJECT_DIR$/walkinggroup.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/walkinggroup2.iml" filepath="$PROJECT_DIR$/.idea/walkinggroup2.iml" />
     </modules>
   </component>
 </project>

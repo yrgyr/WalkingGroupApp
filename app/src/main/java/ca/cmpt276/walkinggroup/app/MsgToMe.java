@@ -49,7 +49,7 @@ public class MsgToMe extends AppCompatActivity {
         displayMsgs();
         setupOnItemClick();
 
-        
+
 
 
     }
@@ -152,6 +152,7 @@ public class MsgToMe extends AppCompatActivity {
 
                     TextView contentTv = (TextView) convertView.findViewById(R.id.msgContent);
                     contentTv.setText(currentMsg.getText());
+
 
 
                     if (currentMsg.isRead()) {

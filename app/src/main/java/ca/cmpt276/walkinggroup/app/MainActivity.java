@@ -101,6 +101,7 @@ public class MainActivity extends AppCompatActivity {
         setupImageBtn();
 
         setupPanicBtn();
+        setUpPermissionListBtn();
 
 
 //        updateevery10sec();
@@ -108,6 +109,7 @@ public class MainActivity extends AppCompatActivity {
 //        autoAdvance();
 
     }
+
 
     private void setupImageBtn() {
 
@@ -210,6 +212,20 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    /*private void refreashButton(){
+        Button btn=(Button)findViewById(R.id.refreash_app);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+
+                Intent intent=new Intent(MainActivity.this,Join_Group.class);
+                startActivity(intent);
+
+            }
+        });
+    }*/
+
 
     // ==========================================GET MONITOR USERS ========================================================
     private void setupGetMonitorUsersBtn() {
@@ -307,4 +323,16 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+    private void setUpPermissionListBtn() {
+        Button btn = findViewById(R.id.permissionBtn);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, Permission.class);
+                startActivity(intent);
+            }
+        });
+    }
+
 }

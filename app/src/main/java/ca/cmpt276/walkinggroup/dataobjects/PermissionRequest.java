@@ -19,6 +19,7 @@ public class PermissionRequest extends IdItemBase {
     private String message;
 
 
+
     public String getAction() {
         return action;
     }
@@ -35,7 +36,7 @@ public class PermissionRequest extends IdItemBase {
         this.status = status;
     }
 
-    @JsonIgnore
+
     public User getUserA() {
         return userA;
     }
@@ -53,7 +54,7 @@ public class PermissionRequest extends IdItemBase {
         this.userB = userB;
     }
 
-    @JsonIgnore
+
     public Group getGroupG() {
         return groupG;
     }
@@ -75,7 +76,7 @@ public class PermissionRequest extends IdItemBase {
         return authorizors;
     }
 
-    @JsonIgnore
+
     public void setAuthorizors(Set<Authorizor> authorizors) {
         this.authorizors = authorizors;
     }
@@ -102,7 +103,7 @@ public class PermissionRequest extends IdItemBase {
             this.id = id;
         }
 
-        @JsonIgnore
+
         public Set<User> getUsers() {
             return users;
         }
@@ -119,7 +120,7 @@ public class PermissionRequest extends IdItemBase {
             this.status = status;
         }
 
-        @JsonIgnore
+
         public User getWhoApprovedOrDenied() {
             return whoApprovedOrDenied;
         }

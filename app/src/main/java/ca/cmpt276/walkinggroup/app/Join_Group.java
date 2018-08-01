@@ -31,10 +31,14 @@ import java.util.List;
 
 import ca.cmpt276.walkinggroup.dataobjects.CurrentUserData;
 import ca.cmpt276.walkinggroup.dataobjects.Group;
+import ca.cmpt276.walkinggroup.dataobjects.PermissionRequest;
 import ca.cmpt276.walkinggroup.dataobjects.User;
 import ca.cmpt276.walkinggroup.proxy.ProxyBuilder;
 import ca.cmpt276.walkinggroup.proxy.WGServerProxy;
 import retrofit2.Call;
+import retrofit2.http.Path;
+
+import static ca.cmpt276.walkinggroup.proxy.WGServerProxy.PermissionStatus.APPROVED;
 
 
 public class Join_Group extends AppCompatActivity {
@@ -49,8 +53,8 @@ public class Join_Group extends AppCompatActivity {
 
     Long grpId = groupSelected.getId();
     String grpDesc = groupSelected.getGroupDescription();
-    String leaderName = groupSelected.getLeader().getName();
-    Long leaderId = groupSelected.getLeader().getId();
+    String leaderName = groupSelected.getLeader().getName();;
+    Long leaderId = groupSelected.getLeader().getId();;
 
     Long currentUserId = currentUser.getId();
     String[] members = groupSelected.getGroupMembersNames();
@@ -67,6 +71,7 @@ public class Join_Group extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_join__group);
 
+
         checkIfIAmInGroup();
 
 
@@ -78,7 +83,9 @@ public class Join_Group extends AppCompatActivity {
 
         populateGroupMembersListView();
         setupActionBar();
+
     }
+
 
     private void setUpValidUserCanCheckInfo() {
         User leader = groupSelected.getLeader();
