@@ -178,7 +178,6 @@ public class Permission extends AppCompatActivity {
                                     Call<PermissionRequest> caller = proxy.approveOrDenyPermissionRequest(id,WGServerProxy.PermissionStatus.APPROVED);
                                     ProxyBuilder.callProxy(Permission.this,caller,returnNothing->responseNothing(returnNothing,WGServerProxy.PermissionStatus.APPROVED));
 
-
                                 }
                             })
 
@@ -227,6 +226,7 @@ public class Permission extends AppCompatActivity {
             text = getString(R.string.denied);
         }
         Toast.makeText(Permission.this,text,Toast.LENGTH_LONG).show();
+        displayPermission();
     }
     private void setUpRefreshBtn() {
         Button btn = findViewById(R.id.refreshBtnForPermission);
