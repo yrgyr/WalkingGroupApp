@@ -126,7 +126,7 @@ public class MyRewardPoints extends AppCompatActivity {
                         currentUser.getRewards().setPurchasedMessageLogos(purchasedLogos);
 
                         // todo: update textview
-                        TextView tv = findViewById(R.id.bg_price);
+                        TextView tv = (TextView) view.findViewById(R.id.bg_price);
                         tv.setText(R.string.text_already_purchased);
                         updateUserRewards();
                     } else {
