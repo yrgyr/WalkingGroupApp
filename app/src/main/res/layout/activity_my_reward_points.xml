@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="ca.cmpt276.walkinggroup.app.MyRewardPoints">
+    tools:context="ca.cmpt276.walkinggroup.app.MyRewardPoints"
+    android:id="@+id/my_reward_points_activity">
 
     <Button
         android:id="@+id/btn_open_leaderboard"
@@ -22,4 +23,12 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:text="Change background" />
+
+    <ListView
+        android:id="@+id/bgList"
+        android:layout_width="match_parent"
+        android:layout_height="520dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="139dp" />
 </RelativeLayout>
