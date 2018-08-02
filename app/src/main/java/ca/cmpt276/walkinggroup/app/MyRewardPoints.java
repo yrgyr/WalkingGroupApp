@@ -40,13 +40,10 @@ public class MyRewardPoints extends AppCompatActivity {
         setContentView(R.layout.activity_my_reward_points);
 
         setupOpenLeaderBoardBtn();
-        setupChangeBgBtn();
         setupBgList();
         setupOnItemClick();
         currentUser.setCurrentPoints(500);  // todo: delete later
         setupTextView();
-
-        Log.e("list size: ", "" + purchasedLogos.size());
 
 
     }
@@ -125,16 +122,14 @@ public class MyRewardPoints extends AppCompatActivity {
                         purchasedLogos.add(imgResId);
                         currentUser.getRewards().setPurchasedMessageLogos(purchasedLogos);
 
-                        // todo: update textview
                         TextView tv = (TextView) view.findViewById(R.id.bg_price);
                         tv.setText(R.string.text_already_purchased);
                         updateUserRewards();
                     } else {
                         Toast.makeText(MyRewardPoints.this, R.string.toast_not_enough_points, Toast.LENGTH_LONG).show();
-                        userSingleton.setBackgroundInUse(-1);
                     }
                 } else {
-                    Toast.makeText(MyRewardPoints.this, "You already purchased this logo!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(MyRewardPoints.this, R.string.text_already_purchased, Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -143,7 +138,7 @@ public class MyRewardPoints extends AppCompatActivity {
     private void setupTextView() {
         int currentPointspoints = currentUser.getCurrentPoints();
         TextView cp = (TextView) findViewById(R.id.currentPoints);
-        cp.setText("you have: " + currentPointspoints + " points ");
+        cp.setText("you have: " + currentPointspoints + " points remaining");
 
     }
 
@@ -158,15 +153,6 @@ public class MyRewardPoints extends AppCompatActivity {
             }
         });
     }
-    private void setupChangeBgBtn(){
-        Button btn = findViewById(R.id.change_bg);
-        btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                userSingleton.setBackgroundInUse(R.drawable.testimg4);
-            }
-        });
-    }
 
     private void updateUserRewards(){
         Call<User> caller = proxy.editUser(currentUser, currentUser.getId());
@@ -174,6 +160,7 @@ public class MyRewardPoints extends AppCompatActivity {
     }
 
     private void responseUpdateUser(User user){
+        Toast.makeText(MyRewardPoints.this, R.string.toast_purchase_successful, Toast.LENGTH_LONG).show();
         setupTextView();
     }
 }

@@ -161,6 +161,7 @@
     <string name="toast_walk_completed">You have been rewarded 50 points for completing the walk!</string>
     <string name="toast_not_enough_points">you don\'t have enough points</string>
     <string name="text_already_purchased">Already purchased!</string>
+    <string name="toast_purchase_successful">Purchased successfully!</string>
 
 
 </resources>
