@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/testimg2"
+    android:id="@+id/main_activity"
     tools:context="ca.cmpt276.walkinggroup.app.MainActivity"
     tools:layout_editor_absoluteY="81dp">
 
@@ -124,6 +125,21 @@
                 app:layout_constraintEnd_toEndOf="@+id/mapBtn"
                 app:layout_constraintStart_toStartOf="@+id/mapBtn"
                 app:layout_constraintTop_toBottomOf="@+id/btn_create_group" />
+
+            <Button
+                android:id="@+id/btn_view_rewards"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/view_reward_points"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/button_style"
+                android:fontFamily="casual"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/mapBtn"
+                app:layout_constraintStart_toStartOf="@+id/mapBtn"
+                app:layout_constraintTop_toBottomOf="@+id/parentDashBtn"/>
 
             <Button
                 android:id="@+id/panicBtn"

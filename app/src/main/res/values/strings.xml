@@ -155,6 +155,13 @@
     <string name="alert_dialog_frag">ALERT!!!</string>
     <string name="delete_user">Delete User</string>
     <string name="Not_Message">You don\'t have any message yet!</string>
+    <string name="view_reward_points">View reward points</string>
+    <string name="btn_open_leader_board">Open leader board</string>
+    <string name="txt_top_100_users">Top 100 users:</string>
+    <string name="toast_walk_completed">You have been rewarded 50 points for completing the walk!</string>
+    <string name="toast_not_enough_points">you don\'t have enough points</string>
+    <string name="text_already_purchased">Already purchased!</string>
+    <string name="toast_purchase_successful">Purchased successfully!</string>
     <string name="permission">PERMISSION</string>
     <string name="pending">Pending</string>
     <string name="Approved">Approved</string>

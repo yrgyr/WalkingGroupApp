@@ -73,15 +73,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
     private boolean uploadingLocation = userSingleton.getUploadingLocation();
-    private final int GPS_UPLOAD_INTERVAL_IN_MILLISEC = 30000;
+    private final int GPS_UPLOAD_INTERVAL_IN_MILLISEC = 5000;  // Todo: 30000
     private final int GPS_UPLOAD_MIN_DIST_IN_METERS = 0;
     private GpsLocation currentGpsLocation = new GpsLocation();
 
     // Countdown timer when user reaches school
-    private final int GPS_COUNTDOWN_INTERVAL_IN_MILLISEC = 600000;
-    private final int SCHOOL_RADIUS_IN_METERS = 200;
+    private final int GPS_COUNTDOWN_INTERVAL_IN_MILLISEC = 10000;  // Todo: 600000
+    private final int SCHOOL_RADIUS_IN_METERS = 1000;  // Todo: 200
     private CountDownTimer DestReachedCountDown = userSingleton.getDestReachedCountDown();
     private boolean DestReachedCountDownRunning = userSingleton.isDestReachedCountDownRunning();
+
+    // Rewards
+    private Integer WALK_COMPLETION_REWARD_POINTS = 50;
 
 
     @Override
@@ -235,7 +238,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
     private void addGroupsToCluster(List<Group> groups){
-        //if (groups != null)
         if (groups != null) {
             if (groups.size() > 0) {
                 for (int i = 0; i < groups.size(); i++) {
@@ -244,14 +246,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     String grpDesc = group.getGroupDescription();
 
 
-
                     List<Double> latArr = group.getRouteLatArray();
                     List<Double> lngArr = group.getRouteLngArray();
-
-
-
-
-
 
 
                     // only populate groups with non-empty lat and lng arrays
@@ -265,8 +261,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             mClusterManager.addItem(newItem);
 
                     }
-
-
                 }
             } else {
                 Toast.makeText(MapsActivity.this, R.string.group_size_zero, Toast.LENGTH_LONG).show();
@@ -275,7 +269,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             Toast.makeText(MapsActivity.this, R.string.group_list_null, Toast.LENGTH_LONG).show();
         }
     }
-
 
 
 
@@ -406,6 +399,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 uploadingLocation = false;
                 userSingleton.setUploadingLocation(uploadingLocation);
 
+                rewardPointsForCompletingWalk();
                 setupUploadButton();
 
             }
@@ -443,6 +437,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         String receivedTime = location.getTimestamp();
         double lat = location.getLat();
         double lng = location.getLng();
+    }
+
+    private void rewardPointsForCompletingWalk(){
+        Integer currentPoints = currentUser.getCurrentPoints();
+        Integer totalPoints = currentUser.getTotalPointsEarned();
+        currentPoints += WALK_COMPLETION_REWARD_POINTS;
+        totalPoints += WALK_COMPLETION_REWARD_POINTS;
+        currentUser.setCurrentPoints(currentPoints);
+        currentUser.setTotalPointsEarned(totalPoints);
+
+        Call<User> caller = proxy.editUser(currentUser, currentUser.getId());
+        ProxyBuilder.callProxy(MapsActivity.this, caller, updatedUser -> responseEditUser(updatedUser));
+    }
+
+    private void responseEditUser(User user){
+        Toast.makeText(MapsActivity.this, R.string.toast_walk_completed, Toast.LENGTH_LONG).show();
     }
 
     private void refreashMap() {
