@@ -1,8 +1,10 @@
 package ca.cmpt276.walkinggroup.app;
 
 import android.content.Intent;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -12,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,6 +39,8 @@ public class MainActivity extends AppCompatActivity {
 
     private CurrentUserData userSingleton = CurrentUserData.getSingletonInstance();
 
+
+    private int backgroundID = userSingleton.getBackgroundInUse();
 
 
 
@@ -73,6 +78,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
         setContentView(R.layout.activity_main);
 
         if(login.getToken(this) == null) {
@@ -98,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
         setupGetMonitorByBtn();
         setupCreateGroupButton();
 
-        setupImageBtn();
+        //setupImageBtn();
 
         setupPanicBtn();
         setupViewRewardsBtn();
@@ -110,9 +117,30 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onResume(){
+        super.onResume();
+        backgroundID = userSingleton.getBackgroundInUse();
+        if (backgroundID != -1) {
+//            ConstraintLayout cl = findViewById(R.id.main_activity);
+//            cl.setBackgroundResource(backgroundID);
+
+            ImageView mailbox = (ImageView) findViewById(R.id.mailImage);
+            mailbox.setImageResource(backgroundID);
+        }
+
+    }
+
     private void setupImageBtn() {
 
         ImageView myImg = (ImageView) findViewById(R.id.mailImage);
+        Integer imgResId = currentUser.getRewards().getMessageLogoInUse();
+
+        if (imgResId != null){
+            myImg.setImageResource(imgResId);
+        }
+
+        Log.e("imgResId: ", "" + imgResId);
 
         myImg.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -137,6 +165,7 @@ public class MainActivity extends AppCompatActivity {
         name = user.getName();
         userSingleton.setCurrentUser(user);
         currentUser = user;
+        setupImageBtn();
         getUnReadMessageList();
         Toast.makeText(this, getString(R.string.welcome) + " " + name, Toast.LENGTH_LONG).show();
 
@@ -319,4 +348,5 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
 }

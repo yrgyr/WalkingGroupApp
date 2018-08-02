@@ -5,6 +5,7 @@ package ca.cmpt276.walkinggroup.dataobjects;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.CountDownTimer;
+import android.util.Log;
 
 import ca.cmpt276.walkinggroup.proxy.WGServerProxy;
 
@@ -21,6 +22,7 @@ public class CurrentUserData {
     private CountDownTimer destReachedCountDown;
     private String token;
     private Long ID;
+    private int backgroundInUse = -1;
 
     private CurrentUserData() {}
 
@@ -83,5 +85,12 @@ public class CurrentUserData {
     public void setDestReachedCountDown(CountDownTimer timer) {
         this.destReachedCountDown = timer;
     }
-}
 
+    public void setBackgroundInUse(int resID) {
+        this.backgroundInUse = resID;
+    }
+
+    public int getBackgroundInUse() {
+        return backgroundInUse;
+    }
+}

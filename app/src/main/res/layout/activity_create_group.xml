@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="ca.cmpt276.walkinggroup.app.CreateGroup">
+    tools:context="ca.cmpt276.walkinggroup.app.CreateGroup"
+    android:id="@+id/create_group_activity">
 
     <TextView
         android:id="@+id/txt_create_grp_name"
