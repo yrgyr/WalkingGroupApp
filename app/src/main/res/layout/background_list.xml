@@ -6,8 +6,8 @@
 
     <TextView
         android:id="@+id/bg_name"
-        android:layout_width="229dp"
-        android:layout_height="38dp"
+        android:layout_width="134dp"
+        android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_marginStart="182dp"
@@ -24,8 +24,7 @@
         android:layout_alignParentEnd="true"
         android:text="TextView"
         android:textColor="@android:color/black"
-        android:textSize="24sp"
-        android:textStyle="bold" />
+        android:textSize="24sp" />
 
     <ImageView
         android:id="@+id/bg_img"
@@ -37,4 +36,14 @@
         android:layout_marginTop="0dp"
         android:scaleType="fitXY"
         app:srcCompat="@android:drawable/btn_star_big_on" />
+
+    <TextView
+        android:id="@+id/bg_flag"
+        android:layout_width="86dp"
+        android:layout_height="45dp"
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@+id/bg_name"
+        android:text="buy it now!"
+        android:textColor="@android:color/black"
+        android:textSize="18sp" />
 </RelativeLayout>

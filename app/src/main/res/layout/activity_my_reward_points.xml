@@ -7,6 +7,17 @@
     tools:context="ca.cmpt276.walkinggroup.app.MyRewardPoints"
     android:id="@+id/my_reward_points_activity">
 
+    <TextView
+        android:id="@+id/currentPoints"
+        android:layout_width="229dp"
+        android:layout_height="38dp"
+        android:layout_alignParentTop="true"
+        android:layout_toStartOf="@+id/change_bg"
+        android:text="TextView"
+        android:textColor="@android:color/black"
+        android:textSize="24sp"
+        android:textStyle="bold" />
+
     <Button
         android:id="@+id/btn_open_leaderboard"
         android:layout_width="wrap_content"
@@ -26,8 +37,9 @@
     <ListView
         android:id="@+id/bgList"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="568dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginBottom="67dp" />
+        android:layout_marginBottom="57dp" />
+
 </RelativeLayout>

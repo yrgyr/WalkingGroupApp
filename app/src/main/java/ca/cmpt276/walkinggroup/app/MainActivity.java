@@ -119,8 +119,11 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         backgroundID = userSingleton.getBackgroundInUse();
         if (backgroundID != -1) {
-            ConstraintLayout cl = findViewById(R.id.main_activity);
-            cl.setBackgroundResource(backgroundID);
+//            ConstraintLayout cl = findViewById(R.id.main_activity);
+//            cl.setBackgroundResource(backgroundID);
+
+            ImageView mailbox = (ImageView) findViewById(R.id.mailImage);
+            mailbox.setImageResource(backgroundID);
         }
 
     }

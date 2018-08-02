@@ -7,21 +7,25 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import ca.cmpt276.walkinggroup.dataobjects.CurrentUserData;
 import ca.cmpt276.walkinggroup.dataobjects.MyBgs;
+import ca.cmpt276.walkinggroup.dataobjects.User;
 
 public class MyRewardPoints extends AppCompatActivity {
     private CurrentUserData userSingleton = CurrentUserData.getSingletonInstance();
-
+    private User currentUser = CurrentUserData.getSingletonInstance().getCurrentUser();
+    private List<MyBgs> bgResIdList = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,22 +34,24 @@ public class MyRewardPoints extends AppCompatActivity {
         setupOpenLeaderBoardBtn();
         setupChangeBgBtn();
         setupBgList();
+        setupOnItemClick();
+        currentUser.setCurrentPoints(500);
+        setupTextView();
+
+
+
     }
 
     private void setupBgList() {
 
-        List<MyBgs> bgResIdList = new ArrayList<>();
 
         bgResIdList.add(new MyBgs(R.drawable.planet1,"Earth",100));
         bgResIdList.add(new MyBgs(R.drawable.planet2,"Mercury",100));
         bgResIdList.add(new MyBgs(R.drawable.planet3,"Venus",100));
-        bgResIdList.add(new MyBgs(R.drawable.planet4,"Mars",100));
-        bgResIdList.add(new MyBgs(R.drawable.planet5,"Jupiter",100));
+        bgResIdList.add(new MyBgs(R.drawable.planet4,"Mars",200));
+        bgResIdList.add(new MyBgs(R.drawable.planet5,"Jupiter",300));
         bgResIdList.add(new MyBgs(R.drawable.planet6,"Saturn",100));
         bgResIdList.add(new MyBgs(R.drawable.planet7,"Neptune",100));
-
-
-
 
 
         ListView bgList = (ListView) findViewById(R.id.bgList);
@@ -60,14 +66,11 @@ public class MyRewardPoints extends AppCompatActivity {
                 if (convertView == null) {
                     convertView = getLayoutInflater().inflate(R.layout.background_list, parent, false);
                 }
-
-
                 MyBgs currentBg = bgResIdList.get(position);
 
                 String name = currentBg.getName();
                 int price = currentBg.getPrice();
                 int resId = currentBg.getBgResId();
-
 
                 TextView tv = (TextView) convertView.findViewById(R.id.bg_name);
                 tv.setText(name);
@@ -83,7 +86,44 @@ public class MyRewardPoints extends AppCompatActivity {
         };
 
         bgList.setAdapter(adapter);
+    }
 
+    private void setupOnItemClick(){
+
+        ListView lv = (ListView) findViewById(R.id.bgList);
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                MyBgs currentBg = bgResIdList.get(position);
+                int imgResId = currentBg.getBgResId();
+                int price = currentBg.getPrice();
+
+                int user_points = currentUser.getCurrentPoints();
+
+                if(user_points>= price){
+                    int points = user_points - price;
+                    currentUser.setCurrentPoints(points);
+                    userSingleton.setBackgroundInUse(imgResId);
+                    setupTextView();
+                }
+                else{
+                    Toast.makeText(MyRewardPoints.this,"you don't have enough money",Toast.LENGTH_LONG).show();
+                    userSingleton.setBackgroundInUse(-1);
+                }
+
+
+
+
+
+            }
+        });
+    }
+
+    private void setupTextView() {
+        int currentPointspoints = currentUser.getCurrentPoints();
+        TextView cp = (TextView) findViewById(R.id.currentPoints);
+        cp.setText("you have: " + currentPointspoints + " points ");
 
     }
 
@@ -98,7 +138,6 @@ public class MyRewardPoints extends AppCompatActivity {
             }
         });
     }
-
     private void setupChangeBgBtn(){
         Button btn = findViewById(R.id.change_bg);
         btn.setOnClickListener(new View.OnClickListener() {
