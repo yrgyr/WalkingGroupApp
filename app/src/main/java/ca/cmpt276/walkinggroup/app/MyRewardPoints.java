@@ -21,11 +21,16 @@ import java.util.List;
 import ca.cmpt276.walkinggroup.dataobjects.CurrentUserData;
 import ca.cmpt276.walkinggroup.dataobjects.MyBgs;
 import ca.cmpt276.walkinggroup.dataobjects.User;
+import ca.cmpt276.walkinggroup.proxy.ProxyBuilder;
+import ca.cmpt276.walkinggroup.proxy.WGServerProxy;
+import retrofit2.Call;
 
 public class MyRewardPoints extends AppCompatActivity {
     private CurrentUserData userSingleton = CurrentUserData.getSingletonInstance();
     private User currentUser = CurrentUserData.getSingletonInstance().getCurrentUser();
+    private WGServerProxy proxy = userSingleton.getCurrentProxy();
     private List<MyBgs> bgResIdList = new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,7 +40,6 @@ public class MyRewardPoints extends AppCompatActivity {
         setupChangeBgBtn();
         setupBgList();
         setupOnItemClick();
-        currentUser.setCurrentPoints(500);
         setupTextView();
 
 
@@ -105,10 +109,10 @@ public class MyRewardPoints extends AppCompatActivity {
                     int points = user_points - price;
                     currentUser.setCurrentPoints(points);
                     userSingleton.setBackgroundInUse(imgResId);
-                    setupTextView();
+                    updateUserRewards();
                 }
                 else{
-                    Toast.makeText(MyRewardPoints.this,"you don't have enough money",Toast.LENGTH_LONG).show();
+                    Toast.makeText(MyRewardPoints.this, R.string.toast_not_enough_points,Toast.LENGTH_LONG).show();
                     userSingleton.setBackgroundInUse(-1);
                 }
 
@@ -146,5 +150,14 @@ public class MyRewardPoints extends AppCompatActivity {
                 userSingleton.setBackgroundInUse(R.drawable.testimg4);
             }
         });
+    }
+
+    private void updateUserRewards(){
+        Call<User> caller = proxy.editUser(currentUser, currentUser.getId());
+        ProxyBuilder.callProxy(MyRewardPoints.this, caller, returnedUser -> responseUpdateUser(returnedUser));
+    }
+
+    private void responseUpdateUser(User user){
+        setupTextView();
     }
 }
