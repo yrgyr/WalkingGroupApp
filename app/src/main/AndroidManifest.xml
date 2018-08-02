@@ -65,6 +65,8 @@
         <activity android:name=".ParentInfo" />
         <activity android:name=".parentInfoList" />
         <activity android:name=".MsgToMe" />
+        <activity android:name=".Permission"></activity>
+        <activity android:name=".MsgToMe" />
         <activity android:name=".LeaderBoard" />
         <activity android:name=".MyRewardPoints"></activity>
     </application>

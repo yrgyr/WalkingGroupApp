@@ -78,8 +78,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
         setContentView(R.layout.activity_main);
 
         if(login.getToken(this) == null) {
@@ -109,6 +107,7 @@ public class MainActivity extends AppCompatActivity {
 
         setupPanicBtn();
         setupViewRewardsBtn();
+        setUpPermissionListBtn();
 
 
 //        updateevery10sec();
@@ -337,6 +336,18 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+    private void setUpPermissionListBtn() {
+        Button btn = findViewById(R.id.permissionBtn);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, Permission.class);
+                startActivity(intent);
+            }
+        });
+    }
+
 
     private void setupViewRewardsBtn(){
         Button btn = findViewById(R.id.btn_view_rewards);

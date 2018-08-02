@@ -64,7 +64,7 @@
     <string name="dialogue_OK">OK</string>
     <string name="dialogue_cancel">Cancel</string>
     <string name="alert_add_members">Select group members to add:</string>
-    <string name="Toast_user_added">User(s) successfully added!</string>
+    <string name="Toast_user_added">Request to add user to group created</string>
     <string name="Toast_user_removed">User(s) successfully removed!</string>
     <string name="Toast_left_group">You have left this group</string>
     <string name="getDeviceLocation_exception">getDeviceLocation: SecurityException:</string>
@@ -162,6 +162,18 @@
     <string name="toast_not_enough_points">you don\'t have enough points</string>
     <string name="text_already_purchased">Already purchased!</string>
     <string name="toast_purchase_successful">Purchased successfully!</string>
+    <string name="permission">PERMISSION</string>
+    <string name="pending">Pending</string>
+    <string name="Approved">Approved</string>
+    <string name="denied">Denied</string>
+    <string name="theRequest">the request.</string>
+    <string name="would_you_like_to_lead_the_group">Would you like to lead the group?</string>
+    <string name="record">Record</string>
+    <string name="noPermission">Yon don\'t have any permissions.</string>
+    <string name="makeDecision">Make decision!</string>
+    <string name="approveThisReq">\u0020approved this request.</string>
+    <string name="denyThisREQ">\u0020deny this request.</string>
+    <string name="click_permission_request_to_make_decision_or_see_the_decsion_from_other_users">Click permission request to make decision or see the decsion from other users.</string>
 
 
 </resources>
