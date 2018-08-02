@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/testimg2"
+    android:id="@+id/main_activity"
     tools:context="ca.cmpt276.walkinggroup.app.MainActivity"
     tools:layout_editor_absoluteY="81dp">
 

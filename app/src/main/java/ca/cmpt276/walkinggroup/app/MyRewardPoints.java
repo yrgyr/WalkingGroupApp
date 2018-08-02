@@ -6,7 +6,10 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import ca.cmpt276.walkinggroup.dataobjects.CurrentUserData;
+
 public class MyRewardPoints extends AppCompatActivity {
+    private CurrentUserData userSingleton = CurrentUserData.getSingletonInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -14,6 +17,7 @@ public class MyRewardPoints extends AppCompatActivity {
         setContentView(R.layout.activity_my_reward_points);
 
         setupOpenLeaderBoardBtn();
+        setupChangeBgBtn();
     }
 
     private void setupOpenLeaderBoardBtn(){
@@ -24,6 +28,16 @@ public class MyRewardPoints extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(MyRewardPoints.this, LeaderBoard.class);
                 startActivity(intent);
+            }
+        });
+    }
+
+    private void setupChangeBgBtn(){
+        Button btn = findViewById(R.id.change_bg);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                userSingleton.setBackgroundInUse(R.drawable.testimg3);
             }
         });
     }

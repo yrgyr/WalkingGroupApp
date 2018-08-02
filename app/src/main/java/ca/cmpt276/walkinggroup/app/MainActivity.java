@@ -1,6 +1,7 @@
 package ca.cmpt276.walkinggroup.app;
 
 import android.content.Intent;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -12,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
     private String name = "default";
 
     private CurrentUserData userSingleton = CurrentUserData.getSingletonInstance();
-
+    private int backgroundID = userSingleton.getBackgroundInUse();
 
 
 
@@ -73,6 +75,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
         setContentView(R.layout.activity_main);
 
         if(login.getToken(this) == null) {
@@ -107,6 +111,17 @@ public class MainActivity extends AppCompatActivity {
 //        updateevery10sec();
 //
 //        autoAdvance();
+
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        backgroundID = userSingleton.getBackgroundInUse();
+        if (backgroundID != -1) {
+            ConstraintLayout cl = findViewById(R.id.main_activity);
+            cl.setBackgroundResource(backgroundID);
+        }
 
     }
 
@@ -319,4 +334,5 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
 }
