@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -16,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ca.cmpt276.walkinggroup.dataobjects.CurrentUserData;
+import ca.cmpt276.walkinggroup.dataobjects.MyBgs;
 
 public class MyRewardPoints extends AppCompatActivity {
     private CurrentUserData userSingleton = CurrentUserData.getSingletonInstance();
@@ -32,20 +34,23 @@ public class MyRewardPoints extends AppCompatActivity {
 
     private void setupBgList() {
 
-        List<Integer> bgResIdList = new ArrayList<Integer>();
+        List<MyBgs> bgResIdList = new ArrayList<>();
 
-        bgResIdList.add(R.drawable.testimg2);
-        bgResIdList.add(R.drawable.testimg3);
-        bgResIdList.add(R.drawable.testimg4);
-        bgResIdList.add(R.drawable.testimg5);
-        bgResIdList.add(R.drawable.testimg6);
-        bgResIdList.add(R.drawable.testimg7);
+        bgResIdList.add(new MyBgs(R.drawable.planet1,"Earth",100));
+        bgResIdList.add(new MyBgs(R.drawable.planet2,"Mercury",100));
+        bgResIdList.add(new MyBgs(R.drawable.planet3,"Venus",100));
+        bgResIdList.add(new MyBgs(R.drawable.planet4,"Mars",100));
+        bgResIdList.add(new MyBgs(R.drawable.planet5,"Jupiter",100));
+        bgResIdList.add(new MyBgs(R.drawable.planet6,"Saturn",100));
+        bgResIdList.add(new MyBgs(R.drawable.planet7,"Neptune",100));
+
+
 
 
 
         ListView bgList = (ListView) findViewById(R.id.bgList);
 
-        ArrayAdapter<Integer> adapter = new ArrayAdapter<Integer>(this, R.layout.background_list, bgResIdList){
+        ArrayAdapter<MyBgs> adapter = new ArrayAdapter<MyBgs>(this, R.layout.background_list, bgResIdList){
 
             @NonNull
             @Override
@@ -57,11 +62,21 @@ public class MyRewardPoints extends AppCompatActivity {
                 }
 
 
-                int thisId = bgResIdList.get(position);
+                MyBgs currentBg = bgResIdList.get(position);
+
+                String name = currentBg.getName();
+                int price = currentBg.getPrice();
+                int resId = currentBg.getBgResId();
 
 
-                TextView tv = (TextView) convertView.findViewById(R.id.bgName);
-                tv.setText(thisId + "hello");
+                TextView tv = (TextView) convertView.findViewById(R.id.bg_name);
+                tv.setText(name);
+
+                TextView price_tv = (TextView) convertView.findViewById(R.id.bg_price);
+                price_tv.setText("cost: "+price+" points");
+
+                ImageView bgImg = (ImageView) convertView.findViewById(R.id.bg_img);
+                bgImg.setImageResource(resId);
 
                 return convertView;
             }
