@@ -21,6 +21,9 @@ public class EarnedRewards {
     private String title = "Dragon slayer";
     private List<File> possibleBackgroundFiles = new ArrayList<>();
     private Integer selectedBackground = 1;
+    private List<Integer> purchasedMessageLogos = new ArrayList<>();
+    private Integer MessageLogoInUse = null;
+
     private Integer titleColor = Color.BLUE;
 
     // Needed for JSON deserialization
@@ -59,6 +62,24 @@ public class EarnedRewards {
         this.titleColor = titleColor;
     }
 
+    public List<Integer> getPurchasedMessageLogos() {
+        return purchasedMessageLogos;
+    }
+
+
+    public Integer getMessageLogoInUse() {
+        return MessageLogoInUse;
+    }
+
+    public void setPurchasedMessageLogos(List<Integer> purchasedMessageLogos) {
+        this.purchasedMessageLogos = purchasedMessageLogos;
+    }
+
+
+    public void setMessageLogoInUse(Integer messageLogoInUse) {
+        MessageLogoInUse = messageLogoInUse;
+    }
+
     @Override
     public String toString() {
         return "EarnedRewards{" +
@@ -68,4 +89,5 @@ public class EarnedRewards {
                 ", titleColor=" + titleColor +
                 '}';
     }
+
 }

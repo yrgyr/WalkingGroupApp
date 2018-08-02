@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -30,6 +31,8 @@ public class MyRewardPoints extends AppCompatActivity {
     private User currentUser = CurrentUserData.getSingletonInstance().getCurrentUser();
     private WGServerProxy proxy = userSingleton.getCurrentProxy();
     private List<MyBgs> bgResIdList = new ArrayList<>();
+    private List<Integer> purchasedLogos = currentUser.getRewards().getPurchasedMessageLogos();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,14 +43,15 @@ public class MyRewardPoints extends AppCompatActivity {
         setupChangeBgBtn();
         setupBgList();
         setupOnItemClick();
+        currentUser.setCurrentPoints(500);  // todo: delete later
         setupTextView();
 
+        Log.e("list size: ", "" + purchasedLogos.size());
 
 
     }
 
     private void setupBgList() {
-
 
         bgResIdList.add(new MyBgs(R.drawable.planet1,"Earth",100));
         bgResIdList.add(new MyBgs(R.drawable.planet2,"Mercury",100));
@@ -76,11 +80,16 @@ public class MyRewardPoints extends AppCompatActivity {
                 int price = currentBg.getPrice();
                 int resId = currentBg.getBgResId();
 
+
                 TextView tv = (TextView) convertView.findViewById(R.id.bg_name);
                 tv.setText(name);
 
                 TextView price_tv = (TextView) convertView.findViewById(R.id.bg_price);
-                price_tv.setText("cost: "+price+" points");
+                if (!purchasedLogos.contains(resId)){
+                    price_tv.setText("cost: "+price+" points");
+                } else {
+                    price_tv.setText(R.string.text_already_purchased);
+                }
 
                 ImageView bgImg = (ImageView) convertView.findViewById(R.id.bg_img);
                 bgImg.setImageResource(resId);
@@ -99,27 +108,34 @@ public class MyRewardPoints extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
+
                 MyBgs currentBg = bgResIdList.get(position);
                 int imgResId = currentBg.getBgResId();
                 int price = currentBg.getPrice();
 
-                int user_points = currentUser.getCurrentPoints();
+                if (!purchasedLogos.contains(imgResId)) {
 
-                if(user_points>= price){
-                    int points = user_points - price;
-                    currentUser.setCurrentPoints(points);
-                    userSingleton.setBackgroundInUse(imgResId);
-                    updateUserRewards();
+                    int user_points = currentUser.getCurrentPoints();
+
+                    if (user_points >= price) {
+                        int points = user_points - price;
+                        currentUser.setCurrentPoints(points);
+                        currentUser.getRewards().setMessageLogoInUse(imgResId);
+                        userSingleton.setBackgroundInUse(imgResId);
+                        purchasedLogos.add(imgResId);
+                        currentUser.getRewards().setPurchasedMessageLogos(purchasedLogos);
+
+                        // todo: update textview
+                        TextView tv = findViewById(R.id.bg_price);
+                        tv.setText(R.string.text_already_purchased);
+                        updateUserRewards();
+                    } else {
+                        Toast.makeText(MyRewardPoints.this, R.string.toast_not_enough_points, Toast.LENGTH_LONG).show();
+                        userSingleton.setBackgroundInUse(-1);
+                    }
+                } else {
+                    Toast.makeText(MyRewardPoints.this, "You already purchased this logo!", Toast.LENGTH_LONG).show();
                 }
-                else{
-                    Toast.makeText(MyRewardPoints.this, R.string.toast_not_enough_points,Toast.LENGTH_LONG).show();
-                    userSingleton.setBackgroundInUse(-1);
-                }
-
-
-
-
-
             }
         });
     }

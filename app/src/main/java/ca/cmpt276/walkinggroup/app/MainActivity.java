@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -37,6 +38,8 @@ public class MainActivity extends AppCompatActivity {
     private String name = "default";
 
     private CurrentUserData userSingleton = CurrentUserData.getSingletonInstance();
+
+
     private int backgroundID = userSingleton.getBackgroundInUse();
 
 
@@ -102,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
         setupGetMonitorByBtn();
         setupCreateGroupButton();
 
-        setupImageBtn();
+        //setupImageBtn();
 
         setupPanicBtn();
         setupViewRewardsBtn();
@@ -131,6 +134,13 @@ public class MainActivity extends AppCompatActivity {
     private void setupImageBtn() {
 
         ImageView myImg = (ImageView) findViewById(R.id.mailImage);
+        Integer imgResId = currentUser.getRewards().getMessageLogoInUse();
+
+        if (imgResId != null){
+            myImg.setImageResource(imgResId);
+        }
+
+        Log.e("imgResId: ", "" + imgResId);
 
         myImg.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -155,6 +165,7 @@ public class MainActivity extends AppCompatActivity {
         name = user.getName();
         userSingleton.setCurrentUser(user);
         currentUser = user;
+        setupImageBtn();
         getUnReadMessageList();
         Toast.makeText(this, getString(R.string.welcome) + " " + name, Toast.LENGTH_LONG).show();
 
