@@ -51,6 +51,7 @@ public class MyRewardPoints extends AppCompatActivity {
     private void setupBgList() {
 
         // images obtained from: http://www.lanrentuku.com/
+
         bgResIdList.add(new MyBgs(R.drawable.planet1,getString(R.string.Earth),100));
         bgResIdList.add(new MyBgs(R.drawable.planet2,getString(R.string.mercury),100));
         bgResIdList.add(new MyBgs(R.drawable.planet3,getString(R.string.venus),100));
