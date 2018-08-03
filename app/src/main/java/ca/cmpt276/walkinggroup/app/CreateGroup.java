@@ -27,7 +27,7 @@ import retrofit2.Call;
 import static ca.cmpt276.walkinggroup.proxy.WGServerProxy.PermissionStatus.APPROVED;
 
 public class CreateGroup extends AppCompatActivity {
-    private WGServerProxy proxy;  // Todo: get proxy and user from singleton class
+    private WGServerProxy proxy;
     private CurrentUserData userSingleton = CurrentUserData.getSingletonInstance();
     private Group newGroup = Group.getGroupSingletonInstance();
 

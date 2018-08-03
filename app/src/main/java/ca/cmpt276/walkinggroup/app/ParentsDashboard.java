@@ -331,7 +331,6 @@ public class ParentsDashboard extends FragmentActivity implements OnMapReadyCall
             public void onClick(View v) {
                 mMap.clear();
                 populateLocationMarkers();
-                // Todo: add code for checking new messages
                 Call<List<Message>> caller = proxy.getUnreadMessages(currentUser.getId(), false);
                 ProxyBuilder.callProxy(ParentsDashboard.this, caller, messageReturn -> responseGetMessage(messageReturn));
             }

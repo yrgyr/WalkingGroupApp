@@ -174,6 +174,17 @@
     <string name="approveThisReq">\u0020approved this request.</string>
     <string name="denyThisREQ">\u0020deny this request.</string>
     <string name="click_permission_request_to_make_decision_or_see_the_decsion_from_other_users">Click permission request to make decision or see the decsion from other users.</string>
+    <string name="btn_change_to_default">Change to default</string>
+    <string name="toast_logo_changed">Logo changed!</string>
+    <string name="txt_buy_instructions">Click to buy or change logo</string>
+    <string name="Earth">Earth</string>
+    <string name="mercury">Mercury</string>
+    <string name="venus">Venus</string>
+    <string name="mars">Mars</string>
+    <string name="jupiter">Jupiter</string>
+    <string name="saturn">Saturn</string>
+    <string name="neptune">Neptune</string>
+    <string name="refreshed">Refreshed</string>
 
 
 </resources>

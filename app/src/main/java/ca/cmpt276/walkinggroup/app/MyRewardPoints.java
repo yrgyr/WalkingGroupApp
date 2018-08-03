@@ -42,21 +42,22 @@ public class MyRewardPoints extends AppCompatActivity {
         setupOpenLeaderBoardBtn();
         setupBgList();
         setupOnItemClick();
-        currentUser.setCurrentPoints(500);  // todo: delete later
         setupTextView();
+        setupChangeDefaultBtn();
 
 
     }
 
     private void setupBgList() {
 
-        bgResIdList.add(new MyBgs(R.drawable.planet1,"Earth",100));
-        bgResIdList.add(new MyBgs(R.drawable.planet2,"Mercury",100));
-        bgResIdList.add(new MyBgs(R.drawable.planet3,"Venus",100));
-        bgResIdList.add(new MyBgs(R.drawable.planet4,"Mars",200));
-        bgResIdList.add(new MyBgs(R.drawable.planet5,"Jupiter",300));
-        bgResIdList.add(new MyBgs(R.drawable.planet6,"Saturn",100));
-        bgResIdList.add(new MyBgs(R.drawable.planet7,"Neptune",100));
+        // images obtained from: http://www.lanrentuku.com/
+        bgResIdList.add(new MyBgs(R.drawable.planet1,getString(R.string.Earth),100));
+        bgResIdList.add(new MyBgs(R.drawable.planet2,getString(R.string.mercury),100));
+        bgResIdList.add(new MyBgs(R.drawable.planet3,getString(R.string.venus),100));
+        bgResIdList.add(new MyBgs(R.drawable.planet4,getString(R.string.mars),200));
+        bgResIdList.add(new MyBgs(R.drawable.planet5,getString(R.string.jupiter),300));
+        bgResIdList.add(new MyBgs(R.drawable.planet6,getString(R.string.saturn),100));
+        bgResIdList.add(new MyBgs(R.drawable.planet7,getString(R.string.neptune),100));
 
 
         ListView bgList = (ListView) findViewById(R.id.bgList);
@@ -129,7 +130,10 @@ public class MyRewardPoints extends AppCompatActivity {
                         Toast.makeText(MyRewardPoints.this, R.string.toast_not_enough_points, Toast.LENGTH_LONG).show();
                     }
                 } else {
-                    Toast.makeText(MyRewardPoints.this, R.string.text_already_purchased, Toast.LENGTH_LONG).show();
+                    Toast.makeText(MyRewardPoints.this, R.string.toast_logo_changed, Toast.LENGTH_LONG).show();
+                    currentUser.getRewards().setMessageLogoInUse(imgResId);
+                    userSingleton.setBackgroundInUse(imgResId);
+                    updateUserRewards();
                 }
             }
         });
@@ -160,7 +164,19 @@ public class MyRewardPoints extends AppCompatActivity {
     }
 
     private void responseUpdateUser(User user){
-        Toast.makeText(MyRewardPoints.this, R.string.toast_purchase_successful, Toast.LENGTH_LONG).show();
         setupTextView();
+    }
+
+    private void setupChangeDefaultBtn(){
+        Button btn = findViewById(R.id.btn_change_default_logo);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                userSingleton.setBackgroundInUse(-1);
+                currentUser.getRewards().setMessageLogoInUse(null);
+                updateUserRewards();
+                Toast.makeText(MyRewardPoints.this, R.string.toast_logo_changed, Toast.LENGTH_LONG).show();
+            }
+        });
     }
 }

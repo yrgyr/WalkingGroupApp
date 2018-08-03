@@ -73,13 +73,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
     private boolean uploadingLocation = userSingleton.getUploadingLocation();
-    private final int GPS_UPLOAD_INTERVAL_IN_MILLISEC = 5000;  // Todo: 30000
+    private final int GPS_UPLOAD_INTERVAL_IN_MILLISEC = 30000;
     private final int GPS_UPLOAD_MIN_DIST_IN_METERS = 0;
     private GpsLocation currentGpsLocation = new GpsLocation();
 
     // Countdown timer when user reaches school
-    private final int GPS_COUNTDOWN_INTERVAL_IN_MILLISEC = 10000;  // Todo: 600000
-    private final int SCHOOL_RADIUS_IN_METERS = 1000;  // Todo: 200
+    private final int GPS_COUNTDOWN_INTERVAL_IN_MILLISEC = 600000;
+    private final int SCHOOL_RADIUS_IN_METERS = 200;
     private CountDownTimer DestReachedCountDown = userSingleton.getDestReachedCountDown();
     private boolean DestReachedCountDownRunning = userSingleton.isDestReachedCountDownRunning();
 
@@ -477,7 +477,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         MainActivity.groupsList.clear();
         MainActivity.groupsList = returnedGroups;
 
-        Toast.makeText(MapsActivity.this, "Refreshed", Toast.LENGTH_LONG).show();
+        Toast.makeText(MapsActivity.this, R.string.refreshed, Toast.LENGTH_LONG).show();
         mClusterManager.clearItems();
         addGroupsToCluster(MainActivity.groupsList);
 

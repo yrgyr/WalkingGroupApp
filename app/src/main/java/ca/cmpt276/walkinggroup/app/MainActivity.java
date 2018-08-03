@@ -64,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
                 isLogOut = true;
                 Intent i = new Intent(MainActivity.this,login.class);
                 startActivity(i);
+                userSingleton.setBackgroundInUse(-1);
                 finish();
 
 
@@ -103,16 +104,10 @@ public class MainActivity extends AppCompatActivity {
         setupGetMonitorByBtn();
         setupCreateGroupButton();
 
-        //setupImageBtn();
-
         setupPanicBtn();
         setupViewRewardsBtn();
         setUpPermissionListBtn();
 
-
-//        updateevery10sec();
-//
-//        autoAdvance();
 
     }
 
@@ -120,12 +115,11 @@ public class MainActivity extends AppCompatActivity {
     public void onResume(){
         super.onResume();
         backgroundID = userSingleton.getBackgroundInUse();
+        ImageView mailbox = (ImageView) findViewById(R.id.mailImage);;
         if (backgroundID != -1) {
-//            ConstraintLayout cl = findViewById(R.id.main_activity);
-//            cl.setBackgroundResource(backgroundID);
-
-            ImageView mailbox = (ImageView) findViewById(R.id.mailImage);
             mailbox.setImageResource(backgroundID);
+        } else {
+            mailbox.setImageResource(R.drawable.mail);
         }
 
     }
@@ -139,7 +133,6 @@ public class MainActivity extends AppCompatActivity {
             myImg.setImageResource(imgResId);
         }
 
-        Log.e("imgResId: ", "" + imgResId);
 
         myImg.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -176,10 +169,6 @@ public class MainActivity extends AppCompatActivity {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                isLogOut = true;
-//                Intent i = new Intent(MainActivity.this,login.class);
-//                startActivity(i);
-//                finish();
                 Intent i = new Intent(MainActivity.this,ParentsDashboard.class);
                 startActivity(i);
             }
@@ -267,18 +256,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
-
-
-
-
-
-    
-
-
-
-
-
     private void getUnReadMessageList() {
         if(login.getToken(MainActivity.this) != null) {
             Call<List<Message>> caller = proxy.getMessages(currentUser.getId());
@@ -286,33 +263,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-//    private void updateevery10sec(){
-//        myRun = new Runnable() {
-//            @Override
-//            public void run() {
-//                if(login.getToken(MainActivity.this) != null) {
-//                    Call<List<Message>> caller = proxy.getUnreadMessages(currentUser.getId(), false);
-//                    ProxyBuilder.callProxy(MainActivity.this, caller, messageReturn -> responseGetMessage(messageReturn));
-//
-//                    //Toast.makeText(MainActivity.this, "hello", Toast.LENGTH_LONG).show();
-//                    autoAdvance();
-//                }
-//
-//
-//            }
-//        };
-//    }
-//    private void autoAdvance() {
-//
-//        Handler TIME_OUT_HANDLER;
-//
-//        int timeOut = 10000;
-//
-//        TIME_OUT_HANDLER = new Handler();
-//
-//
-//        TIME_OUT_HANDLER.postDelayed(myRun,timeOut);
-//    }
 
     private void responseGetMessage (List<Message> messageReturn) {
 
@@ -320,8 +270,6 @@ public class MainActivity extends AppCompatActivity {
         TextView textView = findViewById(R.id.userName);
         textView.setText(getString(R.string.welcome) + " " + name );
     }
-
-
 
 
     private void setupPanicBtn(){
